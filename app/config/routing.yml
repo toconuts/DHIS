@@ -1,3 +1,27 @@
+homepage:
+    pattern: /
+    defaults: { _controller: DHISCommon:Default:index }
+
+DHISCommonBundle:
+    resource: "@DHISCommonBundle/Controller/"
+    type:     annotation
+    prefix:   /
+
+DHISCommonBundle:
+    resource: "@DHISSComDisBundle/Controller/"
+    type:     annotation
+    prefix:   /
+
+DHISEyeBaseBundle:
+    resource: "@DHISEyeBaseBundle/Controller/"
+    type:     annotation
+    prefix:   /
+
+DHISPM1Bundle:
+    resource: "@DHISPM1Bundle/Controller/"
+    type:     annotation
+    prefix:   /
+
 # Internal routing configuration to handle ESI
 #_internal:
 #   resource: "@FrameworkBundle/Resources/config/routing/internal.xml"
