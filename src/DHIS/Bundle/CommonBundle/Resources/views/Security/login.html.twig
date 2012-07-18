@@ -1,9 +1,9 @@
 {% extends 'DHISCommonBundle::layout.html.twig' %}
 
-{% block page_title 'Home' %}
+{% block page_title 'Sign in' %}
 {% block product_name 'DHIS' %}
-{% set menu = 'home' %}
-    
+{% set nodisp_navbar = '' %}
+
 {% block content %}
 <div class="row">
   <div class="span8">
@@ -11,6 +11,7 @@
   </div>
 
   <div class="span4">
+    {% include 'DHISCommonBundle::signinBox.html.twig' %}
   </div>
 </div>
 {% endblock %}

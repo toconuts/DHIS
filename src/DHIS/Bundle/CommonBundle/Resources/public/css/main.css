@@ -1,0 +1,97 @@
+/* 
+    Document   : main
+    Created on : Jul 16, 2012, 10:15:37 PM
+    Author     : Natsuki Hara <toconuts@gmail.com>
+    Description:
+        Purpose of the stylesheet follows.
+*/
+
+/*
+body {
+  padding-top: 30px;
+  padding-bottom: 40px;
+}*/
+
+.wrapper {
+    padding-top: 30px;
+    padding-bottom: 40px;
+    width: 100%;
+}
+
+.wrapper-nonavbar {
+    padding-top: 0px;
+    padding-bottom: 40px;
+}
+
+.hero-unit {
+    padding: 30px;
+}
+
+.hero-unit h1 {
+    color: #222222;
+    font-size: 1.56em;
+    font-weight: normal;
+}
+
+footer {
+    clear: both;
+    margin-left: 35px;
+    margin-right: 35px;
+}
+
+.signin-box, .accountchooser-box {
+    background: none repeat scroll 0 0 #F1F1F1;
+    border: 1px solid #E5E5E5;
+    margin: 12px 0 0;
+    padding: 20px 25px 15px;
+    width: 220px;
+}
+
+.signin-box h2 {
+    font-size: 16px;
+    height: 16px;
+    line-height: 17px;
+    margin: 0 0 1.2em;
+    position: relative;
+}
+
+.product-menu div {
+    border-radius: 6px 6px 6px 6px;
+    float: left;
+    font-size: 15px;
+    height: 30px;
+    margin-bottom: 20px;
+    margin-right: 14px;
+    padding: 26px 20px;
+    text-align: center;
+    width: 150px;
+}
+
+.product1 {
+    background-color: darkkhaki;
+    background-image: -moz-linear-gradient(left top , white, darkkhaki);
+}
+.product2 {
+    background-color: darkorchid;
+    background-image: -moz-linear-gradient(left top , white, darkorchid);
+}
+.product3 {
+    background-color: olivedrab;
+    background-image: -moz-linear-gradient(left top , white, olivedrab);
+}
+.product4 {
+    background-color: royalblue;
+    background-image: -moz-linear-gradient(left top , white, royalblue);
+}
+.product5 {
+    background-color: darkgray;
+    background-image: -moz-linear-gradient(left top , white, darkgray);
+}
+.product6 {
+    background-color: goldenrod;
+    background-image: -moz-linear-gradient(left top , white, goldenrod);
+}
+
+.product-menu h3 {
+  font-weight: normal;
+}

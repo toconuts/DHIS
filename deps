@@ -61,3 +61,19 @@
     git=http://github.com/symfony/AsseticBundle.git
     target=/bundles/Symfony/Bundle/AsseticBundle
     version=origin/2.0
+
+[gedmo-doctrine-extensions]
+    git=https://github.com/l3pp4rd/DoctrineExtensions.git
+    target=/gedmo-doctrine-extensions
+
+[DoctrineExtensionsBundle]
+    git=https://github.com/stof/StofDoctrineExtensionsBundle.git
+    target=/bundles/Stof/DoctrineExtensionsBundle
+
+[doctrine-fixtures]
+    git=https://github.com/doctrine/data-fixtures.git
+
+[DoctrineFixturesBundle]
+    git=https://github.com/doctrine/DoctrineFixturesBundle.git
+    target=/bundles/Symfony/Bundle/DoctrineFixturesBundle
+    version=origin/2.0

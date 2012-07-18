@@ -4,6 +4,8 @@ namespace DHIS\Bundle\CommonBundle\Controller;
 
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Symfony\Component\Security\Core\SecurityContext;
+use JMS\SecurityExtraBundle\Annotation\Secure;  
 
 /**
  * DefaultController.
@@ -20,6 +22,6 @@ class DefaultController extends AppController
      */
     public function indexAction()
     {
-        return array('name' => $name);
+        return array();
     }
 }

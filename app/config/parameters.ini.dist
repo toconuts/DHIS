@@ -5,9 +5,20 @@
     database_driver   = pdo_mysql
     database_host     = localhost
     database_port     =
-    database_name     = symfony
     database_user     = root
     database_password =
+
+    database_name_common  = dhis_common
+    database_name_scomdis = dhis_scomdis
+    database_name_pm1     = dhis_pm1
+    database_name_eyebase = dhis_eyebase
+
+    auth_database_driver_auth = pdo_mysql
+    auth_database_host        = localhost
+    auth_database_port        =
+    auth_database_name        = auth
+    auth_database_user        = root
+    auth_database_password    =
 
     mailer_transport  = smtp
     mailer_host       = localhost

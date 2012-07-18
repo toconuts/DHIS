@@ -1,0 +1,27 @@
+{% extends '::base.html.twig' %}
+
+{% block stylesheets %}
+  {{ parent() }}
+  {% stylesheets '@DHISCommonBundle/Resources/public/css/main.css' %}
+    <link href="{{ asset_url }}" type="text/css" rel="stylesheet" />
+  {% endstylesheets %}
+{% endblock %}
+
+{% block body %}
+<div class="{% if nodisp_navbar is not defined %}wrapper{% else %}wrapper-nonavbar{% endif %}">
+  <div class="hero-unit">
+  <h1>Health Information System for Dominica</h1>
+  </div>
+    
+  <div class="container">
+    {% if app.request.session.hasFlash('success') %}
+    <div class="alert alert-success">
+      {{ app.request.session.getFlash('success') }}
+    </div>
+    {% endif %}
+
+    {% block content %}{% endblock %}
+
+  </div>
+</div>
+{% endblock %}

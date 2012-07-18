@@ -36,17 +36,74 @@ assetic:
 # Doctrine Configuration
 doctrine:
     dbal:
-        driver:   %database_driver%
-        host:     %database_host%
-        port:     %database_port%
-        dbname:   %database_name%
-        user:     %database_user%
-        password: %database_password%
-        charset:  UTF8
+        default_connection: common
+        connections:
+            common:
+                driver:   %database_driver%
+                host:     %database_host%
+                port:     %database_port%
+                dbname:   %database_name_common%
+                user:     %database_user%
+                password: %database_password%
+                charset:  UTF8
+            scomdis:
+                driver:   %database_driver%
+                host:     %database_host%
+                port:     %database_port%
+                dbname:   %database_name_scomdis%
+                user:     %database_user%
+                password: %database_password%
+                charset:  UTF8
+            pm1:
+                driver:   %database_driver%
+                host:     %database_host%
+                port:     %database_port%
+                dbname:   %database_name_pm1%
+                user:     %database_user%
+                password: %database_password%
+                charset:  UTF8
+            eyebase:
+                driver:   %database_driver%
+                host:     %database_host%
+                port:     %database_port%
+                dbname:   %database_name_eyebase%
+                user:     %database_user%
+                password: %database_password%
+                charset:  UTF8
+            auth:
+                driver:   %auth_database_driver_auth%
+                host:     %auth_database_host%
+                port:     %auth_database_port%
+                dbname:   %auth_database_name%
+                user:     %auth_database_user%
+                password: %auth_database_password%
+                charset:  UTF8
 
     orm:
         auto_generate_proxy_classes: %kernel.debug%
-        auto_mapping: true
+#        auto_mapping: true
+        default_entity_manager:   common
+        entity_managers:
+            common:
+                connection:   common
+                mappings:
+                    DHISCommonBundle:   ~
+            scomdis:
+                connection:   scomdis
+                mappings:
+                    DHISSComDisBundle:  ~
+            pm1:
+                connection:   pm1
+                mappings:
+                    DHISPM1Bundle:      ~
+            eyebase:
+                connection:   eyebase
+                mappings:
+                    DHISEyeBaseBundle:  ~
+            auth:
+                connection:   auth
+                mappings:
+                    DHISCommonBundle:   ~
 
 # Swiftmailer Configuration
 swiftmailer:
@@ -58,3 +115,14 @@ swiftmailer:
 jms_security_extra:
     secure_controllers:  true
     secure_all_services: false
+
+stof_doctrine_extensions:
+  orm:
+      common:
+          timestampable: true
+      scomdis:
+          timestampable: true
+      pm1:
+          timestampable: true
+      eyebase:
+          timestampable: true

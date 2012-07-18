@@ -1,1 +1,9 @@
-Hello {{ name }}!
+{% extends 'DHISCommonBundle::layout.html.twig' %}
+
+{% block page_title 'SComDis' %}
+{% block product_name 'SComDis' %}
+{% set menu = 'scomdis' %}
+
+{% block content %}
+  <p>Hello! SComDis</p>
+{% endblock %}
