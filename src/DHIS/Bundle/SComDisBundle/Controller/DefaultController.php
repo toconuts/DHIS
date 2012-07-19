@@ -17,7 +17,7 @@ class DefaultController extends AppController
 {
     /**
      * @Route("/", name="scomdis")
-     * @Secure(roles="ROLE_ADMIN")
+     * @Secure(roles="ROLE_SCOMDIS")
      * @Template()
      */
     public function indexAction()

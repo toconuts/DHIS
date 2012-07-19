@@ -9,7 +9,7 @@
     <title>{% block title %}{{ block('page_title') }} - Dominica Health Information System {% endblock %}</title>
     <link rel="shortcut icon" href="{{ asset('favicon.ico') }}" />
   </head>
-  
+
   <body>
     {% if nodisp_navbar is not defined %}    
     <div class="navbar navbar-fixed-top">
@@ -28,20 +28,41 @@
                                  {% elseif menu == 'admin' %}{{ path('admin') }}
                                  {% endif %}">{{ block('product_name') }} </a>
           <div class="nav-collapse">
-            {% block nav %}
-
-              <ul class="nav">
-                <li class="{% if menu == 'home' %}active{% endif %}">
-                  <a href="{{ path('homepage') }}">Home</a>
-                </li>
-                <li class="{% if menu == 'openmrs' %}active{% endif %}">
-                  <a href="http://openmrs.org/">OpenMRSD</a>
-                </li>
-                <li class="{% if menu == 'scomdis' %}active{% endif %}">
-                  <a href="{{ path('scomdis') }}">SComDis</a>
-                </li>
-              </ul>
-            {% endblock %}
+          {% block nav %}
+          <ul class="nav">
+            <li class="{% if menu == 'home' %}active{% endif %}">
+              <a href="{{ path('homepage') }}">Home</a>
+            </li>
+            <li class="{% if menu == 'openmrs' %}active{% endif %}">
+              {% if is_granted('ROLE_OPENMRS') %}
+              <a href="http://openmrs.org/">OpenMRSD</a>
+              {% else %}
+              <p>OpenMRSD</p>
+              {% endif %}
+            </li>
+            <li class="{% if menu == 'scomdis' %}active{% endif %}">
+              {% if is_granted('ROLE_SCOMDIS') %}
+              <a href="{{ path('scomdis') }}">SComDis</a>
+              {% else %}
+              <p>SComDis</p>
+              {% endif %}
+            </li>
+            <li class="{% if menu == 'pm.1' %}active{% endif %}">
+              {% if is_granted('ROLE_ADMIN') %}
+              <a href="{{ path('scomdis') }}">PM.1</a>
+              {% else %}
+              <p>PM.1</p>
+              {% endif %}
+            </li>
+            <li class="{% if menu == 'eyebase' %}active{% endif %}">
+              {% if is_granted('ROLE_ADMIN') %}
+              <a href="{{ path('scomdis') }}">EyeBase</a>
+              {% else %}
+              <p>EyeBase</p>
+              {% endif %}
+            </li>
+          </ul>
+          {% endblock %}
           </div>
           <div class="btn-group pull-right">
             <a class="btn dropdown-toggle" href="#" data-toggle="dropdown">
