@@ -1,0 +1,58 @@
+{% extends '::base.html.twig' %}
+
+{% block stylesheets %}
+  {{ parent() }}
+  {% stylesheets '@DHISCommonBundle/Resources/public/css/main.css'
+                 '@DHISAdminBundle/Resources/public/css/content.css' %}
+    <link href="{{ asset_url }}" type="text/css" rel="stylesheet" />
+  {% endstylesheets %}
+{% endblock %}
+
+{% block body %}
+<div class="wrapper-with-sidebar">
+  <div class="container-fluid">
+    <div clas="row-fluid">
+      {% block sidebar %}
+      <div class="span3">
+        <div class="well sidebar-nav">
+          {% if sidebar_menu is not defined %}
+            {% set sidebar_menu = null %}
+          {% endif %}
+          <ul class="nav nav-list">
+            <li class="nav-header">User</li>
+            <li {% if sidebar_menu == 'admin_user' %}class="active"{% endif %}>
+              <a href="{{ path('admin_user') }}">List</a></li>
+            <li {% if sidebar_menu == 'admin_user_new' %}class="active"{% endif %}>
+              <a href="{{ path('admin_user_new') }}">Add</a></li>
+            <li class="nav-header">Group</li>
+            <li><a href="#">List</a></li>
+            <li class="nav-header">etc.</li>
+            <li><a href="#">Link</a></li>
+            <li><a href="#">Link</a></li>
+          </ul>
+        </div>
+      </div>
+      {% endblock %}
+
+      <div class="span9">
+        <div class="hero-unit">
+          <h1>{% block content_title %}{{ block('content_title') }}{% endblock %} - Admin </h1>
+        </div>
+        <hr>
+        {% block content %}{% endblock %}
+      </div>
+    </div>
+  </div>
+</div>
+  {#
+  <div class="container">
+    {% if app.request.session.hasFlash('success') %}
+    <div class="alert alert-success">
+      {{ app.request.session.getFlash('success') }}
+    </div>
+    {% endif %}
+
+    {% block content %}{% endblock %}
+    </div> #}
+  
+{% endblock %}

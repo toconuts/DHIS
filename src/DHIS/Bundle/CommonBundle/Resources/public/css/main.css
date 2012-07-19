@@ -6,12 +6,6 @@
         Purpose of the stylesheet follows.
 */
 
-/*
-body {
-  padding-top: 30px;
-  padding-bottom: 40px;
-}*/
-
 .wrapper {
     padding-top: 30px;
     padding-bottom: 40px;
@@ -20,6 +14,11 @@ body {
 
 .wrapper-nonavbar {
     padding-top: 0px;
+    padding-bottom: 40px;
+}
+
+.wrapper-with-sidebar {
+    padding-top: 60px;
     padding-bottom: 40px;
 }
 

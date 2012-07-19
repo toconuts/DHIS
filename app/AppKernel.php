@@ -19,10 +19,12 @@ class AppKernel extends Kernel
             new JMS\SecurityExtraBundle\JMSSecurityExtraBundle(),
             new Stof\DoctrineExtensionsBundle\StofDoctrineExtensionsBundle(),
             new Symfony\Bundle\DoctrineFixturesBundle\DoctrineFixturesBundle(),
+            new Knp\Bundle\PaginatorBundle\KnpPaginatorBundle(),
             new DHIS\Bundle\EyeBaseBundle\DHISEyeBaseBundle(),
             new DHIS\Bundle\SComDisBundle\DHISSComDisBundle(),
             new DHIS\Bundle\CommonBundle\DHISCommonBundle(),
             new DHIS\Bundle\PM1Bundle\DHISPM1Bundle(),
+            new DHIS\Bundle\AdminBundle\DHISAdminBundle(),
         );
 
         if (in_array($this->getEnvironment(), array('dev', 'test'))) {

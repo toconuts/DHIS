@@ -1,0 +1,38 @@
+/* 
+    Document   : content
+    Created on : Jul 18, 2012, 7:56:44 PM
+    Author     : Natsuki Hara <toconuts@gmail.com>
+    Description:
+        Purpose of the stylesheet follows.
+*/
+
+.navbar-inner {
+    /*background: -moz-linear-gradient(center top , #AA2B2B 0%, #930000 100%) repeat scroll 0 0 transparent;*/
+    background: -moz-linear-gradient(center top , #D13B3B 0%, #7B2222 100%) repeat scroll 0 0 transparent;
+    box-shadow: 0 1px 5px rgba(0, 0, 0, 0.15);
+}
+
+.navbar .nav > li:before {
+    border-left: 1px solid #6F1C1C;
+    content: " ";
+    float: left;
+    margin-top: 6px;
+    padding: 14px 0;
+}
+
+.navbar .nav .active > a, .navbar .nav .active > a:hover {
+    background-color: #6B0202;
+    color: white;
+    text-decoration: none;
+}
+
+.page-header {
+    background-color: #EEEEEE;
+    /*border-radius: 6px 6px 6px 6px;*/
+    /*margin-bottom: 30px;
+    padding: 60px;*/
+    
+    border-bottom: 1px solid #EEEEEE;
+    /*margin: 18px 0;*/
+    padding-bottom: 17px;
+}
