@@ -79,20 +79,20 @@ class User implements AdvancedUserInterface
     private $isActive;
 
     /**
-     * @var datetime $createAt
+     * @var datetime $createdAt
      *
-     * @ORM\Column(name="create_at", type="datetime")
+     * @ORM\Column(name="created_at", type="datetime")
      * @Gedmo\Timestampable(on="create")
      */
-    private $createAt;
+    private $createdAt;
 
     /**
-     * @var datetime $updateAt
+     * @var datetime $updatedAt
      *
-     * @ORM\Column(name="update_at", type="datetime")
+     * @ORM\Column(name="updated_at", type="datetime")
      * @Gedmo\Timestampable(on="update")
      */
-    private $updateAt;
+    private $updatedAt;
 
     /**
      * @var ArrayCollection
@@ -285,43 +285,43 @@ class User implements AdvancedUserInterface
     }
 
     /**
-     * Set createAt
+     * Set createdAt
      *
-     * @param datetime $createAt
+     * @param datetime $createdAt
      */
-    public function setCreateAt($createAt)
+    public function setCreateAt($createdAt)
     {
-        $this->createAt = $createAt;
+        $this->createdAt = $createdAt;
     }
 
     /**
-     * Get createAt
+     * Get createdAt
      *
      * @return datetime 
      */
-    public function getCreateAt()
+    public function getCreatedAt()
     {
-        return $this->createAt;
+        return $this->createdAt;
     }
 
     /**
-     * Set updateAt
+     * Set updatedAt
      *
-     * @param datetime $updateAt
+     * @param datetime $updatedAt
      */
-    public function setUpdateAt($updateAt)
+    public function setUpdatedAt($updatedAt)
     {
-        $this->updateAt = $updateAt;
+        $this->updatedAt = $updatedAt;
     }
 
     /**
-     * Get updateAt
+     * Get updatedAt
      *
      * @return datetime 
      */
-    public function getUpdateAt()
+    public function getUpdatedAt()
     {
-        return $this->updateAt;
+        return $this->updatedAt;
     }
 
     /**
