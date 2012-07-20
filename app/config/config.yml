@@ -73,14 +73,14 @@ doctrine:
                 user:     %database_user%
                 password: %database_password%
                 charset:  UTF8
-            auth:
-                driver:   %auth_database_driver_auth%
-                host:     %auth_database_host%
-                port:     %auth_database_port%
-                dbname:   %auth_database_name%
-                user:     %auth_database_user%
-                password: %auth_database_password%
-                charset:  UTF8
+#            auth:
+#                driver:   %auth_database_driver_auth%
+#                host:     %auth_database_host%
+#                port:     %auth_database_port%
+#                dbname:   %auth_database_name%
+#                user:     %auth_database_user%
+#                password: %auth_database_password%
+#                charset:  UTF8
 
     orm:
         auto_generate_proxy_classes: %kernel.debug%
@@ -103,10 +103,10 @@ doctrine:
                 connection:   eyebase
                 mappings:
                     DHISEyeBaseBundle:  ~
-            auth:
-                connection:   auth
-                mappings:
-                    DHISCommonBundle:   ~
+ #           auth:
+ #               connection:   auth
+ #               mappings:
+ #                   DHISCommonBundle:   ~
 
 # Swiftmailer Configuration
 swiftmailer:

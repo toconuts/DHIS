@@ -20,7 +20,6 @@ class DefaultController extends AppController
 {
     /**
      * @Route("/", name="admin")
-     * @Secure(roles="ROLE_ADMIN")
      * @Template()
      */
     public function indexAction()

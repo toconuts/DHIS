@@ -20,7 +20,6 @@ class UserController extends AppController
 {
     /**
      * @Route("/", name="admin_user")
-     * @Secure(roles="ROLE_ADMIN")
      * @Template()
      */
     public function indexAction()
@@ -30,7 +29,6 @@ class UserController extends AppController
     
     /**
      * @Route("/{id}", name="admin_user_show", requirements={"id" = "\d+"})
-     * @Secure(roles="ROLE_ADMIN")
      * @Template()
      */
     public function showAction(Request $request, $id)
@@ -40,7 +38,6 @@ class UserController extends AppController
     
     /**
      * @Route("/new", name="admin_user_new")
-     * @Secure(roles="ROLE_ADMIN")
      * @Template()
      */
     public function newAction()

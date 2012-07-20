@@ -33,7 +33,7 @@ class UserRepository extends EntityRepository implements UserProviderInterface
         
         try {
             $user = $q->getSingleResult();   
-        } catch (\NoResultException $e) {
+        } catch (NoResultException $e) {
             throw new UsernameNotFoundException(sprintf(
                     'Unable to find an active admin DHISCommonBundle:User object'
                     .' identified by "%s".', $username), null, 0, $e);

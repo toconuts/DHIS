@@ -2,29 +2,29 @@
   <h2>Products</h2>
   <p>Sign in and start sharing with health information.</p>
   <div class="product1">
-    {% if app.user.username is defined and is_granted('ROLE_OPENMRS') %}
+    {% if app.user.username is defined and is_granted('ROLE_OPENMRS_USER') %}
     <a href="{{ path('scomdis') }}">OpenMRSD</a>
     {% else %}
     <h3>OpenMRSD</h3>
     {% endif %}
   </div>
   <div class="product2">
-    {% if app.user.username is defined and is_granted('ROLE_SCOMDIS') %}
+    {% if app.user.username is defined and is_granted('ROLE_SCOMDIS_USER') %}
       <a href="{{ path('scomdis') }}">SComDis</a>
     {% else %}
       <h3>SComDis</h3>
     {% endif %}
   </div>
   <div class="product3">
-    {% if app.user.username is defined and is_granted('ROLE_ADMIN') %}
-      <a href="{{ path('scomdis') }}">PM.1</a>
+    {% if app.user.username is defined and is_granted('ROLE_PM1_USER') %}
+      <a href="{{ path('pm1') }}">PM.1</a>
     {% else %}
       <h3>PM.1</h3>
     {% endif %}
   </div>
   <div class="product4">
-    {% if app.user.username is defined and is_granted('ROLE_ADMIN') %}
-      <a href="{{ path('scomdis') }}">EyeBase</a>
+    {% if app.user.username is defined and is_granted('ROLE_EYEBASE_USER') %}
+      <a href="{{ path('eyebase') }}">EyeBase</a>
     {% else %}
       <h3>EyeBase</h3>
     {% endif %}

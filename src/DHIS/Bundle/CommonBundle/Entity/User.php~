@@ -33,18 +33,16 @@ class User implements AdvancedUserInterface
     /**
      * @var string $username
      *
-     * @ORM\Column(name="username", type="string", length=25, unique=true)
+     * @ORM\Column(name="name", type="string", length=25, unique=true)
      * @Assert\NotBlank
      * @Assert\MaxLength(limit=25)
      */
     private $username;
     
     /**
-     * @var string $displayname
+     * @var string $name
      * 
-     * @ORM\Column(name="displayname", type="string", length=100)
-     * @Assert\NotBlank
-     * @Assert\MaxLength(limit=25)
+     * @ORM\Column(name="display_name", type="string", length=25)
      */
     private $displayname;
 
@@ -58,7 +56,7 @@ class User implements AdvancedUserInterface
     /**
      * @var string $email
      *
-     * @ORM\Column(name="email", type="string", length=100, unique=true)
+     * @ORM\Column(name="email", type="string", length=60, unique=true)
      * @Assert\NotBlank
      * @Assert\Email
      */
@@ -67,7 +65,7 @@ class User implements AdvancedUserInterface
     /**
      * @var string $password
      *
-     * @ORM\Column(name="password", type="string", length=40)
+     * @ORM\Column(name="password", type="string", length=100)
      */
     private $password;
 
@@ -375,6 +373,26 @@ class User implements AdvancedUserInterface
     }
 
     /**
+     * Set name
+     *
+     * @param string $name
+     */
+    public function setName($name)
+    {
+        $this->name = $name;
+    }
+
+    /**
+     * Get name
+     *
+     * @return string 
+     */
+    public function getName()
+    {
+        return $this->name;
+    }
+
+    /**
      * Set isLock
      *
      * @param boolean $isLock
@@ -392,25 +410,5 @@ class User implements AdvancedUserInterface
     public function getIsLock()
     {
         return $this->isLock;
-    }
-
-    /**
-     * Set displayname
-     *
-     * @param string $displayname
-     */
-    public function setDisplayname($displayname)
-    {
-        $this->displayname = $displayname;
-    }
-
-    /**
-     * Get displayname
-     *
-     * @return string 
-     */
-    public function getDisplayname()
-    {
-        return $this->displayname;
     }
 }

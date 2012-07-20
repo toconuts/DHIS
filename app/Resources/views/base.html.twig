@@ -25,6 +25,8 @@
           {% endif %}
           <a class="brand" href="{% if menu == 'home' %}{{ path('homepage') }}
                                  {% elseif menu == 'scomdis' %}{{ path('scomdis') }}
+                                 {% elseif menu == 'pm1' %}{{ path('pm1') }}
+                                 {% elseif menu == 'eyebase' %}{{ path('eyebase') }}
                                  {% elseif menu == 'admin' %}{{ path('admin') }}
                                  {% endif %}">{{ block('product_name') }} </a>
           <div class="nav-collapse">
@@ -34,29 +36,29 @@
               <a href="{{ path('homepage') }}">Home</a>
             </li>
             <li class="{% if menu == 'openmrs' %}active{% endif %}">
-              {% if is_granted('ROLE_OPENMRS') %}
+              {% if is_granted('ROLE_OPENMRS_USER') %}
               <a href="http://openmrs.org/">OpenMRSD</a>
               {% else %}
               <p>OpenMRSD</p>
               {% endif %}
             </li>
             <li class="{% if menu == 'scomdis' %}active{% endif %}">
-              {% if is_granted('ROLE_SCOMDIS') %}
+              {% if is_granted('ROLE_SCOMDIS_USER') %}
               <a href="{{ path('scomdis') }}">SComDis</a>
               {% else %}
               <p>SComDis</p>
               {% endif %}
             </li>
-            <li class="{% if menu == 'pm.1' %}active{% endif %}">
-              {% if is_granted('ROLE_ADMIN') %}
-              <a href="{{ path('scomdis') }}">PM.1</a>
+            <li class="{% if menu == 'pm1' %}active{% endif %}">
+              {% if is_granted('ROLE_PM1_USER') %}
+              <a href="{{ path('pm1') }}">PM.1</a>
               {% else %}
               <p>PM.1</p>
               {% endif %}
             </li>
             <li class="{% if menu == 'eyebase' %}active{% endif %}">
-              {% if is_granted('ROLE_ADMIN') %}
-              <a href="{{ path('scomdis') }}">EyeBase</a>
+              {% if is_granted('ROLE_EYEBASE_USER') %}
+              <a href="{{ path('eyebase') }}">EyeBase</a>
               {% else %}
               <p>EyeBase</p>
               {% endif %}
@@ -67,7 +69,11 @@
           <div class="btn-group pull-right">
             <a class="btn dropdown-toggle" href="#" data-toggle="dropdown">
               <i class="icon-user"></i>
-              {{ app.user ? app.user.username : 'Anonymous' }}
+              {% if app.user.displayname is defined %}
+                {{ app.user.displayname }}
+              {% else %}
+                {{ app.user ? app.user.username : 'Anonymous' }}
+              {% endif %}
               <span class="caret"></span>
             </a>
             <ul class="dropdown-menu">
