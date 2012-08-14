@@ -1,6 +1,6 @@
 <?php
 
-namespace DHIS\Bundle\CommonBundle\Controller;
+namespace DHIS\Bundle\AdminBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Security\Core\SecurityContext;

@@ -16,7 +16,6 @@ use Symfony\Component\Validator\Constraints as Assert;
  *
  * @ORM\Table(name="dhis_users")
  * @ORM\Entity(repositoryClass="DHIS\Bundle\CommonBundle\Entity\UserRepository")
- * 
  */
 class User implements AdvancedUserInterface
 {
@@ -44,7 +43,7 @@ class User implements AdvancedUserInterface
      * 
      * @ORM\Column(name="displayname", type="string", length=100)
      * @Assert\NotBlank
-     * @Assert\MaxLength(limit=25)
+     * @Assert\MaxLength(limit=100)
      */
     private $displayname;
 
@@ -107,6 +106,11 @@ class User implements AdvancedUserInterface
      * @ORM\Column(name="is_lock", type="boolean")
      */
     private $isLock;
+    
+    /**
+     * @var string
+     */
+    private $rawPassword;
     
     /**
      * Constructor. 
@@ -192,11 +196,22 @@ class User implements AdvancedUserInterface
     }
     
     /**
+     * Get raw password.
+     * 
+     * @return string
+     */
+    public function getRawPassword()
+    {
+        return $this->rawPassword;
+    }
+    
+    /**
      * Set raw password.
      * @param type $rawPassword 
      */
     public function setRawPassword($rawPassword)
     {
+        $this->rawPassword = $rawPassword;
         $this->password = $this->hashPassword($rawPassword);
     }
 
@@ -412,5 +427,25 @@ class User implements AdvancedUserInterface
     public function getDisplayname()
     {
         return $this->displayname;
+    }
+
+    /**
+     * Set createdAt
+     *
+     * @param datetime $createdAt
+     */
+    public function setCreatedAt($createdAt)
+    {
+        $this->createdAt = $createdAt;
+    }
+    
+    /**
+     * __toString()
+     * 
+     * @return type 
+     */
+    public function __toString()
+    {
+        return (string)$this->username;
     }
 }

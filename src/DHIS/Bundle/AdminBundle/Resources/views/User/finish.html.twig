@@ -1,0 +1,16 @@
+{% extends 'DHISAdminBundle::layout.html.twig' %}
+
+{% block page_title 'Registration Complete - Admin' %}
+{% block product_name 'Admin' %}
+{% block content_title 'Registration Complete' %}
+
+{% set menu = 'admin' %}
+{% set sidebar_menu = 'admin_user' %}
+
+{% block content %}
+<div class="alert alert-success">
+  <p>User registration complete.</p>
+  <a href="{{ path ('admin_user') }}" class="btn">&laquo; Go to top</a>
+  <a href="{{ path ('admin_user_register') }}" class="btn btn-success">Add more user</a>
+</div>
+{% endblock %}

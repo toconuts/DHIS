@@ -33,16 +33,18 @@ class User implements AdvancedUserInterface
     /**
      * @var string $username
      *
-     * @ORM\Column(name="name", type="string", length=25, unique=true)
+     * @ORM\Column(name="username", type="string", length=25, unique=true)
      * @Assert\NotBlank
      * @Assert\MaxLength(limit=25)
      */
     private $username;
     
     /**
-     * @var string $name
+     * @var string $displayname
      * 
-     * @ORM\Column(name="display_name", type="string", length=25)
+     * @ORM\Column(name="displayname", type="string", length=100)
+     * @Assert\NotBlank
+     * @Assert\MaxLength(limit=100)
      */
     private $displayname;
 
@@ -56,7 +58,7 @@ class User implements AdvancedUserInterface
     /**
      * @var string $email
      *
-     * @ORM\Column(name="email", type="string", length=60, unique=true)
+     * @ORM\Column(name="email", type="string", length=100, unique=true)
      * @Assert\NotBlank
      * @Assert\Email
      */
@@ -65,7 +67,7 @@ class User implements AdvancedUserInterface
     /**
      * @var string $password
      *
-     * @ORM\Column(name="password", type="string", length=100)
+     * @ORM\Column(name="password", type="string", length=40)
      */
     private $password;
 
@@ -77,20 +79,20 @@ class User implements AdvancedUserInterface
     private $isActive;
 
     /**
-     * @var datetime $createAt
+     * @var datetime $createdAt
      *
-     * @ORM\Column(name="create_at", type="datetime")
+     * @ORM\Column(name="created_at", type="datetime")
      * @Gedmo\Timestampable(on="create")
      */
-    private $createAt;
+    private $createdAt;
 
     /**
-     * @var datetime $updateAt
+     * @var datetime $updatedAt
      *
-     * @ORM\Column(name="update_at", type="datetime")
+     * @ORM\Column(name="updated_at", type="datetime")
      * @Gedmo\Timestampable(on="update")
      */
-    private $updateAt;
+    private $updatedAt;
 
     /**
      * @var ArrayCollection
@@ -105,6 +107,11 @@ class User implements AdvancedUserInterface
      * @ORM\Column(name="is_lock", type="boolean")
      */
     private $isLock;
+    
+    /**
+     * @var string
+     */
+    private $rawPassword;
     
     /**
      * Constructor. 
@@ -190,11 +197,22 @@ class User implements AdvancedUserInterface
     }
     
     /**
+     * Get raw password.
+     * 
+     * @return string
+     */
+    public function getRawPassword()
+    {
+        return $this->rawPassword;
+    }
+    
+    /**
      * Set raw password.
      * @param type $rawPassword 
      */
     public function setRawPassword($rawPassword)
     {
+        $this->rawPassword = $rawPassword;
         $this->password = $this->hashPassword($rawPassword);
     }
 
@@ -283,43 +301,43 @@ class User implements AdvancedUserInterface
     }
 
     /**
-     * Set createAt
+     * Set createdAt
      *
-     * @param datetime $createAt
+     * @param datetime $createdAt
      */
-    public function setCreateAt($createAt)
+    public function setCreateAt($createdAt)
     {
-        $this->createAt = $createAt;
+        $this->createdAt = $createdAt;
     }
 
     /**
-     * Get createAt
+     * Get createdAt
      *
      * @return datetime 
      */
-    public function getCreateAt()
+    public function getCreatedAt()
     {
-        return $this->createAt;
+        return $this->createdAt;
     }
 
     /**
-     * Set updateAt
+     * Set updatedAt
      *
-     * @param datetime $updateAt
+     * @param datetime $updatedAt
      */
-    public function setUpdateAt($updateAt)
+    public function setUpdatedAt($updatedAt)
     {
-        $this->updateAt = $updateAt;
+        $this->updatedAt = $updatedAt;
     }
 
     /**
-     * Get updateAt
+     * Get updatedAt
      *
      * @return datetime 
      */
-    public function getUpdateAt()
+    public function getUpdatedAt()
     {
-        return $this->updateAt;
+        return $this->updatedAt;
     }
 
     /**
@@ -373,26 +391,6 @@ class User implements AdvancedUserInterface
     }
 
     /**
-     * Set name
-     *
-     * @param string $name
-     */
-    public function setName($name)
-    {
-        $this->name = $name;
-    }
-
-    /**
-     * Get name
-     *
-     * @return string 
-     */
-    public function getName()
-    {
-        return $this->name;
-    }
-
-    /**
      * Set isLock
      *
      * @param boolean $isLock
@@ -410,5 +408,35 @@ class User implements AdvancedUserInterface
     public function getIsLock()
     {
         return $this->isLock;
+    }
+
+    /**
+     * Set displayname
+     *
+     * @param string $displayname
+     */
+    public function setDisplayname($displayname)
+    {
+        $this->displayname = $displayname;
+    }
+
+    /**
+     * Get displayname
+     *
+     * @return string 
+     */
+    public function getDisplayname()
+    {
+        return $this->displayname;
+    }
+
+    /**
+     * Set createdAt
+     *
+     * @param datetime $createdAt
+     */
+    public function setCreatedAt($createdAt)
+    {
+        $this->createdAt = $createdAt;
     }
 }

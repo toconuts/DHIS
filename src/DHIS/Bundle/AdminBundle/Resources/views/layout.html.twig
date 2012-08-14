@@ -22,10 +22,11 @@
             <li class="nav-header">User</li>
             <li {% if sidebar_menu == 'admin_user' %}class="active"{% endif %}>
               <a href="{{ path('admin_user') }}">List</a></li>
-            <li {% if sidebar_menu == 'admin_user_new' %}class="active"{% endif %}>
-              <a href="{{ path('admin_user_new') }}">Add</a></li>
+            <li {% if sidebar_menu == 'admin_user_register' %}class="active"{% endif %}>
+              <a href="{{ path('admin_user_register') }}">Add</a></li>
             <li class="nav-header">Group</li>
-            <li><a href="#">List</a></li>
+            <li {% if sidebar_menu == 'admin_group' %}class="active"{% endif %}>
+              <a href="{{ path('admin_group') }}">List</a></li>
             <li class="nav-header">etc.</li>
             <li><a href="#">Link</a></li>
             <li><a href="#">Link</a></li>
@@ -53,6 +54,6 @@
     {% endif %}
 
     {% block content %}{% endblock %}
-    </div> #}
-  
+  </div>
+  #}
 {% endblock %}

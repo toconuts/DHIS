@@ -1,0 +1,24 @@
+{% extends 'DHISAdminBundle::layout.html.twig' %}
+
+{% block page_title 'Group  Selection - Admin' %}
+{% block product_name 'Admin' %}
+{% block content_title 'Group Selection' %}
+
+{% set menu = 'admin' %}
+{% set sidebar_menu = 'admin_user_register' %}
+
+{% block content %}
+<form action="{{ path('admin_user_group') }}" method="post" class="form-horizontal">
+  {{ form_errors(form) }}
+  <div class="control-group">
+    {# <label class="required" for="user_group_group">Chose groups</label> #}
+    <label class="control-label">Groups</label>
+    {{ form_widget(form.groups) }}
+  </div>
+  {{ form_rest(form) }}
+  <div class="form-actions">
+    <a href=javascript:history:back() class="btn">&laquo; Back</a>
+    <button class="btn btn-primary">Registration</button>
+  </div>
+</form>
+{% endblock %}

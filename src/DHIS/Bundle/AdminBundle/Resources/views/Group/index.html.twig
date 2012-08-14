@@ -1,0 +1,31 @@
+{% extends 'DHISAdminBundle::layout.html.twig' %}
+
+{% block page_title 'Groups - Admin' %}
+{% block product_name 'Admin' %}
+{% block content_title 'Groups' %}
+
+{% set menu = 'admin' %}
+{% set sidebar_menu = 'admin_group' %}
+
+{% block content %}
+<table class="table table-striped table-bordered">
+  <thead>
+    <tr>
+      <th>ID</th>
+      <th>Name</th>
+      <th>Role</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for group in pagination %}
+    <tr>
+      <td><a href="{{ path('admin_group_show', {'id': group.id}) }}">{{ group.id }}</a></td>
+      <td>{{ group.name }}</td>
+      <td>{{ group.role }}</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+
+{{ pagination.render()|raw }}
+{% endblock %}

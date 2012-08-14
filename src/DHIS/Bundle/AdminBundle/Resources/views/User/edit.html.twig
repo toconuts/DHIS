@@ -1,0 +1,72 @@
+{% extends 'DHISAdminBundle::layout.html.twig' %}
+
+{% block page_title 'User Edit - Admin' %}
+{% block product_name 'Admin' %}
+{% block content_title 'User Edit' %}
+
+{% set menu = 'admin' %}
+{% set sidebar_menu = 'admin_user' %}
+
+{% block content %}
+<form action="{{ path('admin_user_edit', {'id': user.id}) }}" method="post" class="form-horizontal">
+  {{ form_errors(form) }}
+    <div class="control-group {% if form.displayname.get('errors') %}error{% endif %}">
+      <label class="control-label">ID</label>
+      <div class="controls">
+        {{ form_errors(form.id) }}
+        {{ form_widget(form.id) }}
+      </div>
+    </div>
+    <div class="control-group {% if form.displayname.get('errors') %}error{% endif %}">
+      <label class="control-label">Name</label>
+      <div class="controls">
+        {{ form_errors(form.displayname) }}
+        {{ form_widget(form.displayname) }}
+      </div>
+    </div>
+    <div class="control-group {% if form.username.get('errrors') %}error{% endif %}">
+      <label class="control-label">Username</label>
+      <div class="controls">
+        {{ form_errors(form.username) }}
+        {{ form_widget(form.username) }}
+      </div>
+    </div>
+    <div class="control-group {% if form.email.get('errors')%}error{% endif %}">
+      <label class="control-label">Email</label>
+      <div class="controls">
+        {{ form_errors(form.email) }}
+        {{ form_widget(form.email.first) }}
+      </div>
+    </div>
+    <div class="control-group {% if form.email.get('errors')%}error{% endif %}">
+      <label class="control-label">Re-type Email</label>
+      <div class="controls">
+        {{ form_widget(form.email.second) }}
+      </div>
+    </div>
+    <hr>
+    <div class="control-group">
+      <label class="control-label">Acount control</label>
+      <div class="controls">
+        <label class="checkbox">{{ form_widget(form.isActive) }}Active</label>
+      </div>
+      <div class="controls">
+        <label class="checkbox">{{ form_widget(form.isLock) }}Lock</label>
+      </div>
+    </div>
+    <hr>
+    <div class="control-group {% if form.username.get('errrors') %}error{% endif %}">
+      <label class="control-label">Groups</label>
+      <div class="controls">
+        {{ form_errors(form.groups) }}
+        {{ form_widget(form.groups) }}
+      </div>
+    </div>
+    {{ form_rest(form) }}
+    <div class="form-actions">
+      <a href=javascript:history:back() class="btn">&laquo; Cancel</a>
+      <button class="btn btn-primary">Update</button>
+    </div>
+
+</form>
+{% endblock %}

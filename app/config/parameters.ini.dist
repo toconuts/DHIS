@@ -13,12 +13,12 @@
     database_name_pm1     = dhis_pm1
     database_name_eyebase = dhis_eyebase
 
-    auth_database_driver_auth = pdo_mysql
-    auth_database_host        = localhost
-    auth_database_port        =
-    auth_database_name        = auth
-    auth_database_user        = root
-    auth_database_password    =
+;    auth_database_driver_auth = pdo_mysql
+;    auth_database_host        = localhost
+;    auth_database_port        =
+;    auth_database_name        = auth
+;    auth_database_user        = root
+;    auth_database_password    =
 
     mailer_transport  = smtp
     mailer_host       = localhost
