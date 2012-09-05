@@ -1,0 +1,189 @@
+<?php
+
+namespace DHIS\Bundle\SComDisBundle\Entity;
+
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\ORM\Mapping as ORM;
+use Gedmo\Mapping\Annotation as Gedmo;
+use Symfony\Component\Validator\Constraints as Assert;
+
+/**
+ * DailyTally.
+ *
+ * @author Natsuki Hara <toconuts@gmail.com>
+ * 
+ * @ORM\Table(name="daily_tally")
+ * @ORM\Entity()
+ */
+class DailyTally
+{
+    /**
+     * @var integer $id
+     *
+     * @ORM\Column(name="id", type="integer")
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="AUTO")
+     */
+    private $id;
+    
+    /**
+     * @var District $district
+     * 
+     * @ORM\ManyToOne(targetEntity="District")
+     * @ORM\JoinColumn(name="district_id", referencedColumnName="id")
+     * @Assert\NotBlank
+     */
+    private $district;
+    
+    /**
+     * @var Clinic $clinic
+     * 
+     * @ORM\ManyToOne(targetEntity="Clinic")
+     * @ORM\JoinColumn(name="clinic_id", referencedColumnName="id")
+     */
+    private $clinic;
+    
+    /**
+     * @var Syndrome $syndrome
+     * 
+     * @ORM\ManyToOne(targetEntity="Syndrome")
+     * @ORM\JoinColumn(name="syndrom_id", referencedColumnName="id")
+     * @Assert\NotBlank 
+     */
+    private $syndrome;
+
+    /**
+     * @var datetime $date
+     * 
+     * @ORM\Column(name="date", type="datetime") 
+     */
+    private $date;
+    
+    /**
+     * @var integer $ageUnder1_f
+     * 
+     * @ORM\Column(name="age_group_f", type="integer")
+     */
+    private $ageGroup1F = 0;
+    
+    private $ageGroup1M = 0;
+    private $ageGroup2F = 0;
+    private $ageGroup2M = 0;
+    private $ageGroup3F = 0;
+    private $ageGroup3M = 0;
+    private $ageGroup4F = 0;
+    private $ageGroup4M = 0;
+    private $ageGroup5F = 0;
+    private $ageGroup5M = 0;
+    private $ageGroup6F = 0;
+    private $ageGroup6M = 0;
+    private $ageGroup7F = 0;
+    private $ageGroup7M = 0;
+    
+    public function getGroupTotal()
+    {
+        return $ageGroup1F + $ageGroup1M
+             + $ageGroup2F + $ageGroup2M
+             + $ageGroup3F + $ageGroup3M
+             + $ageGroup4F + $ageGroup4M
+             + $ageGroup5F + $ageGroup5M
+             + $ageGroup6F + $ageGroup6M
+             + $ageGroup7F + $ageGroup7M;
+    }
+
+    /**
+     * @var integer $unknownUnder5
+     * 
+     * @ORM\Column(name="unknown_under5", type="integer")
+     */
+    private $unknownGroup1 = 0;
+    
+    private $unknownGroup2 = 0;
+    private $unknownTotal = 0;
+    
+    /**
+     * @var datetime $createdAt
+     *
+     * @ORM\Column(name="created_at", type="datetime")
+     * @Gedmo\Timestampable(on="create")
+     */
+    private $createdAt;
+
+    /**
+     * @var datetime $updatedAt
+     *
+     * @ORM\Column(name="updated_at", type="datetime")
+     * @Gedmo\Timestampable(on="update")
+     */
+    private $updatedAt;
+    
+    /**
+     * Get id
+     *
+     * @return integer 
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    /**
+     * Set district
+     *
+     * @param District $district
+     */
+    public function setDistrict(District $district)
+    {
+        $this->district = $district;
+    }
+
+    /**
+     * Get district
+     *
+     * @return District 
+     */
+    public function getDistrict()
+    {
+        return $this->district;
+    }
+
+    /**
+     * Set syndrome
+     *
+     * @param Syndrome $syndrome
+     */
+    public function setSyndrome(Syndrome $syndrome)
+    {
+        $this->syndrome = $syndrome;
+    }
+
+    /**
+     * Get syndrome
+     *
+     * @return Syndrome 
+     */
+    public function getSyndrome()
+    {
+        return $this->syndrome;
+    }
+
+    /**
+     * Set clinic
+     *
+     * @param Clinic $clinic
+     */
+    public function setClinic(Clinic $clinic)
+    {
+        $this->clinic = $clinic;
+    }
+
+    /**
+     * Get clinic
+     *
+     * @return Clinic 
+     */
+    public function getClinic()
+    {
+        return $this->clinic;
+    }
+}

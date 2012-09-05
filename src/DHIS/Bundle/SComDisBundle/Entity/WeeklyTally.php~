@@ -1,0 +1,178 @@
+<?php
+
+namespace DHIS\Bundle\SComDisBundle\Entity;
+
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\ORM\Mapping as ORM;
+use Gedmo\Mapping\Annotation as Gedmo;
+use Symfony\Component\Validator\Constraints as Assert;
+
+/**
+ * WeeklyTally.
+ *
+ * @author Natsuki Hara <toconuts@gmail.com>
+ * 
+ * @ORM\Table(name="weekly_tally")
+ * @ORM\Entity()
+ */
+class WeeklyTally
+{
+    /**
+     * @var integer $id
+     *
+     * @ORM\Column(name="id", type="integer")
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="AUTO")
+     */
+    private $id;
+    
+    /**
+     * @var District $district
+     * 
+     * @ORM\ManyToOne(targetEntity="District")
+     * @ORM\JoinColumn(name="district_id", referencedColumnName="id")
+     * @Assert\NotBlank
+     */
+    private $district;
+    
+    /**
+     * @var Clinic $clinic
+     * 
+     * @ORM\ManyToOne(targetEntity="Clinic")
+     * @ORM\JoinColumn(name="clinic_id", referencedColumnName="id")
+     */
+    private $clinic;
+    
+    /**
+     * @var Syndrome $syndrome
+     * 
+     * @ORM\ManyToOne(targetEntity="Syndrome")
+     * @ORM\JoinColumn(name="syndrom_id", referencedColumnName="id")
+     * @Assert\NotBlank 
+     */
+    private $syndrome;
+
+    /**
+     * @var datetime $date
+     * 
+     * @ORM\Column(name="date", type="datetime") 
+     */
+    private $date;
+//or private weekNumberOfTheYear
+//    ssangetWeekOfYear();
+    
+    /**
+     * @var integer $ageUnder1_f
+     * 
+     * @ORM\Column(name="sun", type="integer")
+     */
+    private $sunday;
+    
+    private $monday;
+    private $tuesday;
+    private $wednesday;
+    private $thursday;
+    private $friday;
+    private $saturday;
+
+    private $reportedBy;
+    private $reportedAt;
+    
+    private $receivedBy;
+    private $receivedAt;
+    
+    private $referrals;
+    
+    private $outbreak;
+    
+    /**
+     * @var datetime $createdAt
+     *
+     * @ORM\Column(name="created_at", type="datetime")
+     * @Gedmo\Timestampable(on="create")
+     */
+    private $createdAt;
+
+    /**
+     * @var datetime $updatedAt
+     *
+     * @ORM\Column(name="updated_at", type="datetime")
+     * @Gedmo\Timestampable(on="update")
+     */
+    private $updatedAt;
+    
+    /**
+     * Get id
+     *
+     * @return integer 
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    /**
+     * Set district
+     *
+     * @param District $district
+     */
+    public function setDistrict(District $district)
+    {
+        $this->district = $district;
+    }
+
+    /**
+     * Get district
+     *
+     * @return District 
+     */
+    public function getDistrict()
+    {
+        return $this->district;
+    }
+
+    /**
+     * Set syndrome
+     *
+     * @param Syndrome $syndrome
+     */
+    public function setSyndrome(Syndrome $syndrome)
+    {
+        $this->syndrome = $syndrome;
+    }
+
+    /**
+     * Get syndrome
+     *
+     * @return Syndrome 
+     */
+    public function getSyndrome()
+    {
+        return $this->syndrome;
+    }
+
+    /**
+     * Set clinic
+     *
+     * @param Clinic $clinic
+     */
+    public function setClinic(Clinic $clinic)
+    {
+        $this->clinic = $clinic;
+    }
+
+    /**
+     * Get clinic
+     *
+     * @return Clinic 
+     */
+    public function getClinic()
+    {
+        return $this->clinic;
+    }
+    
+    public function getWeekEnding()
+    {
+        return $this->saturday->getDate();
+    }
+}
