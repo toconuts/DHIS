@@ -13,26 +13,40 @@
   <div class="container-fluid">
     <div clas="row-fluid">
       {% block sidebar %}
-      <div class="span3">
+      <div class="span2">
         <div class="well sidebar-nav">
           {% if sidebar_menu is not defined %}
             {% set sidebar_menu = null %}
           {% endif %}
           <ul class="nav nav-list">
-            <li class="nav-header">Menu</li>
-            <li><a href="#">List</a></li>
-            <li><a href="#">List</a></li>
-            <li class="nav-header">Menu</li>
-            <li><a href="#">List</a></li>
-            <li class="nav-header">etc.</li>
-            <li><a href="#">Link</a></li>
-            <li><a href="#">Link</a></li>
+            <li class="nav-header">Syndromiic Surveillance</li>
+            <li {% if sidebar_menu == 'scomdis_surveillance' %}class="active"{% endif %}>
+              <a href="{{ path('scomdis_surveillance') }}">List</a></li>
+            <li {% if sidebar_menu == 'scomdis_surveillance_search' %}class="active"{% endif %}>
+              <a href="{{ path('scomdis_surveillance_search') }}">Search</a></li>
+            <li {% if sidebar_menu == 'scomdis_surveillance_new' %}class="active"{% endif %}>
+              <a href="{{ path('scomdis_surveillance_new') }}">New</a></li>
+            <li {% if sidebar_menu == 'scomdis_surveillance_out_carec_report' %}class="active"{% endif %}>
+              <a href="{{ path('scomdis_surveillance_out_carec_report') }}">CAREC Weekly Report</a></li>
+        {#    <li {% if sidebar_menu == 'scomdis_surveillance_out_daily_tally_report' %}class="active"{% endif %}>
+              <a href="{{ path('scomdis_surveillance_out_daily_tally_report') }}">Daily Tally Report</a></li> #}
+            <li class="nav-header">Outbreak Daily Tally</li>
+            <li {% if sidebar_menu == 'scomdis_outbreak' %}class="active"{% endif %}>
+              <a href="#">List</a></li>
+            <li {% if sidebar_menu == 'scomdis_outbreak_new' %}class="active"{% endif %}>
+              <a href="#">New</a></li>
+            <li class="nav-header">Case Notification</li>
+            <li {% if sidebar_menu == 'scomdis_case_notification' %}class="active"{% endif %}>
+              <a href="#">List</a></li>
+            <li {% if sidebar_menu == 'scomdis_case_notification_new' %}class="active"{% endif %}>
+              <a href="#">New</a></li>
           </ul>
+            
         </div>
       </div>
       {% endblock %}
 
-      <div class="span9">
+      <div class="span10">
         <div class="hero-unit">
           <h1>{% block content_title %}{{ block('content_title') }}{% endblock %}</h1>
         </div>
@@ -42,15 +56,70 @@
     </div>
   </div>
 </div>
-  {#
-  <div class="container">
-    {% if app.request.session.hasFlash('success') %}
-    <div class="alert alert-success">
-      {{ app.request.session.getFlash('success') }}
-    </div>
-    {% endif %}
+{% endblock %}
 
-    {% block content %}{% endblock %}
-    </div> #}
-  
+{% block javascripts %}
+  {{ parent() }}
+  {#<script src="@DHISSComDisBundle/Resources/public/js/ConnectedSelect.js" type="text/javascript"></script>#}
+  {#<script type="text/javascript" src="{{ asset('bundles/dhisscomdis/js/ConnectedSelect.js') }}"></script> #}
+    <script type="text/javascript" src="{{ asset('bundles/dhisscomdis/js/jquery_hselect.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('bundles/dhisscomdis/js/epiweek_calc.js') }}"></script>
+    
+<script>
+//$(".weekend").datepicker({ 
+$(".epi-weekend").datepicker({ 
+  dateFormat: 'dd/mm/yy',
+  showWeek: true,
+  changeMonth: true,
+  changeYear: true,
+  calculateWeek: epiWeekCalc,
+  onSelect: function(dat, ins) {
+  var date = $(this).datepicker('getDate');
+  var day = date.getDay();
+  if (day != 6) {
+    date = new Date(date.getFullYear(), date.getMonth(), date.getDate() + (6 - day));
+  }
+//  $("#surveillance_weekend").val(
+  $(".epi-weekend").val(
+      (date.getDate() < 10 ? '0' : '') + date.getDate() + "/"
+   + ((date.getMonth() + 1) < 10 ? '0' : '') + (date.getMonth() + 1) + "/" 
+   + date.getFullYear()
+  );
+
+  var week = $.datepicker.iso8601Week(date);
+  var year = date.getFullYear()
+  if (week >= 52 && (date.getMonth() + 1) == 1) {
+    year -= 1;
+  } else if (week == 1 && (date.getMonth() + 1) == 12) {
+    year += 1;
+  }
+//  $("#surveillance_weekOfYear").val(week);
+//  $("#surveillance_year").val(year);
+  $(".epi-weekOfYear").val(week);
+  $(".epi-year").val(year);
+  }
+});
+</script>
+<script>
+$(".epi-date").datepicker({ 
+//$(".date").datepicker({ 
+dateFormat: 'dd/mm/yy',
+  showWeek: true,
+  changeMonth: true,
+  changeYear: true,
+  calculateWeek: epiWeekCalc
+});
+</script>
+<script>
+$('#sentinelsite').change(function() {
+  parents = new Array('#sentinelsite');
+  $('#clinic').hselect(parents);
+});
+</script>
+<script>
+$(document).ready(function() {
+  $('#sentinelsite').trigger('change');
+});
+</script>
+
 {% endblock %}

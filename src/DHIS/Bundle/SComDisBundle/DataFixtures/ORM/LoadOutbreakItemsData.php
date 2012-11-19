@@ -24,22 +24,24 @@ class LoadOutbreakItemsData extends AbstractFixture implements OrderedFixtureInt
         $this->manager = $manager;
         
         // outbreakItems for outbreak 01
-        $this->createOutbreakItems($this->getReference('OUT1'), 1, 1,   0, 0, 0, 0, 0, 0, 0);
-        $this->createOutbreakItems($this->getReference('OUT1'), 1, 2,   0, 1, 0, 1, 0, 1, 0);
-        $this->createOutbreakItems($this->getReference('OUT1'), 2, 1,   1, 0, 1, 0, 1, 0, 1);
-        $this->createOutbreakItems($this->getReference('OUT1'), 2, 2,   0, 0, 1, 1, 0, 0, 1);
-        $this->createOutbreakItems($this->getReference('OUT1'), 3, 1,   1, 1, 0, 0, 1, 1, 0);
-        $this->createOutbreakItems($this->getReference('OUT1'), 3, 2,   0, 0, 0, 1, 1, 1, 0);
-        $this->createOutbreakItems($this->getReference('OUT1'), 4, 1,   1, 1, 1, 0, 0, 0, 1);
-        $this->createOutbreakItems($this->getReference('OUT1'), 4, 2,   0, 0, 0, 0, 1, 1, 1);
-        $this->createOutbreakItems($this->getReference('OUT1'), 5, 1,   1, 1, 1, 1, 0, 0, 0);
-        $this->createOutbreakItems($this->getReference('OUT1'), 5, 2,   0, 0, 0, 0, 0, 1, 1);
-        $this->createOutbreakItems($this->getReference('OUT1'), 6, 1,   1, 1, 1, 1, 1, 0, 0);
-        $this->createOutbreakItems($this->getReference('OUT1'), 6, 2,   0, 0, 0, 0, 0, 0, 1); 
-        $this->createOutbreakItems($this->getReference('OUT1'), 7, 1,   1, 1, 1, 1, 1, 1, 0);
-        $this->createOutbreakItems($this->getReference('OUT1'), 7, 2,   0, 0, 0, 0, 0, 0, 0);
+        $this->createOutbreakItems($this->getReference('OUT1'), 0, 1,   0, 0, 0, 0, 0, 0, 0);
+        $this->createOutbreakItems($this->getReference('OUT1'), 0, 2,   0, 1, 0, 1, 0, 1, 0);
+        $this->createOutbreakItems($this->getReference('OUT1'), 1, 1,   1, 0, 1, 0, 1, 0, 1);
+        $this->createOutbreakItems($this->getReference('OUT1'), 1, 2,   0, 0, 1, 1, 0, 0, 1);
+        $this->createOutbreakItems($this->getReference('OUT1'), 2, 1,   1, 1, 0, 0, 1, 1, 0);
+        $this->createOutbreakItems($this->getReference('OUT1'), 2, 2,   0, 0, 0, 1, 1, 1, 0);
+        $this->createOutbreakItems($this->getReference('OUT1'), 3, 1,   1, 1, 1, 0, 0, 0, 1);
+        $this->createOutbreakItems($this->getReference('OUT1'), 3, 2,   0, 0, 0, 0, 1, 1, 1);
+        $this->createOutbreakItems($this->getReference('OUT1'), 4, 1,   1, 1, 1, 1, 0, 0, 0);
+        $this->createOutbreakItems($this->getReference('OUT1'), 4, 2,   0, 0, 0, 0, 0, 1, 1);
+        $this->createOutbreakItems($this->getReference('OUT1'), 5, 1,   1, 1, 1, 1, 1, 0, 0);
+        $this->createOutbreakItems($this->getReference('OUT1'), 5, 2,   0, 0, 0, 0, 0, 0, 1); 
+        $this->createOutbreakItems($this->getReference('OUT1'), 6, 1,   1, 1, 1, 1, 1, 1, 0);
+        $this->createOutbreakItems($this->getReference('OUT1'), 6, 2,   0, 0, 0, 0, 0, 0, 0);
         
         // outbreakItems for outbreak 02
+        $this->createOutbreakItems($this->getReference('OUT2'), 0, 1,   1, 1, 1, 1, 1, 1, 0);
+        $this->createOutbreakItems($this->getReference('OUT2'), 0, 2,   0, 0, 0, 0, 0, 0, 0);
         $this->createOutbreakItems($this->getReference('OUT2'), 1, 1,   0, 0, 0, 0, 0, 0, 0);
         $this->createOutbreakItems($this->getReference('OUT2'), 1, 2,   0, 1, 0, 1, 0, 1, 0);
         $this->createOutbreakItems($this->getReference('OUT2'), 2, 1,   1, 0, 1, 0, 1, 0, 1);
@@ -51,30 +53,28 @@ class LoadOutbreakItemsData extends AbstractFixture implements OrderedFixtureInt
         $this->createOutbreakItems($this->getReference('OUT2'), 5, 1,   1, 1, 1, 1, 0, 0, 0);
         $this->createOutbreakItems($this->getReference('OUT2'), 5, 2,   0, 0, 0, 0, 0, 1, 1);
         $this->createOutbreakItems($this->getReference('OUT2'), 6, 1,   1, 1, 1, 1, 1, 0, 0);
-        $this->createOutbreakItems($this->getReference('OUT2'), 6, 2,   0, 0, 0, 0, 0, 0, 1); 
-        $this->createOutbreakItems($this->getReference('OUT2'), 7, 1,   1, 1, 1, 1, 1, 1, 0);
-        $this->createOutbreakItems($this->getReference('OUT2'), 7, 2,   0, 0, 0, 0, 0, 0, 0);        
+        $this->createOutbreakItems($this->getReference('OUT2'), 6, 2,   0, 0, 0, 0, 0, 0, 1);
         
         $this->manager->flush();
         
     }
     
     protected function createOutbreakItems(
-                $outbreak, $ageGroup, $sex,
-                $sunday, $monday, $tuesday, $wednesday, $thursday, $friday, $saturday
+                $outbreak, $dayOfTheWeek, $sex,
+                $ageGroup1, $ageGroup2, $ageGroup3, $ageGroup4, $ageGroup5, $ageGroup6, $ageGroup7
             ) 
     {
         $out = new OutbreakItems();
         $out->setOutbreak($outbreak);
-        $out->setAgeGroup($ageGroup);
+        $out->setDayOfTheWeek($dayOfTheWeek);
         $out->setSex($sex);
-        $out->setSunday($sunday);
-        $out->setMonday($monday);
-        $out->setTuesday($tuesday);
-        $out->setWednesday($wednesday);
-        $out->setThursday($thursday);
-        $out->setFriday($friday);
-        $out->setSaturday($saturday);
+        $out->setAgeGroup1($ageGroup1);
+        $out->setAgeGroup2($ageGroup2);
+        $out->setAgeGroup3($ageGroup3);
+        $out->setAgeGroup4($ageGroup4);
+        $out->setAgeGroup5($ageGroup5);
+        $out->setAgeGroup6($ageGroup6);
+        $out->setAgeGroup7($ageGroup7);
     
         $this->manager->persist($out);
         return $out;

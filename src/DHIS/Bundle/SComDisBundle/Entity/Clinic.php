@@ -42,6 +42,16 @@ class Clinic
     private $sentinelSite;
 
     /**
+     * __toString()
+     * 
+     * @return string 
+     */
+    public function __toString()
+    {
+        return (string)$this->name;
+    }
+
+    /**
      * Set id
      *
      * @param integer $id
@@ -80,7 +90,6 @@ class Clinic
     {
         return $this->name;
     }
-
 
     /**
      * Set sentinelSite

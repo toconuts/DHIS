@@ -13,7 +13,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  * @author Natsuki Hara <toconuts@gmail.com>
  * 
  * @ORM\Table(name="outbreak")
- * @ORM\Entity()
+ * @ORM\Entity(repositoryClass="DHIS\Bundle\SComDisBundle\Entity\OutbreakRepository")
  */
 class Outbreak
 {
@@ -27,9 +27,25 @@ class Outbreak
     private $id;
     
     /**
+     * @var integer $weekOfYear
+     * 
+     * @ORM\Column(name="week_of_year", type="integer")
+     */
+    private $weekOfYear;
+    
+    /**
+     * @var integer $year
+     * 
+     * @ORM\Column(name="year", type="integer")
+     */
+    private $year;
+    
+    /**
      * @var datetime $weekEnd
      *
-     * @ORM\Column(name="week_end", type="datetime")
+     * @ORM\Column(name="week_end", type="datetime", nullable=false)
+     * @Assert\NotBlank
+     * @Assert\Date
      */
     private $weekEnd;
  
@@ -55,17 +71,24 @@ class Outbreak
      * @var Syndrome $syndrome
      * 
      * @ORM\ManyToOne(targetEntity="Syndrome4Outbreak")
-     * @ORM\JoinColumn(name="syndrom_id", referencedColumnName="id", nullable=false)
+     * @ORM\JoinColumn(name="syndrome_id", referencedColumnName="id", nullable=false)
      * @Assert\NotBlank 
      */
     private $syndrome;
     
+    /*
+     * @var OutbreakItems $outbreakItems
+     * 
+     * @ORM\OneToMany(targetEntity="OutbreakItems", mappedBy="outbreak")
+     */
+    public $outbreakItems;
+
+
     /**
      * @var string $reportedBy
      * 
      * @ORM\Column(name="reported_by", type="string", length=100, nullable=false)
      * @Assert\MaxLength(limit=100)
-     * @Assert\NotBlank
      */
     private $reportedBy;
     
@@ -74,6 +97,7 @@ class Outbreak
      *
      * @ORM\Column(name="reported_at", type="datetime", nullable=false)
      * @Assert\NotBlank
+     * @Assert\Date
      */
     private $reportedAt;
     
@@ -89,6 +113,7 @@ class Outbreak
      * @var datetime $receivedAt
      *
      * @ORM\Column(name="received_at", type="datetime", nullable=true)
+     * @Assert\Date
      */
     private $receivedAt;
     
@@ -110,7 +135,7 @@ class Outbreak
     
     public function __construct()
     {
-        
+        $this->outbreakItems = new ArrayCollection();
     }
     
     /**
@@ -321,5 +346,55 @@ class Outbreak
     public function getSyndrome()
     {
         return $this->syndrome;
+    }
+
+    /**
+     * Set weekOfYear
+     *
+     * @param integer $weekOfYear
+     */
+    public function setWeekOfYear($weekOfYear)
+    {
+        $this->weekOfYear = $weekOfYear;
+    }
+
+    /**
+     * Get weekOfYear
+     *
+     * @return integer 
+     */
+    public function getWeekOfYear()
+    {
+        return $this->weekOfYear;
+    }
+
+    /**
+     * Set year
+     *
+     * @param integer $year
+     */
+    public function setYear($year)
+    {
+        $this->year = $year;
+    }
+
+    /**
+     * Get year
+     *
+     * @return integer 
+     */
+    public function getYear()
+    {
+        return $this->year;
+    }
+    
+    /**
+     * Get outbreakItems
+     * 
+     * @return Doctrine\Common\Collections\Collection
+     */
+    public function getOutbreakItems()
+    {
+        return $this->outbreakItems;
     }
 }

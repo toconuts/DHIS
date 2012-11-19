@@ -24,3 +24,11 @@
     color: white;
     text-decoration: none;
 }
+
+.input-daily-tally > input, textarea {
+    width: 30px;
+}
+
+.hide {
+    display: none;
+}

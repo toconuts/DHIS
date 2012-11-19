@@ -25,6 +25,7 @@ class AppKernel extends Kernel
             new DHIS\Bundle\CommonBundle\DHISCommonBundle(),
             new DHIS\Bundle\PM1Bundle\DHISPM1Bundle(),
             new DHIS\Bundle\AdminBundle\DHISAdminBundle(),
+            new Liuggio\ExcelBundle\LiuggioExcelBundle(),
         );
 
         if (in_array($this->getEnvironment(), array('dev', 'test'))) {

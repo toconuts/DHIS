@@ -8,12 +8,12 @@ use Gedmo\Mapping\Annotation as Gedmo;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
- * Syndrome.
+ * Surveillance.
  *
  * @author Natsuki Hara <toconuts@gmail.com>
  * 
  * @ORM\Table(name="surveillance")
- * @ORM\Entity()
+ * @ORM\Entity(repositoryClass="DHIS\Bundle\SComDisBundle\Entity\SurveillanceRepository")
  */
 class Surveillance
 {
@@ -27,11 +27,27 @@ class Surveillance
     private $id;
 
     /**
-     * @var datetime $weekEnd
-     *
-     * @ORM\Column(name="week_end", type="datetime")
+     * @var integer $weekOfYear
+     * 
+     * @ORM\Column(name="week_of_year", type="integer")
      */
-    private $weekEnd;
+    private $weekOfYear;
+    
+    /**
+     * @var integer $year
+     * 
+     * @ORM\Column(name="year", type="integer")
+     */
+    private $year;
+    
+    /**
+     * @var datetime $weekend
+     *
+     * @ORM\Column(name="week_end", type="datetime", nullable=false)
+     * @Assert\NotBlank
+     * @Assert\Date
+     */
+    private $weekend;
     
     /**
      * @var SentinelSite $sentinelSite
@@ -56,14 +72,13 @@ class Surveillance
      * 
      * @ORM\OneToMany(targetEntity="SurveillanceItems", mappedBy="surveillance")
      */
-    private $surveillanceItems;
+    public $surveillanceItems;
     
     /**
      * @var string $reportedBy
      * 
      * @ORM\Column(name="reported_by", type="string", length=100, nullable=false)
      * @Assert\MaxLength(limit=100)
-     * @Assert\NotBlank
      */
     private $reportedBy;
     
@@ -72,6 +87,7 @@ class Surveillance
      *
      * @ORM\Column(name="reported_at", type="datetime", nullable=false)
      * @Assert\NotBlank
+     * @Assert\Date
      */
     private $reportedAt;
     
@@ -87,6 +103,7 @@ class Surveillance
      * @var datetime $receivedAt
      *
      * @ORM\Column(name="received_at", type="datetime", nullable=true)
+     * @Assert\Date
      */
     private $receivedAt;
     
@@ -106,11 +123,39 @@ class Surveillance
      */
     private $updatedAt;
 
-    public function __construct()
+    public function __construct(array $syndromes = null)
     {
         $this->surveillanceItems = new ArrayCollection();
+        
+        $this->weekend = new \DateTime('last Saturday');
+        $this->weekend->setTime(0, 0, 0);
+        
+        $this->weekOfYear = strftime('%V', time());
+        
+        $this->year = strftime('%G', time());
+        
+        $this->reportedAt = new \DateTime();
+        $this->reportedAt->setTime(0, 0, 0);
+        
+        if ($syndromes !== null) {
+            $this->createSurveillanceItems ($syndromes);
+        }
     }
     
+    public function createSurveillanceItems(array $syndromes)
+    {
+        foreach ($syndromes as $syndrome) {
+            $item = new SurveillanceItems();
+            $item->setSyndrome($syndrome);
+            $this->surveillanceItems->add($item);
+        }
+    }
+    
+    public function setWeekNumber(\DateTime $weekend) {
+        $this->year = $weekend->format('o');
+        $this->weekOfYear = $weekend->format('W');
+    }
+
     /**
      * Get id
      *
@@ -121,25 +166,24 @@ class Surveillance
         return $this->id;
     }
 
-
     /**
-     * Set weekEnd
+     * Set weekend
      *
-     * @param datetime $weekEnd
+     * @param datetime $weekend
      */
-    public function setWeekEnd($weekEnd)
+    public function setWeekend($weekend)
     {
-        $this->weekEnd = $weekEnd;
+        $this->weekend = $weekend;
     }
 
     /**
-     * Get weekEnd
+     * Get weekend
      *
      * @return datetime 
      */
-    public function getWeekEnd()
+    public function getWeekend()
     {
-        return $this->weekEnd;
+        return $this->weekend;
     }
 
     /**
@@ -315,10 +359,50 @@ class Surveillance
     /**
      * Get surveillanceItems
      *
-     * @return Doctrine\Common\Collections\Collection 
+     * @return Doctrine\Common\Collections\Collection
      */
     public function getSurveillanceItems()
     {
         return $this->surveillanceItems;
+    }
+
+    /**
+     * Set weekOfYear
+     *
+     * @param integer $weekOfYear
+     */
+    public function setWeekOfYear($weekOfYear)
+    {
+        $this->weekOfYear = $weekOfYear;
+    }
+
+    /**
+     * Get weekOfYear
+     *
+     * @return integer 
+     */
+    public function getWeekOfYear()
+    {
+        return $this->weekOfYear;
+    }
+
+    /**
+     * Set year
+     *
+     * @param integer $year
+     */
+    public function setYear($year)
+    {
+        $this->year = $year;
+    }
+
+    /**
+     * Get year
+     *
+     * @return integer 
+     */
+    public function getYear()
+    {
+        return $this->year;
     }
 }

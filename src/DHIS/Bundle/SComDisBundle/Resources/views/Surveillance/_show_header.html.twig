@@ -1,0 +1,25 @@
+<table class="table table-striped table-bordered">
+  <tbody>
+    <tr>
+      <th>Week of year</th>
+      <td>{{ surveillance.weekOfYear }}</td>
+      <th>Year</th>
+      <td>{{ surveillance.year }}</td>
+      <th>Weekend</th>
+      <td>{{ surveillance.weekEnd|date('d/m/Y') }}</td>
+    </tr>
+    <tr>
+      <tH>Sentinel Site</th>
+      <td colspan="2">{{ surveillance.sentinelSite.name }}</td>
+      <tH>Clinic / Ward</th>
+      <td colspan="2">{{ surveillance.clinic.name }}</td>
+    </tr>
+    <tr>
+      <th>Reported At</th>
+      <td colspan="2">{{ surveillance.reportedAt|date('d/m/Y') }}</td>
+      <th>Reported by</th>
+      <td colspan="2">{{ surveillance.reportedBy }}</td>
+    </tr>
+    {% block after_content %}{% endblock %}
+  </tbody>
+</table>

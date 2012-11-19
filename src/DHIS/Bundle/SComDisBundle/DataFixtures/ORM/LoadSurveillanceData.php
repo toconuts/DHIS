@@ -25,15 +25,21 @@ class LoadSurveillanceData extends AbstractFixture implements OrderedFixtureInte
         
         // surveillance 01
         $sur1 = $this->createSurveillance(
+                    52,
+                    2011,
                     new \DateTime('2011-12-31'), 
                     $this->getReference('PMH'),
                     $this->getReference('A&E@PMH'),
                     'user1',
-                    new \DateTime('2011-12-31')
+                    new \DateTime('2011-12-31'),
+                    '012345678901234567890123456789',
+                    new \DateTime('2012-01-01')
                 );
         
         // surveillance 02
         $sur2 = $this->createSurveillance(
+                    1,
+                    2012,
                     new \DateTime('2012-01-07'), 
                     $this->getReference('PORTSMOUTH'),
                     $this->getReference('PORTSMOUTH@PORTSMOUTH'),
@@ -49,15 +55,20 @@ class LoadSurveillanceData extends AbstractFixture implements OrderedFixtureInte
     }
     
     protected function createSurveillance(
-            $date, $sentinelSite, $clinic, $reportedBy, $reportedAt
+            $weekOfYear, $year, $date, $sentinelSite, $clinic, 
+            $reportedBy, $reportedAt, $receivedBy = null, $receivedAt = null
             ) 
     {
         $sur = new Surveillance();
+        $sur->setWeekOfYear($weekOfYear);
+        $sur->setYear($year);
         $sur->setWeekEnd($date);
         $sur->setSentinelSite($sentinelSite);
         $sur->setClinic($clinic);
         $sur->setReportedBy($reportedBy);
         $sur->setReportedAt($reportedAt);
+        $sur->setReceivedBy($receivedBy);
+        $sur->setReceivedAt($receivedAt);
         $this->manager->persist($sur);
         return $sur;
     }

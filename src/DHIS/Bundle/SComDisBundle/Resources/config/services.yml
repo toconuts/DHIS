@@ -1,0 +1,9 @@
+services:
+  surveillance.carec_report_service:
+    class: DHIS\Bundle\SComDisBundle\Service\CARECReportService
+    arguments:
+      - @doctrine
+  surveillance.dailly_tally_report_service:
+    class: DHIS\Bundle\SComDisBundle\Service\DailyTallyReportService
+    arguments:
+      - @doctrine

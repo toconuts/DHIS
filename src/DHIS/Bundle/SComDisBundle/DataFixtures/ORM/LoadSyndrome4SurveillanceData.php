@@ -45,7 +45,7 @@ class LoadSyndrome4SurveillanceData extends AbstractFixture implements OrderedFi
         $symptom07 = $this->createSyndrome4SurveillanceSite(7, 'Ferver & respiratory symptoms (ARI) < 5', 7);
         
         // ARI >= 5
-        $symptom08 = $this->createSyndrome4SurveillanceSite(8, 'Ferver & respiratory symptoms (ARI) > 5', 8);
+        $symptom08 = $this->createSyndrome4SurveillanceSite(8, 'Ferver & respiratory symptoms (ARI) >= 5', 8);
         
         // Skin Rash
         $symptom09 = $this->createSyndrome4SurveillanceSite(9, 'Skin Rash', 9);

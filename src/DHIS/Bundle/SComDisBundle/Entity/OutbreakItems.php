@@ -34,25 +34,14 @@ class OutbreakItems
      * @Assert\NotBlank 
      */
     private $outbreak;
-    
+
     /**
-     * AgeGroup.
-     * Should be stored following values;
+     * @var integer $dayOfTheWeek
      * 
-     * 1 = < 1
-     * 2 = 1 < 4
-     * 3 = 5 < 14
-     * 4 = 15 < 24
-     * 5 = 25 < 44
-     * 6 = 45 < 64
-     * 7 = 65+
-     * 
-     * @var AgeGroup $ageGroup
-     * 
-     * @ORM\Column(name="age_group", type="integer", nullable=false)
+     * @ORM\Column(name="day_of_the_week", type="integer", nullable=false)
      * @Assert\NotBlank
      */
-    private $ageGroup;
+    private $dayOfTheWeek;
 
     /**
      * Sex.
@@ -65,7 +54,7 @@ class OutbreakItems
      * 
      * note: ISO/IEC 5218
      * 
-     * @var Sex $sex
+     * @var integer $sex
      * 
      * @ORM\Column(name="sex", type="integer", nullable=false)
      * @Assert\NotBlank
@@ -75,51 +64,51 @@ class OutbreakItems
     /**
      * @var integer $sunday
      * 
-     * @ORM\Column(name="sunday", type="integer", nullable=false)
+     * @ORM\Column(name="age_group1", type="integer", nullable=false)
      */
-    private $sunday;
+    private $ageGroup1;
     
     /**
-     * @var integer $monday
+     * @var integer $ageGroup2
      * 
-     * @ORM\Column(name="monday", type="integer", nullable=false)
+     * @ORM\Column(name="age_group2", type="integer", nullable=false)
      */
-    private $monday;
+    private $ageGroup2;
     
     /**
-     * @var integer $tuesday
+     * @var integer $ageGroup3
      * 
-     * @ORM\Column(name="tuesday", type="integer", nullable=false)
+     * @ORM\Column(name="age_group3", type="integer", nullable=false)
      */
-    private $tuesday;
+    private $ageGroup3;
     
     /**
-     * @var integer $wednesday
+     * @var integer $age_group4
      * 
-     * @ORM\Column(name="wednesday", type="integer", nullable=false)
+     * @ORM\Column(name="age_group4", type="integer", nullable=false)
      */
-    private $wednesday;
+    private $ageGroup4;
     
     /**
      * @var integer $thursday
      * 
-     * @ORM\Column(name="thursday", type="integer", nullable=false)
+     * @ORM\Column(name="age_group5", type="integer", nullable=false)
      */
-    private $thursday;
+    private $ageGroup5;
     
     /**
-     * @var integer $friday
+     * @var integer $ageGroup6
      * 
-     * @ORM\Column(name="friday", type="integer", nullable=false)
+     * @ORM\Column(name="age_group6", type="integer", nullable=false)
      */
-    private $friday;
+    private $ageGroup6;
     
     /**
-     * @var integer $saturday
+     * @var integer $ageGroup7
      * 
-     * @ORM\Column(name="saturday", type="integer", nullable=false)
+     * @ORM\Column(name="age_group7", type="integer", nullable=false)
      */
-    private $saturday;
+    private $ageGroup7;
 
     /**
      * @var datetime $createdAt
@@ -139,6 +128,13 @@ class OutbreakItems
     
     public function __construct()
     {
+        $this->ageGroup1 = 0;
+        $this->ageGroup2 = 0;
+        $this->ageGroup3 = 0;
+        $this->ageGroup4 = 0;
+        $this->ageGroup5 = 0;
+        $this->ageGroup6 = 0;
+        $this->ageGroup7 = 0;
     }
 
     /**
@@ -149,26 +145,6 @@ class OutbreakItems
     public function getId()
     {
         return $this->id;
-    }
-
-    /**
-     * Set ageGroup
-     *
-     * @param integer $ageGroup
-     */
-    public function setAgeGroup($ageGroup)
-    {
-        $this->ageGroup = $ageGroup;
-    }
-
-    /**
-     * Get ageGroup
-     *
-     * @return integer 
-     */
-    public function getAgeGroup()
-    {
-        return $this->ageGroup;
     }
 
     /**
@@ -189,146 +165,6 @@ class OutbreakItems
     public function getSex()
     {
         return $this->sex;
-    }
-
-    /**
-     * Set sunday
-     *
-     * @param integer $sunday
-     */
-    public function setSunday($sunday)
-    {
-        $this->sunday = $sunday;
-    }
-
-    /**
-     * Get sunday
-     *
-     * @return integer 
-     */
-    public function getSunday()
-    {
-        return $this->sunday;
-    }
-
-    /**
-     * Set monday
-     *
-     * @param integer $monday
-     */
-    public function setMonday($monday)
-    {
-        $this->monday = $monday;
-    }
-
-    /**
-     * Get monday
-     *
-     * @return integer 
-     */
-    public function getMonday()
-    {
-        return $this->monday;
-    }
-
-    /**
-     * Set tuesday
-     *
-     * @param integer $tuesday
-     */
-    public function setTuesday($tuesday)
-    {
-        $this->tuesday = $tuesday;
-    }
-
-    /**
-     * Get tuesday
-     *
-     * @return integer 
-     */
-    public function getTuesday()
-    {
-        return $this->tuesday;
-    }
-
-    /**
-     * Set wednesday
-     *
-     * @param integer $wednesday
-     */
-    public function setWednesday($wednesday)
-    {
-        $this->wednesday = $wednesday;
-    }
-
-    /**
-     * Get wednesday
-     *
-     * @return integer 
-     */
-    public function getWednesday()
-    {
-        return $this->wednesday;
-    }
-
-    /**
-     * Set thursday
-     *
-     * @param integer $thursday
-     */
-    public function setThursday($thursday)
-    {
-        $this->thursday = $thursday;
-    }
-
-    /**
-     * Get thursday
-     *
-     * @return integer 
-     */
-    public function getThursday()
-    {
-        return $this->thursday;
-    }
-
-    /**
-     * Set friday
-     *
-     * @param integer $friday
-     */
-    public function setFriday($friday)
-    {
-        $this->friday = $friday;
-    }
-
-    /**
-     * Get friday
-     *
-     * @return integer 
-     */
-    public function getFriday()
-    {
-        return $this->friday;
-    }
-
-    /**
-     * Set saturday
-     *
-     * @param integer $saturday
-     */
-    public function setSaturday($saturday)
-    {
-        $this->saturday = $saturday;
-    }
-
-    /**
-     * Get saturday
-     *
-     * @return integer 
-     */
-    public function getSaturday()
-    {
-        return $this->saturday;
     }
 
     /**
@@ -389,5 +225,165 @@ class OutbreakItems
     public function getOutbreak()
     {
         return $this->outbreak;
+    }
+
+    /**
+     * Set dayOfTheWeek
+     *
+     * @param integer $dayOfTheWeek
+     */
+    public function setDayOfTheWeek($dayOfTheWeek)
+    {
+        $this->dayOfTheWeek = $dayOfTheWeek;
+    }
+
+    /**
+     * Get dayOfTheWeek
+     *
+     * @return integer 
+     */
+    public function getDayOfTheWeek()
+    {
+        return $this->dayOfTheWeek;
+    }
+
+    /**
+     * Set ageGroup1
+     *
+     * @param integer $ageGroup1
+     */
+    public function setAgeGroup1($ageGroup1)
+    {
+        $this->ageGroup1 = $ageGroup1;
+    }
+
+    /**
+     * Get ageGroup1
+     *
+     * @return integer 
+     */
+    public function getAgeGroup1()
+    {
+        return $this->ageGroup1;
+    }
+
+    /**
+     * Set ageGroup2
+     *
+     * @param integer $ageGroup2
+     */
+    public function setAgeGroup2($ageGroup2)
+    {
+        $this->ageGroup2 = $ageGroup2;
+    }
+
+    /**
+     * Get ageGroup2
+     *
+     * @return integer 
+     */
+    public function getAgeGroup2()
+    {
+        return $this->ageGroup2;
+    }
+
+    /**
+     * Set ageGroup3
+     *
+     * @param integer $ageGroup3
+     */
+    public function setAgeGroup3($ageGroup3)
+    {
+        $this->ageGroup3 = $ageGroup3;
+    }
+
+    /**
+     * Get ageGroup3
+     *
+     * @return integer 
+     */
+    public function getAgeGroup3()
+    {
+        return $this->ageGroup3;
+    }
+
+    /**
+     * Set ageGroup4
+     *
+     * @param integer $ageGroup4
+     */
+    public function setAgeGroup4($ageGroup4)
+    {
+        $this->ageGroup4 = $ageGroup4;
+    }
+
+    /**
+     * Get ageGroup4
+     *
+     * @return integer 
+     */
+    public function getAgeGroup4()
+    {
+        return $this->ageGroup4;
+    }
+
+    /**
+     * Set ageGroup5
+     *
+     * @param integer $ageGroup5
+     */
+    public function setAgeGroup5($ageGroup5)
+    {
+        $this->ageGroup5 = $ageGroup5;
+    }
+
+    /**
+     * Get ageGroup5
+     *
+     * @return integer 
+     */
+    public function getAgeGroup5()
+    {
+        return $this->ageGroup5;
+    }
+
+    /**
+     * Set ageGroup6
+     *
+     * @param integer $ageGroup6
+     */
+    public function setAgeGroup6($ageGroup6)
+    {
+        $this->ageGroup6 = $ageGroup6;
+    }
+
+    /**
+     * Get ageGroup6
+     *
+     * @return integer 
+     */
+    public function getAgeGroup6()
+    {
+        return $this->ageGroup6;
+    }
+
+    /**
+     * Set ageGroup7
+     *
+     * @param integer $ageGroup7
+     */
+    public function setAgeGroup7($ageGroup7)
+    {
+        $this->ageGroup7 = $ageGroup7;
+    }
+
+    /**
+     * Get ageGroup7
+     *
+     * @return integer 
+     */
+    public function getAgeGroup7()
+    {
+        return $this->ageGroup7;
     }
 }

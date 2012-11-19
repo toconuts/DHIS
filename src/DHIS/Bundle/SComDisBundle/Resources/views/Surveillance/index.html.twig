@@ -1,0 +1,60 @@
+{% extends 'DHISSComDisBundle::layout.html.twig' %}
+
+{% block page_title 'SComDis - Syndromic Surveillance' %}
+{% block product_name 'SComDis' %}
+{% block content_title 'Syndromic Surveillance' %}
+
+{% set menu = 'scomdis' %}
+{% set sidebar_menu = 'scomdis_surveillance' %}
+
+{% block content %}
+{% if app.request.session.hasFlash('success') %}
+<div class="alert alert-success">
+  {{ app.request.session.getFlash('success') }}
+</div>
+{% endif %}
+{% if app.request.session.hasFlash('error') %}
+<div class="alert alert-error">
+  {{ app.request.session.getFlash('error') }}
+</div>
+{% endif %}
+
+<table class="table table-striped table-bordered">
+  <thead>
+    <tr>
+      <th>id</th>
+      <th>Week</th>
+      <th>Year</th>
+      <th>Weekend</th>
+      <th>Sentinel site</th>
+      <th>Clinic / Ward</th>
+      <th>Reported at</th>
+      <th>Reported by</th>
+      <th>Received at</th>
+      <th>Received by</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for surveillance in pagination %}
+    <tr>
+      <td><a href="{{ path('scomdis_surveillance_show', {'id': surveillance.id}) }}">{{ surveillance.id }}</a></td>
+      <td>{{ surveillance.weekOfYear }}</td>
+      <td>{{ surveillance.year }}</td>
+      <td>{{ surveillance.weekEnd|date('d/m/Y') }}</td>
+      <td>{{ surveillance.sentinelSite.name }}</td>
+      <td>{{ surveillance.clinic.name }}</td>
+      <td>{{ surveillance.reportedAt|date('d/m/Y') }}</td>
+      <td>{{ surveillance.reportedBy }}</td>
+      {% if surveillance.receivedAt is not null %}
+      <td>{{ surveillance.receivedAt|date('d/m/y') }}</td>
+      <td>{{ surveillance.receivedBy }}</td>
+      {% else %}
+      <td colspan="2">Unreceived</td>
+      {% endif %}
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+
+{{ pagination.render()|raw }}
+{% endblock %}

@@ -23,17 +23,45 @@ class LoadSentinelSiteData extends AbstractFixture implements OrderedFixtureInte
     {
         $this->manager = $manager;
         
-        // PMH
-        $pmh = $this->createSentinelSite(8, 'PMH');
+        // MARIGOT
+        $marigot = $this->createSentinelSite(1, 'MARIGOT');
+        
+        // GRAND BAY
+        $grandbay = $this->createSentinelSite(2, 'GRAND BAY');
+
+        // ST JOSEPH
+        $stjoseph = $this->createSentinelSite(3, 'ST JOSEPH');
+        
+        // LA PLAINE
+        $laplaine = $this->createSentinelSite(4, 'LA PLAINE');
+        
+        // CASTLE BRUCE
+        $castlebruce = $this->createSentinelSite(5, 'CASTLE BRUCE');
         
         // POTSMOUTH
         $portsmouth = $this->createSentinelSite(6, 'PORTSMOUTH');
         
+        // ROSEAU
+        $roseau = $this->createSentinelSite(7, 'ROSEAU');
+        
+        // PMH
+        $pmh = $this->createSentinelSite(8, 'PMH');
+        
+        // ROSS UNIVERSITY
+        $rossuniversity = $this->createSentinelSite(9, 'ROSS University');
+        
         $this->manager->flush();
         
-        $this->addReference('PMH', $pmh);
+        $this->addReference('MARIGOT', $marigot);
+        $this->addReference('GRANDBAY', $grandbay);
+        $this->addReference('STJOSEPH', $stjoseph);
+        $this->addReference('LAPLAINE', $laplaine);
+        $this->addReference('CASTLEBRUCE', $castlebruce);
         $this->addReference('PORTSMOUTH', $portsmouth);
-        
+        $this->addReference('ROSEAU', $roseau);
+        $this->addReference('PMH', $pmh);
+        $this->addReference('ROSSUNIVERSITY', $rossuniversity);
+
     }
     
     protected function createSentinelSite($id, $name) {

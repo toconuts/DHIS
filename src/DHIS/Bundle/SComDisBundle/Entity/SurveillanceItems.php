@@ -26,11 +26,10 @@ class SurveillanceItems
     private $id;
 
     /**
-     * @var Surveilance $syndrome
+     * @var Surveilance $surveillance
      * 
      * @ORM\ManyToOne(targetEntity="Surveillance")
      * @ORM\JoinColumn(name="surveillance_id", referencedColumnName="id", nullable=false)
-     * @Assert\NotBlank 
      */
     private $surveillance;
     
@@ -38,7 +37,7 @@ class SurveillanceItems
      * @var Syndrome $syndrome
      * 
      * @ORM\ManyToOne(targetEntity="Syndrome4Surveillance")
-     * @ORM\JoinColumn(name="syndrom_id", referencedColumnName="id", nullable=false)
+     * @ORM\JoinColumn(name="syndrome_id", referencedColumnName="id", nullable=false)
      * @Assert\NotBlank 
      */
     private $syndrome;
@@ -115,6 +114,17 @@ class SurveillanceItems
      * @Gedmo\Timestampable(on="update")
      */
     private $updatedAt;
+    
+    public function __construct()
+    {
+        $this->sunday = 0;
+        $this->monday = 0;
+        $this->tuesday = 0;
+        $this->wednesday = 0;
+        $this->thursday = 0;
+        $this->friday = 0;
+        $this->saturday = 0;
+    }
     
     /**
      * Get id
@@ -364,5 +374,16 @@ class SurveillanceItems
     public function getSyndrome()
     {
         return $this->syndrome;
+    }
+    
+    public function getTotal()
+    {
+        return $this->sunday
+             + $this->monday 
+             + $this->tuesday
+             + $this->wednesday
+             + $this->thursday
+             + $this->friday
+             + $this->saturday;
     }
 }

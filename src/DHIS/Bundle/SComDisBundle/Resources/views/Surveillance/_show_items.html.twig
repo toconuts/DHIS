@@ -1,0 +1,32 @@
+<div class="surveillanceitems">
+  <table class="table table-striped table-bordered">
+    <thead>
+      <th>Syndromes</th>
+      <th>Sun.</th>
+      <th>Mon.</th>
+      <th>Tue.</th>
+      <th>Wed.</th>
+      <th>Thu.</th>
+      <th>Fri.</th>
+      <th>Sat.</th>
+      <th>Total</th>
+      <th>Referrals</th>
+    </thead>
+    <tbody>
+      {% for item in surveillance.surveillanceItems %}
+      <tr>
+        <td>{{ item.syndrome.name }}</td>
+        <td>{{ item.sunday }}</td>
+        <td>{{ item.monday }}</td>
+        <td>{{ item.tuesday }}</td>
+        <td>{{ item.wednesday }}</td>
+        <td>{{ item.thursday }}</td>
+        <td>{{ item.friday }}</td>
+        <td>{{ item.saturday }}</td>
+        <td>{{ item.getTotal() }}</td>
+        <td>{{ item.referrals }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>

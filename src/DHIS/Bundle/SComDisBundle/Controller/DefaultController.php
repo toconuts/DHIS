@@ -2,11 +2,8 @@
 
 namespace DHIS\Bundle\SComDisBundle\Controller;
 
-use DHIS\Bundle\CommonBundle\Controller\AppController;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
-
-use Symfony\Component\Security\Core\SecurityContext;
 use JMS\SecurityExtraBundle\Annotation\Secure;
 
 /**
@@ -16,6 +13,8 @@ use JMS\SecurityExtraBundle\Annotation\Secure;
 class DefaultController extends AppController
 {
     /**
+     * @todo scomdis admin display information for user.
+     * 
      * @Route("/", name="scomdis")
      * @Template()
      */

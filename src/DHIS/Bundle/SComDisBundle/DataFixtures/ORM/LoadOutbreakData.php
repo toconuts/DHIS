@@ -25,6 +25,8 @@ class LoadOutbreakData extends AbstractFixture implements OrderedFixtureInterfac
         
         // outbreak 01
         $outbreak1 = $this->createOutbreak(
+                    52,
+                    2011,
                     new \DateTime('2011-12-31'), 
                     $this->getReference('PMH'),
                     $this->getReference('A&E@PMH'),
@@ -35,6 +37,8 @@ class LoadOutbreakData extends AbstractFixture implements OrderedFixtureInterfac
         
         // outbreak 02
         $outbreak2 = $this->createOutbreak(
+                    1,
+                    2012,
                     new \DateTime('2012-01-07'), 
                     $this->getReference('PORTSMOUTH'),
                     $this->getReference('PORTSMOUTH@PORTSMOUTH'),
@@ -51,9 +55,12 @@ class LoadOutbreakData extends AbstractFixture implements OrderedFixtureInterfac
     }
     
     protected function createOutbreak(
-            $date, $sentinelSite, $clinic, $syndrome, $reportedBy, $reportedAt)
+            $weekOfYear, $year, $date, $sentinelSite, $clinic, 
+            $syndrome, $reportedBy, $reportedAt)
     {
         $out = new Outbreak();
+        $out->setWeekOfYear($weekOfYear);
+        $out->setYear($year);
         $out->setWeekEnd($date);
         $out->setSentinelSite($sentinelSite);
         $out->setClinic($clinic);

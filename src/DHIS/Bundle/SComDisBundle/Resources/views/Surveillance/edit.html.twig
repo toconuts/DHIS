@@ -1,0 +1,95 @@
+{% extends 'DHISSComDisBundle::layout.html.twig' %}
+
+{% block page_title 'Syndromic Surveillance - Edit - SComDis' %}
+{% block product_name 'SComDis' %}
+{% block content_title 'Syndromic Surveillance - edit' %}
+
+{% set menu = 'SComDis' %}
+{% set sidebar_menu = 'scomdis_surveillance' %}
+
+{% block content %}
+{% if app.request.session.hasFlash('error') %}
+<div class="alert alert-error">
+  {{ app.request.session.getFlash('error') }}
+</div>
+{% endif %}
+
+<form action="{{ path('scomdis_surveillance_edit', {'id': surveillance.id}) }}" method="post" class="form-horizontal">
+  {{ form_errors(form) }}
+    
+  {#<div class="control-group {% if form.weekend.get('errors') %}error{% endif %}">
+    <label class="control-label">Weekend</label>
+    <div class="controls">
+    {{ form_errors(form.weekend) }}
+    {{ form_widget(form.weekend) }}
+    </div>
+  </div>
+  <div class="control-group">
+    <label class="control-label">Week of year</label>
+    <div class="controls">
+    {{ form_errors(form.weekOfYear) }}
+    {{ form_widget(form.weekOfYear, {'attr': {'readonly': 'readonly'} }) }}
+    </div>
+  </div>
+  <div class="control-group">
+  <label class="control-label">Year</label>
+    <div class="controls">
+    {{ form_errors(form.year) }}
+    {{ form_widget(form.year, {'attr': {'readonly': 'readonly'} }) }}
+    </div>
+  </div>
+  <div class="control-group {% if form.sentinelSite.get('errors') %}error{% endif %}">
+    <label class="control-label">Sentinel Site</label>
+    <div class="controls">
+    {{ form_errors(form.sentinelSite) }}
+      <select id="sentinelsite" name="surveillance[sentinelSite]">
+      {% for sentinelSite in sentinelSites %}
+      <option value="{{ sentinelSite.id }}">{{ sentinelSite.name }}</option>
+      {% endfor %}
+      </select>
+    </div>
+  </div>
+  <div class="control-group {% if form.clinic.get('errors') %}error{% endif %}">
+    <label class="control-label">Clinic / Ward</label>
+    <div class="controls">
+      {{ form_errors(form.clinic) }}
+      <select id="clinic" name="surveillance[clinic]">
+      {% for sentinelSite in sentinelSites %}
+        {% for clinic in clinics %}
+          {% if sentinelSite.id == clinic.sentinelSite.id %}
+          <option class=":{{ sentinelSite.id }}:" value="{{ clinic.id }}">{{ clinic.name }}</option>
+          {% endif %}
+        {% endfor %}
+      {% endfor %}
+      </select>
+    </div>
+  </div>
+  <div class="control-group {% if form.reportedAt.get('errors') %}error{% endif %}">
+    <label class="control-label">Reported at</label>
+    <div class="controls">
+    {{ form_errors(form.reportedAt) }}
+    {{ form_widget(form.reportedAt) }}
+    </div>
+  </div>
+  <div class="control-group {% if form.reportedBy.get('errors') %}error{% endif %}">
+    <label class="control-label">Reported by</label>
+    <div class="controls">
+      <select id="surveillance_reportedBy" name="surveillance[reportedBy]">
+      {% for user in users %}
+        <option value="{{ user.displayname }}" {% if user.id == app.user.id %}selected{% endif %}>{{ user.displayname }}</option>
+      {% endfor %}
+      </select>
+    </div>
+  </div> #}
+  {% include "DHISSComDisBundle:Surveillance:_edit_header.html.twig" %}
+  {% include "DHISSComDisBundle:Surveillance:_edit_items.html.twig" %}
+
+  <input type="hidden" name="surveillance[_token]" value="{{ form._token.get('value') }}">
+
+  <div class="form-actions">
+    <input type="submit" class="btn btn-primary" value="Confirm">
+  </div>
+</form>
+{% endblock %}
+
+
