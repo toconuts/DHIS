@@ -343,10 +343,10 @@ class SurveillanceController extends AppController
                 
                 $manager = $this->get('doctrine')->getEntityManager('scomdis');
                 $surveillanceRepository = $manager->getRepository('DHISSComDisBundle:Surveillance');
-                $surveillance = $surveillanceRepository->findOneBy(
-                    array('weekend' => $weekend),
-                    array('clinic' => $clinic)
-                );
+                $surveillance = $surveillanceRepository->findOneBy(array(
+                    'weekend' => $weekend,
+                    'clinic' => $clinic
+                ));
                 
                 if ($surveillance) {
                     return $this->redirect($this->generateUrl(

@@ -131,13 +131,15 @@ class OutbreakController extends AppController
             if ($form->isValid()) {
                 $weekend = $form['weekend']->getData();
                 $clinic = $form['clinic']->getData();
+                $syndrome = $form['syndrome']->getData();
                 
                 $manager = $this->get('doctrine')->getEntityManager('scomdis');
                 $outbreakRepository = $manager->getRepository('DHISSComDisBundle:Outbreak');
-                $outbreak = $outbreakRepository->findOneBy(
-                    array('weekend' => $weekend),
-                    array('clinic' => $clinic)
-                );
+                $outbreak = $outbreakRepository->findOneBy(array(
+                    'weekend' => $weekend,
+                    'clinic' => $clinic,
+                    'syndrome' => $syndrome
+                ));
                 
                 if ($outbreak) {
                     return $this->redirect($this->generateUrl(
@@ -152,7 +154,7 @@ class OutbreakController extends AppController
         return array(
             'sentinelSites' => $sentinelSites,
             'clinics'       => $clinics,
-            'syndrome'      => $syndromes,
+            'syndromes'      => $syndromes,
             'form' => $form->createView(),
         );
     }

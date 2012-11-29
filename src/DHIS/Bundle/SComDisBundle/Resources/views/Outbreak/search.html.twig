@@ -70,8 +70,12 @@
   <div class="control-group {% if form.syndrome.get('errors') %}error{% endif %}">
     <label class="control-label">Syndrome</label>
     <div class="controls">
-    {{ form_errors(form.syndrome) }}
-    {{ form_widget(form.syndrome) }}
+      <select id="syndrome" name="SearchOutbreak[syndrome]">
+      {% for syndrome in syndromes %}
+        <option value="{{ syndrome.id }}" {% if syndrome.id == 1 %}selected{% endif %}>{{ syndrome.name }}</option>
+      {% endfor %}
+      </select>
+    
     </div>
   </div>
   {{ form_widget(form._token) }}
