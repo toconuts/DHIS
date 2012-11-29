@@ -12,7 +12,7 @@ use DHIS\Bundle\SComDisBundle\Entity\OutbreakItems;
  *
  * @author Natsuki Hara <toconuts@gmail.com>
  */
-class LoadOutbreakItemsData extends AbstractFixture implements OrderedFixtureInterface
+class LoadOutbreakItemData extends AbstractFixture implements OrderedFixtureInterface
 {
     private $manager;
     
@@ -22,62 +22,76 @@ class LoadOutbreakItemsData extends AbstractFixture implements OrderedFixtureInt
     public function load(ObjectManager $manager)
     {
         $this->manager = $manager;
+  
+        /*
+        $outbreak = new OutbreakItems;
+        $outbreak->setOutbreak($this->getReference('OUTBREAK1'));
+        $outbreak->setDayOfTheWeek(0);
+        $outbreak->setAgeGroup1F(1);
+        $outbreak->setAgeGroup2M(1);
+        $outbreak->setAgeGroup3F(1);
+        $outbreak->setAgeGroup3M(1);
+        $outbreak->setAgeGroup4F(1);
+        $outbreak->setAgeGroup4M(1);
+        $outbreak->setAgeGroup5F(1);
+        $outbreak->setAgeGroup5M(1);
+        $outbreak->setAgeGroup6F(1);
+        $outbreak->setAgeGroup6M(1);
+        $outbreak->setAgeGroup7F(1);
+        $outbreak->setAgeGroup7M(1);
+        $this->manager->persist($outbreak);
+        */
         
-        // outbreakItems for outbreak 01
-        $this->createOutbreakItems($this->getReference('OUT1'), 0, 1,   0, 0, 0, 0, 0, 0, 0);
-        $this->createOutbreakItems($this->getReference('OUT1'), 0, 2,   0, 1, 0, 1, 0, 1, 0);
-        $this->createOutbreakItems($this->getReference('OUT1'), 1, 1,   1, 0, 1, 0, 1, 0, 1);
-        $this->createOutbreakItems($this->getReference('OUT1'), 1, 2,   0, 0, 1, 1, 0, 0, 1);
-        $this->createOutbreakItems($this->getReference('OUT1'), 2, 1,   1, 1, 0, 0, 1, 1, 0);
-        $this->createOutbreakItems($this->getReference('OUT1'), 2, 2,   0, 0, 0, 1, 1, 1, 0);
-        $this->createOutbreakItems($this->getReference('OUT1'), 3, 1,   1, 1, 1, 0, 0, 0, 1);
-        $this->createOutbreakItems($this->getReference('OUT1'), 3, 2,   0, 0, 0, 0, 1, 1, 1);
-        $this->createOutbreakItems($this->getReference('OUT1'), 4, 1,   1, 1, 1, 1, 0, 0, 0);
-        $this->createOutbreakItems($this->getReference('OUT1'), 4, 2,   0, 0, 0, 0, 0, 1, 1);
-        $this->createOutbreakItems($this->getReference('OUT1'), 5, 1,   1, 1, 1, 1, 1, 0, 0);
-        $this->createOutbreakItems($this->getReference('OUT1'), 5, 2,   0, 0, 0, 0, 0, 0, 1); 
-        $this->createOutbreakItems($this->getReference('OUT1'), 6, 1,   1, 1, 1, 1, 1, 1, 0);
-        $this->createOutbreakItems($this->getReference('OUT1'), 6, 2,   0, 0, 0, 0, 0, 0, 0);
+        $this->createOutbreakItems($this->getReference('OUTBREAK1'), 0, 10, 11, 20, 21, 30, 31, 40, 41, 50, 51, 60, 61, 70, 71);
+        $this->createOutbreakItems($this->getReference('OUTBREAK1'), 1, 10, 11, 20, 21, 30, 31, 40, 41, 50, 51, 60, 61, 70, 71);
+        $this->createOutbreakItems($this->getReference('OUTBREAK1'), 2, 10, 11, 20, 21, 30, 31, 40, 41, 50, 51, 60, 61, 70, 71);
+        $this->createOutbreakItems($this->getReference('OUTBREAK1'), 3, 10, 11, 20, 21, 30, 31, 40, 41, 50, 51, 60, 61, 70, 71);
+        $this->createOutbreakItems($this->getReference('OUTBREAK1'), 4, 10, 11, 20, 21, 30, 31, 40, 41, 50, 51, 60, 61, 70, 71);
+        $this->createOutbreakItems($this->getReference('OUTBREAK1'), 5, 10, 11, 20, 21, 30, 31, 40, 41, 50, 51, 60, 61, 70, 71);
+        $this->createOutbreakItems($this->getReference('OUTBREAK1'), 6, 10, 11, 20, 21, 30, 31, 40, 41, 50, 51, 60, 61, 70, 71);
         
-        // outbreakItems for outbreak 02
-        $this->createOutbreakItems($this->getReference('OUT2'), 0, 1,   1, 1, 1, 1, 1, 1, 0);
-        $this->createOutbreakItems($this->getReference('OUT2'), 0, 2,   0, 0, 0, 0, 0, 0, 0);
-        $this->createOutbreakItems($this->getReference('OUT2'), 1, 1,   0, 0, 0, 0, 0, 0, 0);
-        $this->createOutbreakItems($this->getReference('OUT2'), 1, 2,   0, 1, 0, 1, 0, 1, 0);
-        $this->createOutbreakItems($this->getReference('OUT2'), 2, 1,   1, 0, 1, 0, 1, 0, 1);
-        $this->createOutbreakItems($this->getReference('OUT2'), 2, 2,   0, 0, 1, 1, 0, 0, 1);
-        $this->createOutbreakItems($this->getReference('OUT2'), 3, 1,   1, 1, 0, 0, 1, 1, 0);
-        $this->createOutbreakItems($this->getReference('OUT2'), 3, 2,   0, 0, 0, 1, 1, 1, 0);
-        $this->createOutbreakItems($this->getReference('OUT2'), 4, 1,   1, 1, 1, 0, 0, 0, 1);
-        $this->createOutbreakItems($this->getReference('OUT2'), 4, 2,   0, 0, 0, 0, 1, 1, 1);
-        $this->createOutbreakItems($this->getReference('OUT2'), 5, 1,   1, 1, 1, 1, 0, 0, 0);
-        $this->createOutbreakItems($this->getReference('OUT2'), 5, 2,   0, 0, 0, 0, 0, 1, 1);
-        $this->createOutbreakItems($this->getReference('OUT2'), 6, 1,   1, 1, 1, 1, 1, 0, 0);
-        $this->createOutbreakItems($this->getReference('OUT2'), 6, 2,   0, 0, 0, 0, 0, 0, 1);
+        $this->createOutbreakItems($this->getReference('OUTBREAK2'), 0, 10, 11, 20, 21, 30, 31, 40, 41, 50, 51, 60, 61, 70, 71);
+        $this->createOutbreakItems($this->getReference('OUTBREAK2'), 1, 10, 11, 20, 21, 30, 31, 40, 41, 50, 51, 60, 61, 70, 71);
+        $this->createOutbreakItems($this->getReference('OUTBREAK2'), 2, 10, 11, 20, 21, 30, 31, 40, 41, 50, 51, 60, 61, 70, 71);
+        $this->createOutbreakItems($this->getReference('OUTBREAK2'), 3, 10, 11, 20, 21, 30, 31, 40, 41, 50, 51, 60, 61, 70, 71);
+        $this->createOutbreakItems($this->getReference('OUTBREAK2'), 4, 10, 11, 20, 21, 30, 31, 40, 41, 50, 51, 60, 61, 70, 71);
+        $this->createOutbreakItems($this->getReference('OUTBREAK2'), 5, 10, 11, 20, 21, 30, 31, 40, 41, 50, 51, 60, 61, 70, 71);
+        $this->createOutbreakItems($this->getReference('OUTBREAK2'), 6, 10, 11, 20, 21, 30, 31, 40, 41, 50, 51, 60, 61, 70, 71);
         
         $this->manager->flush();
         
     }
     
     protected function createOutbreakItems(
-                $outbreak, $dayOfTheWeek, $sex,
-                $ageGroup1, $ageGroup2, $ageGroup3, $ageGroup4, $ageGroup5, $ageGroup6, $ageGroup7
-            ) 
+            $outbreak, $dayOfTheWeek, 
+            $ageGroup1F, $ageGroup1M,
+            $ageGroup2F, $ageGroup2M,
+            $ageGroup3F, $ageGroup3M,
+            $ageGroup4F, $ageGroup4M,
+            $ageGroup5F, $ageGroup5M,
+            $ageGroup6F, $ageGroup6M,
+            $ageGroup7F, $ageGroup7M)
     {
-        $out = new OutbreakItems();
-        $out->setOutbreak($outbreak);
-        $out->setDayOfTheWeek($dayOfTheWeek);
-        $out->setSex($sex);
-        $out->setAgeGroup1($ageGroup1);
-        $out->setAgeGroup2($ageGroup2);
-        $out->setAgeGroup3($ageGroup3);
-        $out->setAgeGroup4($ageGroup4);
-        $out->setAgeGroup5($ageGroup5);
-        $out->setAgeGroup6($ageGroup6);
-        $out->setAgeGroup7($ageGroup7);
-    
-        $this->manager->persist($out);
-        return $out;
+        $item = new OutbreakItems();
+        $item->setOutbreak($outbreak);
+        $item->setDayOfTheWeek($dayOfTheWeek);
+        $item->setAgeGroup1F($ageGroup1F);
+        $item->setAgeGroup1M($ageGroup1M);
+        $item->setAgeGroup2F($ageGroup2F);
+        $item->setAgeGroup2M($ageGroup2M);
+        $item->setAgeGroup3F($ageGroup3F);
+        $item->setAgeGroup3M($ageGroup3M);
+        $item->setAgeGroup4F($ageGroup4F);
+        $item->setAgeGroup4M($ageGroup4M);
+        $item->setAgeGroup5F($ageGroup5F);
+        $item->setAgeGroup5M($ageGroup5M);
+        $item->setAgeGroup6F($ageGroup6F);
+        $item->setAgeGroup6M($ageGroup6M);
+        $item->setAgeGroup7F($ageGroup7F);
+        $item->setAgeGroup7M($ageGroup7M);
+        
+        $this->manager->persist($item);
+        return $item;
     }
     
     /**

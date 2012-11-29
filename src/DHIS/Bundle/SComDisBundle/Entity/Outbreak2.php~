@@ -8,14 +8,14 @@ use Gedmo\Mapping\Annotation as Gedmo;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
- * Outbreak.
+ * Outbreak Daily Tally.
  *
  * @author Natsuki Hara <toconuts@gmail.com>
  * 
- * @ORM\Table(name="outbreak")
- * @ORM\Entity(repositoryClass="DHIS\Bundle\SComDisBundle\Entity\OutbreakRepository")
+ * @ORM\Table(name="outbreak2")
+ * @ORM\Entity(repositoryClass="DHIS\Bundle\SComDisBundle\Entity\Outbreak2Repository")
  */
-class Outbreak
+class Outbreak2
 {
     /**
      * @var integer $id
@@ -68,20 +68,11 @@ class Outbreak
     private $clinic;
     
     /**
-     * @var Syndrome $syndrome
+     * @var Outbreak2Items $outbreak2Items
      * 
-     * @ORM\ManyToOne(targetEntity="Syndrome4Outbreak")
-     * @ORM\JoinColumn(name="syndrome_id", referencedColumnName="id", nullable=false)
-     * @Assert\NotBlank 
+     * @ORM\OneToMany(targetEntity="Outbreak2Items", mappedBy="outbreak2")
      */
-    private $syndrome;
-    
-    /**
-     * @var OutbreakItems $outbreakItems
-     * 
-     * @ORM\OneToMany(targetEntity="OutbreakItems", mappedBy="outbreak")
-     */
-    public $outbreakItems;
+    public $outbreak2Items;
     
     /**
      * @var string $reportedBy
@@ -118,7 +109,7 @@ class Outbreak
 
     public function __construct()
     {
-        $this->outbreakItems = new ArrayCollection();
+        $this->outbreak2Items = new ArrayCollection();
         
         $this->weekend = new \DateTime('last Saturday');
         $this->weekend->setTime(0, 0, 0);
@@ -131,8 +122,7 @@ class Outbreak
         $this->reportedAt->setTime(0, 0, 0);
     }
     
-    /*
-    public function createSurveillanceItems(array $syndromes)
+    /*public function createSurveillanceItems(array $syndromes)
     {
         foreach ($syndromes as $syndrome) {
             $item = new SurveillanceItems();
@@ -297,23 +287,23 @@ class Outbreak
     }
 
     /**
-     * Add outbreakItems
+     * Add surveillanceItems
      *
-     * @param DHIS\Bundle\SComDisBundle\Entity\OutbreakItems $outbreakItems
+     * @param DHIS\Bundle\SComDisBundle\Entity\SurveillanceItems $outbreak2Items
      */
-    public function addOutbreakItems(\DHIS\Bundle\SComDisBundle\Entity\OutbreakItems $outbreakItems)
+    public function addOutbreak2Items(\DHIS\Bundle\SComDisBundle\Entity\SurveillanceItems $Outbreak2Items)
     {
-        $this->outbreakItems[] = $outbreakItems;
+        $this->outbreak2Items[] = $Outbreak2Items;
     }
 
     /**
-     * Get outbreakItems
+     * Get surveillanceItems
      *
      * @return Doctrine\Common\Collections\Collection
      */
-    public function getOutbreakItems()
+    public function getOutbreak2Items()
     {
-        return $this->outbreakItems;
+        return $this->outbreak2Items;
     }
 
     /**
@@ -354,25 +344,5 @@ class Outbreak
     public function getYear()
     {
         return $this->year;
-    }
-
-    /**
-     * Set syndrome
-     *
-     * @param DHIS\Bundle\SComDisBundle\Entity\Syndrome4Outbreak $syndrome
-     */
-    public function setSyndrome(\DHIS\Bundle\SComDisBundle\Entity\Syndrome4Outbreak $syndrome)
-    {
-        $this->syndrome = $syndrome;
-    }
-
-    /**
-     * Get syndrome
-     *
-     * @return DHIS\Bundle\SComDisBundle\Entity\Syndrome4Outbreak 
-     */
-    public function getSyndrome()
-    {
-        return $this->syndrome;
     }
 }

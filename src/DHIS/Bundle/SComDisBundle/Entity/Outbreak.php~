@@ -25,7 +25,7 @@ class Outbreak
      * @ORM\GeneratedValue(strategy="AUTO")
      */
     private $id;
-    
+
     /**
      * @var integer $weekOfYear
      * 
@@ -41,14 +41,14 @@ class Outbreak
     private $year;
     
     /**
-     * @var datetime $weekEnd
+     * @var datetime $weekend
      *
-     * @ORM\Column(name="week_end", type="datetime", nullable=false)
+     * @ORM\Column(name="weekend", type="datetime", nullable=false)
      * @Assert\NotBlank
      * @Assert\Date
      */
-    private $weekEnd;
- 
+    private $weekend;
+    
     /**
      * @var SentinelSite $sentinelSite
      * 
@@ -71,19 +71,18 @@ class Outbreak
      * @var Syndrome $syndrome
      * 
      * @ORM\ManyToOne(targetEntity="Syndrome4Outbreak")
-     * @ORM\JoinColumn(name="syndrom_id", referencedColumnName="id", nullable=false)
+     * @ORM\JoinColumn(name="syndrome_id", referencedColumnName="id", nullable=false)
      * @Assert\NotBlank 
      */
     private $syndrome;
     
-    /*
+    /**
      * @var OutbreakItems $outbreakItems
      * 
      * @ORM\OneToMany(targetEntity="OutbreakItems", mappedBy="outbreak")
      */
-    private $outbreakItems;
-
-
+    public $outbreakItems;
+    
     /**
      * @var string $reportedBy
      * 
@@ -102,22 +101,6 @@ class Outbreak
     private $reportedAt;
     
     /**
-     * @var string $receivedBy
-     * 
-     * @ORM\Column(name="received_by", type="string", length=100, nullable=true)
-     * @Assert\MaxLength(limit=100)
-     */
-    private $receivedBy;
-    
-    /**
-     * @var datetime $receivedAt
-     *
-     * @ORM\Column(name="received_at", type="datetime", nullable=true)
-     * @Assert\Date
-     */
-    private $receivedAt;
-    
-    /**
      * @var datetime $createdAt
      *
      * @ORM\Column(name="created_at", type="datetime")
@@ -132,12 +115,37 @@ class Outbreak
      * @Gedmo\Timestampable(on="update")
      */
     private $updatedAt;
-    
+
     public function __construct()
     {
         $this->outbreakItems = new ArrayCollection();
+        
+        $this->weekend = new \DateTime('last Saturday');
+        $this->weekend->setTime(0, 0, 0);
+        
+        $this->weekOfYear = strftime('%V', time());
+        
+        $this->year = strftime('%G', time());
+        
+        $this->reportedAt = new \DateTime();
+        $this->reportedAt->setTime(0, 0, 0);
     }
     
+    /*
+    public function createSurveillanceItems(array $syndromes)
+    {
+        foreach ($syndromes as $syndrome) {
+            $item = new SurveillanceItems();
+            $item->setSyndrome($syndrome);
+            $this->surveillanceItems->add($item);
+        }
+    }*/
+    
+    public function setWeekNumber(\DateTime $weekend) {
+        $this->year = $weekend->format('o');
+        $this->weekOfYear = $weekend->format('W');
+    }
+
     /**
      * Get id
      *
@@ -149,23 +157,23 @@ class Outbreak
     }
 
     /**
-     * Set weekEnd
+     * Set weekend
      *
-     * @param datetime $weekEnd
+     * @param datetime $weekend
      */
-    public function setWeekEnd($weekEnd)
+    public function setWeekend($weekend)
     {
-        $this->weekEnd = $weekEnd;
+        $this->weekend = $weekend;
     }
 
     /**
-     * Get weekEnd
+     * Get weekend
      *
      * @return datetime 
      */
-    public function getWeekEnd()
+    public function getWeekend()
     {
-        return $this->weekEnd;
+        return $this->weekend;
     }
 
     /**
@@ -206,46 +214,6 @@ class Outbreak
     public function getReportedAt()
     {
         return $this->reportedAt;
-    }
-
-    /**
-     * Set receivedBy
-     *
-     * @param string $receivedBy
-     */
-    public function setReceivedBy($receivedBy)
-    {
-        $this->receivedBy = $receivedBy;
-    }
-
-    /**
-     * Get receivedBy
-     *
-     * @return string 
-     */
-    public function getReceivedBy()
-    {
-        return $this->receivedBy;
-    }
-
-    /**
-     * Set receivedAt
-     *
-     * @param datetime $receivedAt
-     */
-    public function setReceivedAt($receivedAt)
-    {
-        $this->receivedAt = $receivedAt;
-    }
-
-    /**
-     * Get receivedAt
-     *
-     * @return datetime 
-     */
-    public function getReceivedAt()
-    {
-        return $this->receivedAt;
     }
 
     /**
@@ -329,23 +297,23 @@ class Outbreak
     }
 
     /**
-     * Set syndrome
+     * Add outbreakItems
      *
-     * @param DHIS\Bundle\SComDisBundle\Entity\Syndrome4Outbreak $syndrome
+     * @param DHIS\Bundle\SComDisBundle\Entity\OutbreakItems $outbreakItems
      */
-    public function setSyndrome(\DHIS\Bundle\SComDisBundle\Entity\Syndrome4Outbreak $syndrome)
+    public function addOutbreakItems(\DHIS\Bundle\SComDisBundle\Entity\OutbreakItems $outbreakItems)
     {
-        $this->syndrome = $syndrome;
+        $this->outbreakItems[] = $outbreakItems;
     }
 
     /**
-     * Get syndrome
+     * Get outbreakItems
      *
-     * @return DHIS\Bundle\SComDisBundle\Entity\Syndrome4Outbreak 
+     * @return Doctrine\Common\Collections\Collection
      */
-    public function getSyndrome()
+    public function getOutbreakItems()
     {
-        return $this->syndrome;
+        return $this->outbreakItems;
     }
 
     /**
@@ -386,5 +354,25 @@ class Outbreak
     public function getYear()
     {
         return $this->year;
+    }
+
+    /**
+     * Set syndrome
+     *
+     * @param DHIS\Bundle\SComDisBundle\Entity\Syndrome4Outbreak $syndrome
+     */
+    public function setSyndrome(\DHIS\Bundle\SComDisBundle\Entity\Syndrome4Outbreak $syndrome)
+    {
+        $this->syndrome = $syndrome;
+    }
+
+    /**
+     * Get syndrome
+     *
+     * @return DHIS\Bundle\SComDisBundle\Entity\Syndrome4Outbreak 
+     */
+    public function getSyndrome()
+    {
+        return $this->syndrome;
     }
 }

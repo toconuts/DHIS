@@ -1,0 +1,27 @@
+<table class="table table-striped table-bordered">
+  <tbody>
+    <tr>
+      <th>Week of year</th>
+      <td>{{ outbreak.weekOfYear }}</td>
+      <th>Year</th>
+      <td>{{ outbreak.year }}</td>
+      <th>Weekend</th>
+      <td>{{ outbreak.weekEnd|date('d/m/Y') }}</td>
+    </tr>
+    <tr>
+      <th>Sentinel Site</th>
+      <td colspan="2">{{ outbreak.sentinelSite.name }}</td>
+      <th>Clinic / Ward</th>
+      <td colspan="2">{{ outbreak.clinic.name }}</td>
+    </tr>
+    <tr>
+      <th>Syndrome</th>
+      <td>{{ outbreak.syndrome.name }}</td>
+      <th>Reported At</th>
+      <td>{{ outbreak.reportedAt|date('d/m/Y') }}</td>
+      <th>Reported by</th>
+      <td>{{ outbreak.reportedBy }}</td>
+    </tr>
+    {% block after_content %}{% endblock %}
+  </tbody>
+</table>

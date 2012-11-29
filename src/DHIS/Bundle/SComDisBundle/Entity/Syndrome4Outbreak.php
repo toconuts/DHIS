@@ -43,11 +43,11 @@ class Syndrome4Outbreak
     /**
      * __toString().
      * 
-     * @return string 
+     * @return string
      */
     public function __toString()
     {
-        return $this->name;
+        return (string)$this->name;
     }
     
     /**

@@ -28,11 +28,11 @@
               <a href="{{ path('scomdis_surveillance_new') }}">New</a></li>
             <li {% if sidebar_menu == 'scomdis_surveillance_out_carec_report' %}class="active"{% endif %}>
               <a href="{{ path('scomdis_surveillance_out_carec_report') }}">CAREC Weekly Report</a></li>
-        {#    <li {% if sidebar_menu == 'scomdis_surveillance_out_daily_tally_report' %}class="active"{% endif %}>
-              <a href="{{ path('scomdis_surveillance_out_daily_tally_report') }}">Daily Tally Report</a></li> #}
             <li class="nav-header">Outbreak Daily Tally</li>
             <li {% if sidebar_menu == 'scomdis_outbreak' %}class="active"{% endif %}>
-              <a href="#">List</a></li>
+              <a href="{{ path('scomdis_outbreak') }}">List</a></li>
+            <li {% if sidebar_menu == 'scomdis_outbreak_search' %}class="active"{% endif %}>
+              <a href="{{ path('scomdis_outbreak_search') }}">Search</a></li>
             <li {% if sidebar_menu == 'scomdis_outbreak_new' %}class="active"{% endif %}>
               <a href="#">New</a></li>
             <li class="nav-header">Case Notification</li>

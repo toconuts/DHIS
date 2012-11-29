@@ -1,0 +1,54 @@
+{% extends 'DHISSComDisBundle::layout.html.twig' %}
+
+{% block page_title 'SComDis - Outbreak Dailly Tally' %}
+{% block product_name 'SComDis' %}
+{% block content_title 'Outbreak Dailly Tally' %}
+
+{% set menu = 'scomdis' %}
+{% set sidebar_menu = 'scomdis_outbreak' %}
+
+{% block content %}
+{% if app.request.session.hasFlash('success') %}
+<div class="alert alert-success">
+  {{ app.request.session.getFlash('success') }}
+</div>
+{% endif %}
+{% if app.request.session.hasFlash('error') %}
+<div class="alert alert-error">
+  {{ app.request.session.getFlash('error') }}
+</div>
+{% endif %}
+
+<table class="table table-striped table-bordered">
+  <thead>
+    <tr>
+      <th>id</th>
+      <th>Week</th>
+      <th>Year</th>
+      <th>Weekend</th>
+      <th>Sentinel site</th>
+      <th>Clinic / Ward</th>
+      <th>Syndrome</th>
+      <th>Reported at</th>
+      <th>Reported by</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for outbreak in pagination %}
+    <tr>
+      <td><a href="{{ path('scomdis_outbreak_show', {'id': outbreak.id}) }}">{{ outbreak.id }}</a></td>
+      <td>{{ outbreak.weekOfYear }}</td>
+      <td>{{ outbreak.year }}</td>
+      <td>{{ outbreak.weekEnd|date('d/m/Y') }}</td>
+      <td>{{ outbreak.sentinelSite.name }}</td>
+      <td>{{ outbreak.clinic.name }}</td>
+      <td>{{ outbreak.syndrome.name }}</td>
+      <td>{{ outbreak.reportedAt|date('d/m/Y') }}</td>
+      <td>{{ outbreak.reportedBy }}</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+
+{{ pagination.render()|raw }}
+{% endblock %}
