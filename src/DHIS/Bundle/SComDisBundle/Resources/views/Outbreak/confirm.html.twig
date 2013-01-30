@@ -1,0 +1,27 @@
+{% extends 'DHISSComDisBundle::layout.html.twig' %}
+
+{% block page_title 'Outbreak Daily Tally - confirm - SComDis' %}
+{% block product_name 'SComDis' %}
+{% block content_title 'Outbreak Daily Tally - confirm' %}
+
+{% set menu = 'SComDis' %}
+{% set sidebar_menu = 'scomdis_outbreak_new' %}
+
+{% block content %}
+{% if app.request.session.hasFlash('error') %}
+<div class="alert alert-error">
+  {{ app.request.session.getFlash('error') }}
+</div>
+{% endif %}
+
+{% include "DHISSComDisBundle:Outbreak:_show_header.html.twig" %}
+{% include "DHISSComDisBundle:Outbreak:_show_items.html.twig" %}
+
+<form action="{{ path('scomdis_outbreak_confirm') }}" method="post">
+  <div class="form-actions">
+      <a href=javascript:history:back() class="btn">&laquo; Back</a>
+      <input type="submit" class="btn btn-primary" value="Submit">
+  </div>
+</form>
+
+{% endblock %}

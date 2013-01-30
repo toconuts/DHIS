@@ -7,7 +7,7 @@ use Gedmo\Mapping\Annotation as Gedmo;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
- * Syndrome.
+ * Syndrome Items.
  *
  * @author Natsuki Hara <toconuts@gmail.com>
  * 

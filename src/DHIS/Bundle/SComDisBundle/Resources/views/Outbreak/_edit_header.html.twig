@@ -1,0 +1,75 @@
+<div class="control-group {% if form.weekend.get('errors') %}error{% endif %}">
+  <label class="control-label">Weekend</label>
+  <div class="controls">
+  {{ form_errors(form.weekend) }}
+  {{ form_widget(form.weekend) }}
+  </div>
+</div>
+<div class="control-group">
+  <label class="control-label">Week of year</label>
+  <div class="controls">
+  {{ form_errors(form.weekOfYear) }}
+  {{ form_widget(form.weekOfYear, {'attr': {'readonly': 'readonly'} }) }}
+  </div>
+</div>
+<div class="control-group">
+  <label class="control-label">Year</label>
+    <div class="controls">
+    {{ form_errors(form.year) }}
+    {{ form_widget(form.year, {'attr': {'readonly': 'readonly'} }) }}
+    </div>
+</div>
+<div class="control-group {% if form.sentinelSite.get('errors') %}error{% endif %}">
+  <label class="control-label">Sentinel Site</label>
+  <div class="controls">
+  {{ form_errors(form.sentinelSite) }}
+    <select id="sentinelsite" name="outbreak[sentinelSite]">
+    {% for sentinelSite in sentinelSites %}
+      <option value="{{ sentinelSite.id }}" {% if outbreak is defined and outbreak.sentinelSite.id == sentinelSite.id %}selected{% endif %}>{{ sentinelSite.name }}</option>
+    {% endfor %}
+    </select>
+  </div>
+</div>
+<div class="control-group {% if form.clinic.get('errors') %}error{% endif %}">
+  <label class="control-label">Clinic / Ward</label>
+  <div class="controls">
+  {{ form_errors(form.clinic) }}
+    <select id="clinic" name="outbreak[clinic]">
+    {% for sentinelSite in sentinelSites %}
+      {% for clinic in clinics %}
+        {% if sentinelSite.id == clinic.sentinelSite.id %}
+        <option class=":{{ sentinelSite.id }}:" value="{{ clinic.id }}"{% if outbreak is defined and outbreak.clinic.id == clinic.id %}selected{% endif %}>{{ clinic.name }}</option>
+        {% endif %}
+      {% endfor %}
+    {% endfor %}
+    </select>
+  </div>
+</div>
+<div class="control-group {% if form.syndrome.get('errors') %}error{% endif %}">
+  <label class="control-label">Syndrome</label>
+  <div class="controls">
+  {{ form_errors(form.syndrome) }}
+    <select id="syndrome" name="outbreak[syndrome]">
+    {% for syndrome in syndromes %}
+        <option value="{{ syndrome.id }}" {% if outbreak is defined and outbreak.syndrome.id == syndrome.id %}selected{% endif %}>{{ syndrome.name }}</option>
+    {% endfor %}
+    </select>
+  </div>
+</div>
+<div class="control-group {% if form.reportedAt.get('errors') %}error{% endif %}">
+  <label class="control-label">Reported at</label>
+  <div class="controls">
+  {{ form_errors(form.reportedAt) }}
+  {{ form_widget(form.reportedAt) }}
+  </div>
+</div>
+<div class="control-group {% if form.reportedBy.get('errors') %}error{% endif %}">
+  <label class="control-label">Reported by</label>
+  <div class="controls">
+    <select id="outbreak_reportedBy" name="outbreak[reportedBy]">
+    {% for user in users %}
+      <option value="{{ user.displayname }}" {% if user.id == app.user.id %}selected{% endif %}>{{ user.displayname }}</option>
+    {% endfor %}
+    </select>
+  </div>
+</div>

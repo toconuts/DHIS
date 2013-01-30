@@ -11,6 +11,8 @@ use DHIS\Bundle\SComDisBundle\Entity\SurveillanceRepository;
 use DHIS\Bundle\SComDisBundle\Form\SurveillanceType;
 use DHIS\Bundle\SComDisBundle\Form\OutCARECReportType;
 use DHIS\Bundle\SComDisBundle\Form\SearchSurveillanceType;
+use DHIS\Bundle\SComDisBundle\Form\SurveillanceTrendCriteriaType;
+use DHIS\Bundle\SComDisBundle\Entity\SurveillanceTrendCriteria;
 
 /**
  * SurveillanceController for SComDis site.
@@ -262,8 +264,6 @@ class SurveillanceController extends AppController
     {
         $weekend = new \DateTime('last Saturday');
         $weekend->setTime(0, 0, 0);
-        //$weekOfYear = strftime('%V', time());
-        //$year = strftime('%G', time());
         
         $form = $this->createForm(new OutCARECReportType());
         $form['weekend']->setData($weekend);
@@ -343,10 +343,10 @@ class SurveillanceController extends AppController
                 
                 $manager = $this->get('doctrine')->getEntityManager('scomdis');
                 $surveillanceRepository = $manager->getRepository('DHISSComDisBundle:Surveillance');
-                $surveillance = $surveillanceRepository->findOneBy(
-                    array('weekend' => $weekend),
-                    array('clinic' => $clinic)
-                );
+                $surveillance = $surveillanceRepository->findOneBy(array(
+                    'weekend' => $weekend,
+                    'clinic' => $clinic
+                ));
                 
                 if ($surveillance) {
                     return $this->redirect($this->generateUrl(
@@ -396,6 +396,60 @@ class SurveillanceController extends AppController
         $service->outReport($filename, $surveillance);
 
         return $response;
+    }
+    
+    /**
+     * @Route("/trend", name="scomdis_surveillance_trend")
+     * @Template
+     */
+    public function trendAction(Request $request)
+    {
+        $manager = $this->get('doctrine')->getEntityManager('scomdis');
+        $repo = $manager->getRepository('DHISSComDisBundle:Syndrome4Surveillance');
+        $syndromes = $repo->findAll();
+        
+        $criteria = new SurveillanceTrendCriteria($syndromes);
+        
+        $form = $this->createForm(new SurveillanceTrendCriteriaType, $criteria);
+        //$chartSrc = 'http://chart.apis.google.com/chart?chs=800x320&chd=t:78.0,32.0,84.0&cht=lc';
+        //$chartSrc = 'http://chart.apis.google.com/chart?chs=600x400&chd=t:78.0,32.0,84.0&cht=lc';
+        
+        if ($request->getMethod() === 'POST') {
+            $data = $request->request->get($form->getName());
+            $form->bind($data);
+            if ($form->isValid()) {
+                
+                // get chart source from service
+                $service = $this->get('surveillance.chart_service');
+                $chartSrc = $service->createTrendChart();   // @todo Arguments
+                
+                return $this->render('DHISSComDisBundle:Surveillance:chart.html.twig', array(
+                    'chartSrc' => $chartSrc,
+                ));
+            }
+        }
+        return array(
+            'syndromes' => $syndromes,
+            'form' => $form->createView(),
+        );
+    }
+    
+    /**
+     * @Route("/prediction", name="scomdis_surveillance_prediction")
+     * @Template
+     */
+    public function predictionAction(Request $request)
+    {
+        return array();
+    }
+    
+    /**
+     * @Route("/gis", name="scomdis_surveillance_gis")
+     * @Template
+     */
+    public function gisAction(Request $request)
+    {
+        return array();
     }
 
     /**

@@ -43,7 +43,7 @@ class Surveillance
     /**
      * @var datetime $weekend
      *
-     * @ORM\Column(name="week_end", type="datetime", nullable=false)
+     * @ORM\Column(name="weekend", type="datetime", nullable=false)
      * @Assert\NotBlank
      * @Assert\Date
      */
@@ -72,7 +72,7 @@ class Surveillance
      * 
      * @ORM\OneToMany(targetEntity="SurveillanceItems", mappedBy="surveillance")
      */
-    private $surveillanceItems;
+    public $surveillanceItems;
     
     /**
      * @var string $reportedBy
@@ -127,7 +127,7 @@ class Surveillance
     {
         $this->surveillanceItems = new ArrayCollection();
         
-        $this->weekend = new \DateTime();
+        $this->weekend = new \DateTime('last Saturday');
         $this->weekend->setTime(0, 0, 0);
         
         $this->weekOfYear = strftime('%V', time());
@@ -150,6 +150,11 @@ class Surveillance
             $this->surveillanceItems->add($item);
         }
     }
+    
+    public function setWeekNumber(\DateTime $weekend) {
+        $this->year = $weekend->format('o');
+        $this->weekOfYear = $weekend->format('W');
+    }
 
     /**
      * Get id
@@ -160,7 +165,6 @@ class Surveillance
     {
         return $this->id;
     }
-
 
     /**
      * Set weekend
@@ -355,7 +359,7 @@ class Surveillance
     /**
      * Get surveillanceItems
      *
-     * @return Doctrine\Common\Collections\Collection 
+     * @return Doctrine\Common\Collections\Collection
      */
     public function getSurveillanceItems()
     {

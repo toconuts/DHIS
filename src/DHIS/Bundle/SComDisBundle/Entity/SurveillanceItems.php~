@@ -7,7 +7,7 @@ use Gedmo\Mapping\Annotation as Gedmo;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
- * Syndrome.
+ * Syndrome Items.
  *
  * @author Natsuki Hara <toconuts@gmail.com>
  * 
@@ -37,7 +37,7 @@ class SurveillanceItems
      * @var Syndrome $syndrome
      * 
      * @ORM\ManyToOne(targetEntity="Syndrome4Surveillance")
-     * @ORM\JoinColumn(name="syndrom_id", referencedColumnName="id", nullable=false)
+     * @ORM\JoinColumn(name="syndrome_id", referencedColumnName="id", nullable=false)
      * @Assert\NotBlank 
      */
     private $syndrome;

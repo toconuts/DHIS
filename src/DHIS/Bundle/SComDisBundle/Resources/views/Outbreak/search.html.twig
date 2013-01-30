@@ -1,11 +1,11 @@
 {% extends 'DHISSComDisBundle::layout.html.twig' %}
 
-{% block page_title 'Syndromic Surveillance - Search - SComDis' %}
+{% block page_title 'Syndromic Outbreak - Search - SComDis' %}
 {% block product_name 'SComDis' %}
-{% block content_title 'Syndromic Surveillance - Search' %}
+{% block content_title 'Syndromic outbreak - Search' %}
 
 {% set menu = 'SComDis' %}
-{% set sidebar_menu = 'scomdis_surveillance_search' %}
+{% set sidebar_menu = 'scomdis_outbreak_search' %}
 
 {% block content %}
 {% if app.request.session.hasFlash('success') %}
@@ -18,7 +18,7 @@
   {{ app.request.session.getFlash('error') }}
 </div>
 {% endif %}
-<form action="{{ path('scomdis_surveillance_search') }}" method="post" class="form-horizontal">
+<form action="{{ path('scomdis_outbreak_search') }}" method="post" class="form-horizontal">
   {{ form_errors(form) }}
   <div class="control-group {% if form.weekend.get('errors') %}error{% endif %}">
     <label class="control-label">Weekend</label>
@@ -45,7 +45,7 @@
     <label class="control-label">Sentinel Site</label>
     <div class="controls">
     {{ form_errors(form.sentinelSite) }}
-      <select id="sentinelsite" name="SearchSurveillance[sentinelSite]">
+      <select id="sentinelsite" name="SearchOutbreak[sentinelSite]">
       {% for sentinelSite in sentinelSites %}
         <option value="{{ sentinelSite.id }}" {% if surveillance is defined and surveillance.sentinelSite.id == sentinelSite.id %}selected{% endif %}>{{ sentinelSite.name }}</option>
       {% endfor %}
@@ -56,7 +56,7 @@
     <label class="control-label">Clinic / Ward</label>
     <div class="controls">
     {{ form_errors(form.clinic) }}
-      <select id="clinic" name="SearchSurveillance[clinic]">
+      <select id="clinic" name="SearchOutbreak[clinic]">
       {% for sentinelSite in sentinelSites %}
         {% for clinic in clinics %}
           {% if sentinelSite.id == clinic.sentinelSite.id %}
@@ -65,6 +65,17 @@
         {% endfor %}
       {% endfor %}
       </select>
+    </div>
+  </div>
+  <div class="control-group {% if form.syndrome.get('errors') %}error{% endif %}">
+    <label class="control-label">Syndrome</label>
+    <div class="controls">
+      <select id="syndrome" name="SearchOutbreak[syndrome]">
+      {% for syndrome in syndromes %}
+        <option value="{{ syndrome.id }}" {% if syndrome.id == 1 %}selected{% endif %}>{{ syndrome.name }}</option>
+      {% endfor %}
+      </select>
+    
     </div>
   </div>
   {{ form_widget(form._token) }}

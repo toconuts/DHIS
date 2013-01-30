@@ -43,7 +43,7 @@ class Surveillance
     /**
      * @var datetime $weekend
      *
-     * @ORM\Column(name="week_end", type="datetime", nullable=false)
+     * @ORM\Column(name="weekend", type="datetime", nullable=false)
      * @Assert\NotBlank
      * @Assert\Date
      */
