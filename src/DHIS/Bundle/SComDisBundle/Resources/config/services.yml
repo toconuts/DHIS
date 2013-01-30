@@ -7,3 +7,7 @@ services:
     class: DHIS\Bundle\SComDisBundle\Service\DailyTallyReportService
     arguments:
       - @doctrine
+  surveillance.chart_service:
+    class: DHIS\Bundle\SComDisBundle\Service\ChartService
+    arguments:
+      - @doctrine

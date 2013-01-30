@@ -41,7 +41,6 @@
     <div class="form-actions">
       <a href=javascript:history:back() class="btn">&laquo; Back</a>
       <a href="{{ path('scomdis_outbreak_edit', {'id': outbreak.id}) }}" class="btn btn-success">Edit</a>
-      <a href="{{ path('scomdis_outbreak_out_daily_tally_report', {'id': outbreak.id}) }}" class="btn btn-primary">Daily Tally Report</a>
     </div>
   </div>
   <div class="span4">
@@ -50,7 +49,7 @@
       <p>Note: once it is deleted, you will not be able to restore it.</p>
       <a href="{{ path('scomdis_outbreak_delete', {'id': outbreak.id}) }}" class="btn btn-danger">Delete</a>
     </div>
-  </div>    
+  </div>
 </div>
 
 {% endblock %}

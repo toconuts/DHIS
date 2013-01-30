@@ -36,16 +36,16 @@ class LoadSyndrome4SurveillanceData extends AbstractFixture implements OrderedFi
         $symptom04 = $this->createSyndrome4SurveillanceSite(4, 'Undifferentiated Fever >= 5', 4);
         
         // Ferver & Neurological symptoms
-        $symptom05 = $this->createSyndrome4SurveillanceSite(5, 'Ferver & Neurological symptoms', 5);
+        $symptom05 = $this->createSyndrome4SurveillanceSite(5, 'Ferver & Neurological Symptoms', 5);
         
         // Ferver & Hemorrhagic symptoms
-        $symptom06 = $this->createSyndrome4SurveillanceSite(6, 'Ferver & Hemorrhagic symptoms', 6);
+        $symptom06 = $this->createSyndrome4SurveillanceSite(6, 'Ferver & Hemorrhagic Symptoms', 6);
         
         // ARI < 5
-        $symptom07 = $this->createSyndrome4SurveillanceSite(7, 'Ferver & respiratory symptoms (ARI) < 5', 7);
+        $symptom07 = $this->createSyndrome4SurveillanceSite(7, 'ARI < 5', 7);
         
         // ARI >= 5
-        $symptom08 = $this->createSyndrome4SurveillanceSite(8, 'Ferver & respiratory symptoms (ARI) >= 5', 8);
+        $symptom08 = $this->createSyndrome4SurveillanceSite(8, 'ARI >= 5', 8);
         
         // Skin Rash
         $symptom09 = $this->createSyndrome4SurveillanceSite(9, 'Skin Rash', 9);
@@ -54,10 +54,10 @@ class LoadSyndrome4SurveillanceData extends AbstractFixture implements OrderedFi
         $symptom10 = $this->createSyndrome4SurveillanceSite(10, 'Conjunctivitis', 10);
         
         // Genital discharge
-        $symptom11 = $this->createSyndrome4SurveillanceSite(11, 'Genital discharge', 11);
+        $symptom11 = $this->createSyndrome4SurveillanceSite(11, 'Genital Discharge', 11);
         
         // Genital ulcer
-        $symptom12 = $this->createSyndrome4SurveillanceSite(12, 'Genital ulcer', 12);
+        $symptom12 = $this->createSyndrome4SurveillanceSite(12, 'Genital Ulcer', 12);
         
         $this->manager->flush();
         

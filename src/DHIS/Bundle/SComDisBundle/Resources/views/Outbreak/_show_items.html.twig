@@ -32,9 +32,9 @@
     </thead>
 
     <tbody>
-      {% for item in outbreak.outbreakItems %}
+    {% for item in outbreak.outbreakItems %}
       <tr>
-        <td>{{ item.getDayOfTheWeekString() }}</td>
+        <td>{{ item.dayOfTheWeekString }}</td>
         <td>{{ item.ageGroup1F }}</td>
         <td>{{ item.ageGroup1M }}</td>
         <td>{{ item.ageGroup2F }}</td>
@@ -51,7 +51,7 @@
         <td>{{ item.ageGroup7M }}</td>
         <td>{{ item.getTotal() }}</td>
       </tr>
-      {% endfor %}
+    {% endfor %}
     </tbody>
 
   </table>

@@ -41,6 +41,11 @@ class OutbreakItems
     private $dayOfTheWeek;
 
     /**
+     * @var string $dayOfTheWeekName; 
+     */
+    private $dayOfTheWeekName;
+    
+    /**
      * @var integer $ageGroup1F
      * 
      * @ORM\Column(name="age_group_1f", type="integer") 
@@ -283,6 +288,7 @@ class OutbreakItems
     public function setDayOfTheWeek($dayOfTheWeek)
     {
         $this->dayOfTheWeek = $dayOfTheWeek;
+        $this->dayOfTheWeekString =  self::$textualRepOfDayOfTheWeek[$dayOfTheWeek];
     }
 
     /**

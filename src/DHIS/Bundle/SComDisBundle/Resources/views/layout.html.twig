@@ -28,20 +28,25 @@
               <a href="{{ path('scomdis_surveillance_new') }}">New</a></li>
             <li {% if sidebar_menu == 'scomdis_surveillance_out_carec_report' %}class="active"{% endif %}>
               <a href="{{ path('scomdis_surveillance_out_carec_report') }}">CAREC Weekly Report</a></li>
+            <li {% if sidebar_menu == 'scomdis_surveillance_trend' %}class="active"{% endif %}>
+              <a href="{{ path('scomdis_surveillance_trend') }}">Trend</a></li>
+            <li {% if sidebar_menu == 'scomdis_surveillance_prediction' %}class="active"{% endif %}>
+              <a href="{{ path('scomdis_surveillance_prediction') }}">Prediction</a></li>
+            <li {% if sidebar_menu == 'scomdis_surveillance_gis' %}class="active"{% endif %}>
+              <a href="{{ path('scomdis_surveillance_gis') }}">GIS</a></li>
             <li class="nav-header">Outbreak Daily Tally</li>
             <li {% if sidebar_menu == 'scomdis_outbreak' %}class="active"{% endif %}>
               <a href="{{ path('scomdis_outbreak') }}">List</a></li>
             <li {% if sidebar_menu == 'scomdis_outbreak_search' %}class="active"{% endif %}>
               <a href="{{ path('scomdis_outbreak_search') }}">Search</a></li>
             <li {% if sidebar_menu == 'scomdis_outbreak_new' %}class="active"{% endif %}>
-              <a href="#">New</a></li>
+              <a href="{{ path('scomdis_outbreak_new') }}">New</a></li>
             <li class="nav-header">Case Notification</li>
             <li {% if sidebar_menu == 'scomdis_case_notification' %}class="active"{% endif %}>
               <a href="#">List</a></li>
             <li {% if sidebar_menu == 'scomdis_case_notification_new' %}class="active"{% endif %}>
               <a href="#">New</a></li>
           </ul>
-            
         </div>
       </div>
       {% endblock %}
