@@ -1,3 +1,85 @@
-<div>
-  <img src="{{ chartSrc }}" width="800" height="600">
-</div>
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <title>{% block title %}{{ block('page_title') }} - Dominica Health Information System {% endblock %}</title>
+    <link rel="shortcut icon" href="{{ asset('favicon.ico') }}" />
+    <script type="text/javascript" src="http://www.google.com/jsapi"></script>
+    <script type="text/javascript">
+      google.load('visualization', '1', {packages: ['corechart']});
+    </script>
+    <script type="text/javascript">
+      function drawVisualization() {
+        var data = google.visualization.arrayToDataTable([
+          {% set first_time = true %}
+          {% for s in lineChart.series %}{% if loop.index0 == 0 %} ['{{ s | raw }}'{% else %}, '{{ s | raw }}'{% endif %}{% endfor %}, ''], 
+          {% for week in lineChart.data %}[{% for value in week %}{% if loop.index0 == 0 %}'{{ value }}'{% else %}, {% if value == -1 %} {% else %}{{ value }}{% endif %}{% endif %}{% endfor %}, 0],{% endfor %}
+        ]);
+      
+        new google.visualization.LineChart(document.getElementById('visualization')).
+            draw(data, {title: '{{ lineChart.title | raw }}',
+                        titleTextStyle: {color: 'gray', fontName: 'Arial', fontSize: 20},
+                        fontSize: 10,
+                        fontName: 'Arial',
+                        curveType: "none",
+                        pointSize: 2,
+                        width: 1280, height: 720,
+                        vAxis: {maxValue: {{ lineChart.maxValue }},
+                                textStyle: {color: 'gray', fontName: 'Arial', fontSize: 10},
+                        },
+                        hAxis: {showTextEvery: 1,
+                                textStyle: {color: 'gray', fontName: 'Arial', fontSize: 10}
+                                , slantedText: true
+                        },
+                        series: { {{ (lineChart.series | length) - 1 }}:{lineWidth: 0, pointSize: 0, visibleInLegend: false}},
+            });
+      }
+      google.setOnLoadCallback(drawVisualization);
+      
+    </script>
+  </head>
+
+  <body style="font-family: Arial;border: 0 none;">
+    <div>
+      <div class="control-group">
+        <label class="control-label">Years: </label>
+        {% set continue_year = false %}
+        {% for year in year_choices %}
+          {% if continue_year == false %}{% set continue_year = true %}{% else %}{{ ', ' }}{% endif %}
+          {{ year }}
+        {% endfor %}
+      </div>
+      <div class="control-group">
+        <label class="control-label">Syndromes: </label>
+        {% set continue_syndrome = false %}
+        {% for syndrome in syndromes %}
+          {% for syndrome_choice in syndrome_choices %}
+            {% if syndrome.id == syndrome_choice %}
+              {% if continue_syndrome == false %}{% set continue_syndrome = true %}{% else %}{{ ', ' }}{% endif %}
+              {{ syndrome.name }}
+            {% endif %}
+          {% endfor %}
+        {% endfor %}
+      </div>
+      <div class="control-group"> 
+        <label class="control-label">Sentinel sites: </label>
+        {% set continue_sentinel = false %}
+        {% for sentinelSite in sentinelSites %}
+          {% for sentinelSite_choice in sentinelSite_choices %}
+            {% if sentinelSite.id == sentinelSite_choice %}
+              {% if continue_sentinel == false %}{% set continue_sentinel = true %}{% else %}{{ ', ' }}{% endif %}
+              {{ sentinelSite.name }}
+            {% endif %}
+          {% endfor %}
+        {% endfor %}
+      </div>
+    </div>
+    <hr>
+
+    <div id="visualization" style="width: 1280px; height: 720px;"></div>
+    <footer>
+        <hr>
+        <p>&copy; HIU.MOH 2013</p>
+    </footer>
+  </body>
+</html>

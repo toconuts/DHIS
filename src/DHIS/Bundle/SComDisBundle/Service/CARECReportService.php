@@ -13,7 +13,7 @@ use DHIS\Bundle\SComDisBundle\Entity\Surveillance;
 class CARECReportService
 {
     /**
-     * @var type RegistryInterface
+     * @var RegistryInterface $managerRegistry
      */
     private $managerRegistry;
     

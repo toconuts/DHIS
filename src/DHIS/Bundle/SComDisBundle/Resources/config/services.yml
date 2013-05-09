@@ -11,3 +11,7 @@ services:
     class: DHIS\Bundle\SComDisBundle\Service\ChartService
     arguments:
       - @doctrine
+  surveillance.dailly_tally_import_service:
+    class: DHIS\Bundle\SComDisBundle\Service\DailyTallyImportService
+    arguments:
+      - @doctrine

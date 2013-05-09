@@ -3,16 +3,23 @@
 namespace DHIS\Bundle\SComDisBundle\Controller;
 
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
+
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 
+use DHIS\Bundle\CommonBundle\Entity\Document;
+
 use DHIS\Bundle\SComDisBundle\Entity\Surveillance;
 use DHIS\Bundle\SComDisBundle\Entity\SurveillanceRepository;
+use DHIS\Bundle\SComDisBundle\Entity\SurveillanceTrendCriteria;
+use DHIS\Bundle\SComDisBundle\Entity\SurveillancePredictionCriteria;
+
 use DHIS\Bundle\SComDisBundle\Form\SurveillanceType;
 use DHIS\Bundle\SComDisBundle\Form\OutCARECReportType;
 use DHIS\Bundle\SComDisBundle\Form\SearchSurveillanceType;
 use DHIS\Bundle\SComDisBundle\Form\SurveillanceTrendCriteriaType;
-use DHIS\Bundle\SComDisBundle\Entity\SurveillanceTrendCriteria;
+use DHIS\Bundle\SComDisBundle\Form\SurveillancePredictionCriteriaType;
 
 /**
  * SurveillanceController for SComDis site.
@@ -223,6 +230,7 @@ class SurveillanceController extends AppController
         $user = $this->get('security.context')->getToken()->getUser();
         
         try {
+            
             $repo->receiveSurveillance($id, $user);
             $message = 'Received the surveillance.';
             $request->getSession()->setFlash('success', $message);
@@ -405,31 +413,37 @@ class SurveillanceController extends AppController
     public function trendAction(Request $request)
     {
         $manager = $this->get('doctrine')->getEntityManager('scomdis');
-        $repo = $manager->getRepository('DHISSComDisBundle:Syndrome4Surveillance');
-        $syndromes = $repo->findAll();
+        $syndromeRepositry = $manager->getRepository('DHISSComDisBundle:Syndrome4Surveillance');
+        $syndromes = $syndromeRepositry->findAll();
+        $sentinelSiteRepository = $manager->getRepository('DHISSComDisBundle:SentinelSite');
+        $sentinelSites = $sentinelSiteRepository->findAll();
+        $criteria = new SurveillanceTrendCriteria($syndromes, $sentinelSites);
         
-        $criteria = new SurveillanceTrendCriteria($syndromes);
-        
-        $form = $this->createForm(new SurveillanceTrendCriteriaType, $criteria);
-        //$chartSrc = 'http://chart.apis.google.com/chart?chs=800x320&chd=t:78.0,32.0,84.0&cht=lc';
-        //$chartSrc = 'http://chart.apis.google.com/chart?chs=600x400&chd=t:78.0,32.0,84.0&cht=lc';
+        $form = $this->createForm(new SurveillanceTrendCriteriaType(), $criteria);
         
         if ($request->getMethod() === 'POST') {
             $data = $request->request->get($form->getName());
             $form->bind($data);
             if ($form->isValid()) {
                 
-                // get chart source from service
+                // Get chart data from service
                 $service = $this->get('surveillance.chart_service');
-                $chartSrc = $service->createTrendChart();   // @todo Arguments
+                $lineChart = $service->createTrendChart($criteria);
                 
                 return $this->render('DHISSComDisBundle:Surveillance:chart.html.twig', array(
-                    'chartSrc' => $chartSrc,
+                    'lineChart' => $lineChart,
+                    'year_choices' => $criteria->getYearChoices(),
+                    'syndrome_choices' => $criteria->getSyndromes(),
+                    'sentinelSite_choices' => $criteria->getSentinelSites(),
+                    'syndromes' => $syndromes,
+                    'sentinelSites' => $sentinelSites,
                 ));
             }
         }
         return array(
+            'yearChoices' => $criteria->getYearChoices(),
             'syndromes' => $syndromes,
+            'sentinelSites' => $sentinelSites,
             'form' => $form->createView(),
         );
     }
@@ -440,7 +454,41 @@ class SurveillanceController extends AppController
      */
     public function predictionAction(Request $request)
     {
-        return array();
+        $manager = $this->get('doctrine')->getEntityManager('scomdis');
+        $syndromeRepositry = $manager->getRepository('DHISSComDisBundle:Syndrome4Surveillance');
+        $syndromes = $syndromeRepositry->findAll();
+        $sentinelSiteRepository = $manager->getRepository('DHISSComDisBundle:SentinelSite');
+        $sentinelSites = $sentinelSiteRepository->findAll();
+        $criteria = new SurveillancePredictionCriteria($syndromes, $sentinelSites);
+        
+        $form = $this->createForm(new SurveillancePredictionCriteriaType(), $criteria);
+        
+        if ($request->getMethod() === 'POST') {
+            $data = $request->request->get($form->getName());
+            $form->bind($data);
+            if ($form->isValid()) {
+                
+                // Get chart data from service
+                $service = $this->get('surveillance.chart_service');
+                $lineChart = $service->createPredictionChart($criteria);
+                
+                return $this->render('DHISSComDisBundle:Surveillance:chart.html.twig', array(
+                    'lineChart' => $lineChart,
+                    'year_choices' => $criteria->getYearChoices(),
+                    'syndrome_choices' => $criteria->getSyndromes(),
+                    'sentinelSite_choices' => $criteria->getSentinelSites(),
+                    'syndromes' => $syndromes,
+                    'sentinelSites' => $sentinelSites,
+                ));
+            }
+        }
+        
+        return array(
+            'yearChoices' => $criteria->getYearChoices(),
+            'syndromes' => $syndromes,
+            'sentinelSites' => $sentinelSites,
+            'form' => $form->createView(),
+        );
     }
     
     /**
@@ -450,6 +498,48 @@ class SurveillanceController extends AppController
     public function gisAction(Request $request)
     {
         return array();
+    }
+    
+    /**
+     * @Route("/import", name="scomdis_surveillance_import")
+     * @Template
+     */
+    public function importAction(Request $request)
+    {
+        $form = $this->createFormBuilder()
+                ->add('attachment', 'file')
+                ->getForm()
+        ;
+        
+        if ($request->getMethod() === 'POST') {
+            $form->bindRequest($request);
+            if ($form->isValid()) {
+                $file = $form['attachment']->getData();
+                
+                $document = new Document();
+                $document->setName($file->getClientOriginalName());
+                $document->setFile($file);
+                $user = $this->get('security.context')->getToken()->getUser();
+                $document->setUser($user);
+                
+                $manager = $this->get('doctrine')->getEntityManager('common');
+                $manager->persist($document);
+                $manager->flush();
+                
+                // Import
+                $service = $this->get('surveillance.dailly_tally_import_service');
+                if ($service->import($document)) {
+                    $request->getSession()->setFlash('success',
+                            $service->getImportedRecordsNumber().' Records were successfully imported.');
+                    return $this->redirect($this->generateUrl('scomdis_surveillance'));
+                } else {
+                    $request->getSession()->setFlash('success', $service->getErrors());
+                    return $this->redirect($this->generateUrl('scomdis_surveillance'));
+                }
+            }
+        }
+        
+        return array('form' => $form->createView());
     }
 
     /**

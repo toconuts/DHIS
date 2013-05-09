@@ -5,6 +5,7 @@ namespace DHIS\Bundle\SComDisBundle\Service;
 use Symfony\Bridge\Doctrine\RegistryInterface;
 use DHIS\Bundle\SComDisBundle\Entity\SurveillanceRepository;
 use DHIS\Bundle\SComDisBundle\Entity\Surveillance;
+
 /**
  * CAREC Weekly Report Service for Syndromic Surveillance
  *
@@ -13,7 +14,7 @@ use DHIS\Bundle\SComDisBundle\Entity\Surveillance;
 class DailyTallyReportService
 {
     /**
-     * @var type RegistryInterface
+     * @var RegistryInterface $managerRegistry
      */
     private $managerRegistry;
     
@@ -21,8 +22,7 @@ class DailyTallyReportService
      * @var DHIS\Bundle\SComDisBundle\Entity\Surveillance 
      */
     private $surveillance;
-    
-    
+
     /**
      * Constructor.
      * 

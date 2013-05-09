@@ -1,0 +1,32 @@
+{% extends 'DHISSComDisBundle::layout.html.twig' %}
+
+{% block page_title 'Syndromic Surveillance - Import - SComDis' %}
+{% block product_name 'SComDis' %}
+{% block content_title 'Syndromic Surveillance - Import' %}
+
+{% set menu = 'SComDis' %}
+{% set sidebar_menu = 'scomdis_surveillance_import' %}
+
+{% block content %}
+{% if app.request.session.hasFlash('success') %}
+<div class="alert alert-success">
+  {{ app.request.session.getFlash('success') }}
+</div>
+{% endif %}
+{% if app.request.session.hasFlash('error') %}
+<div class="alert alert-error">
+  {{ app.request.session.getFlash('error') }}
+</div>
+{% endif %}
+<form action="{{ path('scomdis_surveillance_import') }}" method="post" class="form-horizontal" {{ form_enctype(form) }}>
+  <label class="control-label">File to import</label>
+  <div class="controls">
+  {{ form_errors(form.attachment) }}
+  {{ form_widget(form.attachment) }}
+  </div>
+  {{ form_widget(form._token) }}
+  <div class="form-actions">
+    <input class="btn btn-primary" type="submit" value="Import">
+  </div>
+</form>
+{% endblock %}

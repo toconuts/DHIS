@@ -104,4 +104,34 @@ class SurveillanceRepository extends EntityRepository
         $manager->persist($surveillance);
         $manager->flush();
     }
+    
+    public function findAllByYearAndSentinelSite(array $years, array $sentinelSites) {
+        
+        $paramYears = '( ';
+        for ($i = 0; $i < count($years); $i++) {
+            $paramYears = $paramYears . 's.year = ' . $years[$i];
+            if ($i === count($years) - 1) {
+                $paramYears = $paramYears . ' )';
+            } else {
+                $paramYears = $paramYears . ' OR ';
+            }
+        };
+        
+        $paramSentinelSites = '( ';
+        for ($i = 0; $i < count($sentinelSites); $i++) {
+            $paramSentinelSites = $paramSentinelSites . 's.sentinelSite = ' . $sentinelSites[$i];
+            if ($i === count($sentinelSites) - 1) {
+                $paramSentinelSites = $paramSentinelSites . ' )';
+            } else {
+                $paramSentinelSites = $paramSentinelSites . ' OR ';
+            }
+        };
+        
+        $manager = $this->getEntityManager();
+        $query = $manager->createQuery('SELECT s FROM DHISSComDisBundle:Surveillance s WHERE ' . 
+                $paramYears . ' AND ' . $paramSentinelSites . ' ORDER BY s.year, s.weekOfYear');
+        $surveillances = $query->getResult();
+        
+        return $surveillances;
+    }
 }

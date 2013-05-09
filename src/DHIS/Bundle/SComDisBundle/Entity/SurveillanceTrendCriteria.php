@@ -2,9 +2,6 @@
 
 namespace DHIS\Bundle\SComDisBundle\Entity;
 
-use Doctrine\Common\Collections\ArrayCollection;
-//use Doctrine\ORM\Mapping as ORM;
-//use Gedmo\Mapping\Annotation as Gedmo;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
@@ -15,52 +12,72 @@ use Symfony\Component\Validator\Constraints as Assert;
  */
 class SurveillanceTrendCriteria
 {
-    
-    private $test;
-    
-    private $year_choices;
+    /**
+     * @var array $yearChoices 
+     */
+    private $yearChoices;
     
     /**
-     * @var Syndromes $syndromes
+     * @var array $syndromes
      */
     private $syndromes;
 
     /**
-     * __toString()
-     * 
-     * @return string 
+     * @var array $sentinelSites
      */
-    //public function __toString()
-    //{
-    //    return (string)$this->name;
-    //}
+    private $sentinelSites;
+    
+    /**
+     * 
+     * @var type 
+     */
+    private $useSeriesSyndromes;
 
-    public function __construct(array $syndromes, array $districts = null)
+    public function __construct(array $syndromes, array $sentinelSites)
     {
         $this->syndromes = $syndromes;
+        $this->sentinelSites = $sentinelSites;
+        $this->setYears();
+        $this->useSeriesSyndromes = false;
     }
     
-    public function setTest($value) {
-        $this->test = $value;
+    public function setYears() {
+        $year = date('Y');
+        for ($i = $year; $year >= CommonUtils::$BEGINING_YEAR; $year--){
+            $this->yearChoices[] = $year;
+        }
     }
-    
-    public function getTest() {
-        return $this->test;
-    }
-    
+
     public function setYearChoices(array $years) {
-        $this->year_choices = $years;
+        $this->yearChoices = $years;
     }
     
     public function getYearChoices() {
-        return $this->year_choices;
+        return $this->yearChoices;
     }
     
-    public function setSyndromes(array $syndromws) {
-        $this->syndromes = $syndromws;
+    public function setSyndromes(array $syndromes) {
+        $this->syndromes = $syndromes;
     }
     
     public function getSyndromes() {
         return $this->syndromes;
+    }
+    
+    public function setSentinelSites(array $sentinelSites) {
+        $this->sentinelSites = $sentinelSites;
+    }
+    
+    public function getSentinelSites() {
+        return $this->sentinelSites;
+    }
+    
+    public function setUseSeriesSyndromes($value)
+    {
+        $this->useSeriesSyndromes = $value;
+    }
+    
+    public function isUseSeriesSyndromes() {
+        return $this->useSeriesSyndromes;
     }
 }
