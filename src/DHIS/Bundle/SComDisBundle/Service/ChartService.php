@@ -23,6 +23,8 @@ class ChartService
      * @var RegistryInterface $managerRegistry
      */
     private $managerRegistry;
+    
+    private $numberOfRecord;
 
     /**
      * Constructor.
@@ -32,14 +34,19 @@ class ChartService
     public function __construct(RegistryInterface $managerRegistry)
     {
         $this->managerRegistry = $managerRegistry;
+        $this->numberOfRecord = array();
     }
     
     public function createTrendChart(SurveillanceTrendCriteria $criteria)
     {
+        set_time_limit(600);
+        ini_set("memory_limit", "1G");
+
+        $data = $this->getTrendChartData($criteria);
+        
         $lineChart = new LineChart();
         $lineChart->setTitle("Epidemic Trend");
         
-        $data = $this->getTrendChartData($criteria);
         $lineChart->setData($data);
         
         $dataLabels = $this->getSyndromeNames($criteria);
@@ -48,7 +55,7 @@ class ChartService
         return $lineChart;
     }
     
-    protected function getTrendChartData(SurveillanceTrendCriteria $criteria)
+    protected function getTrendChartData(SurveillanceTrendCriteria $criteria, $initialValue = 0)
     {
         $manager = $this->managerRegistry->getEntityManager('scomdis');
         $surveillances = $manager->getRepository('DHISSComDisBundle:Surveillance')
@@ -60,7 +67,15 @@ class ChartService
         
         $syndromeChoices = $criteria->getSyndromes();
         $numberOfSeries = $criteria->isUseSeriesSyndromes() ? count($syndromeChoices) : 1;
-        $series = array_fill(0, $numberOfSeries, -1);
+        if ($criteria->isUseSeriesSyndromes()) {
+            for ($i = 0; $i < count($syndromeChoices); $i++) {
+                $this->numberOfRecord[$syndromeChoices[$i]] = 0;
+            }
+        } else {
+            $this->numberOfRecord[0] = 0;
+        }
+
+        $series = array_fill(0, $numberOfSeries, $initialValue);
         
         $week52 = array_fill(1, 52, $series);
         $week53 = array_fill(1, 53, $series);
@@ -82,15 +97,22 @@ class ChartService
             for ($i = 0; $i < count($syndromeChoices); $i++) {
                 $surveillanceItem = $surveillance->getSurveillanceItemBySyndrome($syndromeChoices[$i]);
                 if ($criteria->isUseSeriesSyndromes()) {
+                    if (-1 === $trends[$surveillance->getYear()][$surveillance->getWeekOfYear()][$i])
+                        $trends[$surveillance->getYear()][$surveillance->getWeekOfYear()][$i] = 0;
                     $trends[$surveillance->getYear()][$surveillance->getWeekOfYear()][$i] +=  $surveillanceItem->getTotal();
+                    $this->numberOfRecord[$syndromeChoices[$i]];
                 } else {
                     $total += $surveillanceItem->getTotal();
                 }
             }
             if ($criteria->isUseSeriesSyndromes() === false) {
+                if (-1 === $trends[$surveillance->getYear()][$surveillance->getWeekOfYear()][0])
+                    $trends[$surveillance->getYear()][$surveillance->getWeekOfYear()][0] = 0;
                 $trends[$surveillance->getYear()][$surveillance->getWeekOfYear()][0] += $total;
+                $this->numberOfRecord[0]++;
             }
         }
+        
         return $trends;
     }
 
@@ -128,10 +150,10 @@ class ChartService
     
     protected function getPredictionData(array $targetYearData, SurveillancePredictionCriteria $criteria)
     {
-        // data = [year][week][series = 0]
-        $calcData = $this->getTrendChartData($criteria);
+        // CalcData = [year][week][series = 0]
+        $calcData = $this->getTrendChartData($criteria, -1);
         
-        $series = array_fill(0, 3/*Number, AVG, Threshold*/, -1);
+        $series = array_fill(0, 3/*Number, AVG, Threshold*/, 0);
         
         $weeks = array();
         $prediction = array();
@@ -162,22 +184,26 @@ class ChartService
             }
             
             // Number
-            if ($targetYearData[$criteria->getTargetYear()][$week][0] !== -1)
-                $prediction[$criteria->getTargetYear()][$week][0] = $targetYearData[$criteria->getTargetYear()][$week][0];
-            else
-                $prediction[$criteria->getTargetYear()][$week][0] = 0;
+            $prediction[$criteria->getTargetYear()][$week][0] = $targetYearData[$criteria->getTargetYear()][$week][0];
             
-            if (count($values) !== 0) {
-                // Avg
+            // Avg
+            if (count($values) > 0) {
                 $prediction[$criteria->getTargetYear()][$week][1] = round((float)(array_sum($values) / count($values)), 2);
-                
-                // Threshold
-                if (count($values) !== 1) { // Because of sample = true = (n - 1) 
-                    $prediction[$criteria->getTargetYear()][$week][2] = round($weekSet[1] + 
-                        (CommonUtils::staticsStandardDeviation($values, true) 
-                        * $confidenceCoefficient), 2);
-                }
+            } else {
+                $message = "Can not calculate average because there are not enough records. Week: ${week}. Please try to check \"no records as 0 case\" option.";
+                throw new \InvalidArgumentException($message);
             }
+            
+            // Threshold
+            if (count($values) > 1) { // Because of sample = true = (n - 1) 
+                $prediction[$criteria->getTargetYear()][$week][2] = round($weekSet[1] + 
+                    (CommonUtils::staticsStandardDeviation($values, true) 
+                    * $confidenceCoefficient), 2);
+            } else {
+                $message = "Can not calculate threshold because there are not enough records. Week: ${week}. Please try to check \"no records as 0 case\" option.";
+                throw new \InvalidArgumentException($message);
+            }
+            
         }
         
         return $prediction;

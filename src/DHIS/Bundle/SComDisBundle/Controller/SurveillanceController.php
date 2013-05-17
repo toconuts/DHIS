@@ -429,7 +429,8 @@ class SurveillanceController extends AppController
                 // Get chart data from service
                 $service = $this->get('surveillance.chart_service');
                 $lineChart = $service->createTrendChart($criteria);
-                
+
+
                 return $this->render('DHISSComDisBundle:Surveillance:chart.html.twig', array(
                     'lineChart' => $lineChart,
                     'year_choices' => $criteria->getYearChoices(),
@@ -440,6 +441,7 @@ class SurveillanceController extends AppController
                 ));
             }
         }
+        
         return array(
             'yearChoices' => $criteria->getYearChoices(),
             'syndromes' => $syndromes,
@@ -470,16 +472,19 @@ class SurveillanceController extends AppController
                 
                 // Get chart data from service
                 $service = $this->get('surveillance.chart_service');
-                $lineChart = $service->createPredictionChart($criteria);
-                
+                                        $lineChart = $service->createPredictionChart($criteria);
+                $useNoRecords = $criteria->isUseNoRecords() ? "on" : "off";
+                $note = "no records as 0 case option = $useNoRecords";
                 return $this->render('DHISSComDisBundle:Surveillance:chart.html.twig', array(
                     'lineChart' => $lineChart,
-                    'year_choices' => $criteria->getYearChoices(),
+                    'year_choices' => array($criteria->getTargetYear()),
+                    'calcYears' => $criteria->getYearChoices(),
                     'syndrome_choices' => $criteria->getSyndromes(),
                     'sentinelSite_choices' => $criteria->getSentinelSites(),
                     'syndromes' => $syndromes,
                     'sentinelSites' => $sentinelSites,
-                ));
+                    'note' => $note,
+                ));                
             }
         }
         

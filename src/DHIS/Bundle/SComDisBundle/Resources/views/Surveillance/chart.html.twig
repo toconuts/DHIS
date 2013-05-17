@@ -12,7 +12,7 @@
       function drawVisualization() {
         var data = google.visualization.arrayToDataTable([
           {% set first_time = true %}
-          {% for s in lineChart.series %}{% if loop.index0 == 0 %} ['{{ s | raw }}'{% else %}, '{{ s | raw }}'{% endif %}{% endfor %}, ''], 
+          {% for s in lineChart.series %}{% if loop.index0 == 0 %} ['{{ s | raw }}'{% else %}, '{{ s | raw }}'{% endif %}{% endfor %}, ''],
           {% for week in lineChart.data %}[{% for value in week %}{% if loop.index0 == 0 %}'{{ value }}'{% else %}, {% if value == -1 %} {% else %}{{ value }}{% endif %}{% endif %}{% endfor %}, 0],{% endfor %}
         ]);
       
@@ -24,7 +24,8 @@
                         curveType: "none",
                         pointSize: 2,
                         width: 1280, height: 720,
-                        vAxis: {maxValue: {{ lineChart.maxValue }},
+                        vAxis: {maxValue: {% if lineChart.maxValue == 0 %}10{% else %}{{ lineChart.maxValue }}{% endif %},
+                                minValue: 0,
                                 textStyle: {color: 'gray', fontName: 'Arial', fontSize: 10},
                         },
                         hAxis: {showTextEvery: 1,
@@ -32,7 +33,7 @@
                                 , slantedText: true
                         },
                         series: { {{ (lineChart.series | length) - 1 }}:{lineWidth: 0, pointSize: 0, visibleInLegend: false}},
-            });
+        });
       }
       google.setOnLoadCallback(drawVisualization);
       
@@ -40,15 +41,36 @@
   </head>
 
   <body style="font-family: Arial;border: 0 none;">
+    {% if app.request.session.hasFlash('success') %}
+    <div class="alert alert-success">
+      {{ app.request.session.getFlash('success') }}
+    </div>
+    {% endif %}
+    {% if app.request.session.hasFlash('error') %}
+    <div class="alert alert-error">
+    {{ app.request.session.getFlash('error') }}
+    </div>
+    {% endif %}
+    
     <div>
       <div class="control-group">
-        <label class="control-label">Years: </label>
+        <label class="control-label">{% if calcYears is defined %}Target Year: {% else %}Years: {% endif %}</label>
         {% set continue_year = false %}
         {% for year in year_choices %}
           {% if continue_year == false %}{% set continue_year = true %}{% else %}{{ ', ' }}{% endif %}
           {{ year }}
         {% endfor %}
       </div>
+      {% if calcYears is defined %}
+      <div class="control-group">
+        <label class="control-label">Calculation Years: </label>
+        {% set continue_year = false %}
+        {% for calcYear in calcYears %}
+          {% if continue_year == false %}{% set continue_year = true %}{% else %}{{ ', ' }}{% endif %}
+          {{ calcYear }}
+        {% endfor %}
+      </div>
+      {% endif %}
       <div class="control-group">
         <label class="control-label">Syndromes: </label>
         {% set continue_syndrome = false %}
@@ -73,6 +95,11 @@
           {% endfor %}
         {% endfor %}
       </div>
+      {% if note is defined %}
+      <div class="control-group">
+        <label class="control-label">Note: </label>{{ note }}
+      </div>
+      {% endif %}
     </div>
     <hr>
 
