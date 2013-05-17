@@ -7,7 +7,7 @@ use DHIS\Bundle\SComDisBundle\Entity\SurveillanceRepository;
 use DHIS\Bundle\SComDisBundle\Entity\Surveillance;
 
 /**
- * CAREC Weekly Report Service for Syndromic Surveillance
+ * Weekly Report Service for Syndromic Surveillance
  *
  * @author Natsuki Hara <toconuts@gmail.com>
  */
@@ -48,7 +48,7 @@ class DailyTallyReportService
     }
         
     /**
-     * Output CAREC Weekly Report.
+     * Output Weekly Report.
      * 
      * @param string $filename 
      */

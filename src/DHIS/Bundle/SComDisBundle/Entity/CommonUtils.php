@@ -39,24 +39,28 @@ class CommonUtils extends CommonUtilsBase
         return false;
     }
     
-    public static function getEPIWeekOfYear($dateTime) {
+    public static function getEPIWeekOfYear($dateTime)
+    {
+        $wednesday = clone $dateTime;
+        $interval = 3 - (int)$dateTime->format('w');
+        $wednesday->add(\DateInterval::createFromDateString("${interval}day"));
+        $year = (int)$wednesday->format('Y');
         $firstday = new \DateTime("first day of January $year");
-        $numberOfWeek = \floor(\round(((int)$dateTime->format('U')
+
+        $numberOfWeek = \floor(\round(((int)$wednesday->format('U')
                               - (int)$firstday->format('U')) 
                               / self::$SECONDS_IN_A_DAY)
                               / self::$DAYS_IN_A_WEEK) + 1;
         return $numberOfWeek;
     }
     
-    public static function getEPIYear($dataTime) {
-        $weekOfYear = self::getEPIWeekOfYear($dateTime);
-        $year = (int)$dataTime->format('Y');
+    public static function getEPIYear($dateTime)
+    {    
+        $wednesday = clone $dateTime;
+        $interval = 3 - (int)$dateTime->format('w');
+        $wednesday->add(\DateInterval::createFromDateString("${interval}day"));
+        $year = (int)$wednesday->format('Y');
         
-        // Adjust year to EPI Week
-        $month = (int)$dateTime->format('n');
-        if ($weekOfYear >= 52 && $month == 1) {
-            $year -=1;
-        }
         return $year;
     }
     

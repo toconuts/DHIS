@@ -6,11 +6,11 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilder;
 
 /**
- * OutCARECReportType,
+ * OutCARPHAReportType,
  *
  * @author Natsuki Hara <toconuts@gmail.com>
  */
-class OutCARECReportType extends AbstractType
+class OutCARPHAReportType extends AbstractType
 {
     /**
      * @inheritDoc
@@ -46,6 +46,6 @@ class OutCARECReportType extends AbstractType
      */
     public function getName()
     {
-        return 'OutCARECReport';
+        return 'OutCARPHAReport';
     }
 }

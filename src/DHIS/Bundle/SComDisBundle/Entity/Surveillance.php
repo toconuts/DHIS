@@ -152,11 +152,7 @@ class Surveillance
         }
     }
     
-    public function setWeekNumber(\DateTime $weekend) {
-// @todo delete if there is no problem.
-        //$this->year = $weekend->format('o');
-        //$this->weekOfYear = $weekend->format('W');
-        
+    public function setWeekNumber(\DateTime $weekend) {        
         $this->weekOfYear = CommonUtils::getEPIWeekOfYear($weekend);
         $this->year = CommonUtils::getEPIYear($weekend);
     }

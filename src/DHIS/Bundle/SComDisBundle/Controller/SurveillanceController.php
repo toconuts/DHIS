@@ -16,7 +16,7 @@ use DHIS\Bundle\SComDisBundle\Entity\SurveillanceTrendCriteria;
 use DHIS\Bundle\SComDisBundle\Entity\SurveillancePredictionCriteria;
 
 use DHIS\Bundle\SComDisBundle\Form\SurveillanceType;
-use DHIS\Bundle\SComDisBundle\Form\OutCARECReportType;
+use DHIS\Bundle\SComDisBundle\Form\OutCARPHAReportType;
 use DHIS\Bundle\SComDisBundle\Form\SearchSurveillanceType;
 use DHIS\Bundle\SComDisBundle\Form\SurveillanceTrendCriteriaType;
 use DHIS\Bundle\SComDisBundle\Form\SurveillancePredictionCriteriaType;
@@ -265,15 +265,15 @@ class SurveillanceController extends AppController
     }
     
     /**
-     * @Route("/out_carec_report", name="scomdis_surveillance_out_carec_report")
+     * @Route("/out_carpha_report", name="scomdis_surveillance_out_carpha_report")
      * @Template
      */
-    public function outCARECReportAction(Request $request)
+    public function outCARPHAReportAction(Request $request)
     {
         $weekend = new \DateTime('last Saturday');
         $weekend->setTime(0, 0, 0);
         
-        $form = $this->createForm(new OutCARECReportType());
+        $form = $this->createForm(new OutCARPHAReportType());
         $form['weekend']->setData($weekend);
         $form['weekOfYear']->setData(strftime('%V', time()));
         $form['year']->setData(strftime('%G', time()));
@@ -289,7 +289,7 @@ class SurveillanceController extends AppController
                 //$year = $form['year']->getData();
                 $totalSites = $form['totalSites']->getData();
                 
-                $filename = __DIR__.'/../Data/SComdis_CARECWEEKLY.xls';
+                $filename = __DIR__.'/../Data/SComdis_CARPHAWEEKLY.xls';
                 if (!file_exists($filename)) {
                     throw $this->createNotFoundException('No template found');
                 }
@@ -297,7 +297,7 @@ class SurveillanceController extends AppController
                 // Create the response
                 $response = new \Symfony\Component\HttpFoundation\Response();
                 $response->headers->set('Content-Type', 'text/vnd.ms-excel; charset=utf-8');
-                $response->headers->set('Content-Disposition', 'attachment;filename=SComDis_CAREC_WEEKLY.xls');
+                $response->headers->set('Content-Disposition', 'attachment;filename=SComDis_CARPHA_WEEKLY.xls');
                 $response->headers->set('Cache-Control', 'ax-age=0');
 
                 // If you are using a https connection, you have to set those two headers for compatibility with IE <9
@@ -308,7 +308,7 @@ class SurveillanceController extends AppController
                 $response->sendHeaders();
 
                 // Output the report
-                $service = $this->get('surveillance.carec_report_service');
+                $service = $this->get('surveillance.carpha_report_service');
                 $service->outReport($filename, $weekOfYear, $weekend, $totalSites);
 
                 return $response;
@@ -529,12 +529,15 @@ class SurveillanceController extends AppController
                 // Import
                 $service = $this->get('surveillance.dailly_tally_import_service');
                 if ($service->import($document)) {
-                    $request->getSession()->setFlash('success',
-                            $service->getImportedRecordsNumber().' Records were successfully imported.');
+                    $message = $service->getImportedRecordsNumber().' Records were successfully imported.';
+                    $warnings = $service->getLogWarn();
+                    if (count($warnings) > 0)
+                        $message = $message.'   Warnings: '.implode(', ', $warnings);
+                    $request->getSession()->setFlash('success', $message);
                     return $this->redirect($this->generateUrl('scomdis_surveillance'));
                 } else {
-                    $request->getSession()->setFlash('success', $service->getErrors());
-                    return $this->redirect($this->generateUrl('scomdis_surveillance'));
+                    $request->getSession()->setFlash('error', $service->getErrorMessage());
+                    return $this->redirect($this->generateUrl('scomdis_surveillance_import'));
                 }
             }
         }
@@ -581,5 +584,49 @@ class SurveillanceController extends AppController
         }
         
         return true;
+    }
+    
+    /**
+     * @Route("/test", name="scomdis_surveillance_test")
+     * @Template()
+     */
+    public function testAction(Request $request)
+    {
+        $manager = $this->get('doctrine')->getEntityManager('scomdis');
+        $syndromeRepository = $manager->getRepository('DHISSComDisBundle:Syndrome4Surveillance');
+        $syndromes = $syndromeRepository->findAll();
+        $surveillance = new Surveillance($syndromes);
+
+        $form = $this->createForm(new SurveillanceType(), $surveillance);
+        
+        $sentinelSiteRepository = $manager->getRepository('DHISSComDisBundle:SentinelSite');
+        $sentinelSites = $sentinelSiteRepository->findAll();
+        
+        $clinicRepository = $manager->getRepository('DHISSComDisBundle:Clinic');
+        $clinics = $clinicRepository->findAll();
+        
+        $manager = $this->get('doctrine')->getEntityManager('common');
+        $userRepository = $manager->getRepository('DHISCommonBundle:User');
+        $query = $userRepository->createQueryBuilder('r')->orderBy('r.displayname', 'ASC')->getQuery();
+        $users = $query->getResult();
+        
+        if ($request->getMethod() === 'POST') {
+            $form->bindRequest($request);
+            //$data = $request->request->get($form->getName());
+            //$form->bind($data);
+            
+            if ($form->isValid()) {
+                $weekofYear = \DHIS\Bundle\SComDisBundle\Entity\CommonUtils::getEPIWeekOfYear($surveillance->getWeekend());
+                $year = \DHIS\Bundle\SComDisBundle\Entity\CommonUtils::getEPIYear($surveillance->getWeekend());
+            }
+        }
+        
+        return array(
+            'sentinelSites' => $sentinelSites,
+            'clinics'       => $clinics,
+            'users'         => $users,
+            'form'          => $form->createView(),
+        );
+
     }
 }

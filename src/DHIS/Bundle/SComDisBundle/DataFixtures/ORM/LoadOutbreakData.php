@@ -21,6 +21,7 @@ class LoadOutbreakData extends AbstractFixture implements OrderedFixtureInterfac
      */
     public function load(ObjectManager $manager)
     {
+        return;
         $this->manager = $manager;
         
         // surveillance 01

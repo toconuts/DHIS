@@ -1,11 +1,11 @@
 {% extends 'DHISSComDisBundle::layout.html.twig' %}
 
-{% block page_title 'Syndromic Surveillance - out CAREC Report - SComDis' %}
+{% block page_title 'Syndromic Surveillance - out CARPHA Report - SComDis' %}
 {% block product_name 'SComDis' %}
-{% block content_title 'Syndromic Surveillance - CAREC Weekly Report' %}
+{% block content_title 'Syndromic Surveillance - CARPHA Weekly Report' %}
 
 {% set menu = 'SComDis' %}
-{% set sidebar_menu = 'scomdis_surveillance_out_carec_report' %}
+{% set sidebar_menu = 'scomdis_surveillance_out_carpha_report' %}
 
 {% block content %}
 {% if app.request.session.hasFlash('success') %}
@@ -19,7 +19,7 @@
 </div>
 {% endif %}
 
-<form action="{{ path('scomdis_surveillance_out_carec_report') }}" method="post" class="form-horizontal">
+<form action="{{ path('scomdis_surveillance_out_carpha_report') }}" method="post" class="form-horizontal">
   {{ form_errors(form) }}
   <div class="control-group {% if form.weekend.get('errors') %}error{% endif %}">
     <label class="control-label">Weekend</label>
@@ -46,7 +46,7 @@
     <label class="control-label">Total number of reporting sites</label>
     <div class="controls">
     {{ form_errors(form.totalSites) }}
-      <select name="OutCARECReport[totalSites]" size="1">
+      <select name="OutCARPHAReport[totalSites]" size="1">
       {% for i in 1..99 %}
         <option value="{{ i }}" {% if i == 11 %}selected{% endif %}>{{ i }}</option>
       {% endfor %}

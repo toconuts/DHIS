@@ -21,6 +21,7 @@ class LoadOutbreakItemData extends AbstractFixture implements OrderedFixtureInte
      */
     public function load(ObjectManager $manager)
     {
+        return;
         $this->manager = $manager;
   
         /*

@@ -26,14 +26,15 @@
               <a href="{{ path('scomdis_surveillance_search') }}">Search</a></li>
             <li {% if sidebar_menu == 'scomdis_surveillance_new' %}class="active"{% endif %}>
               <a href="{{ path('scomdis_surveillance_new') }}">New</a></li>
-            <li {% if sidebar_menu == 'scomdis_surveillance_out_carec_report' %}class="active"{% endif %}>
-              <a href="{{ path('scomdis_surveillance_out_carec_report') }}">CAREC Weekly Report</a></li>
+            <li {% if sidebar_menu == 'scomdis_surveillance_out_carpha_report' %}class="active"{% endif %}>
+              <a href="{{ path('scomdis_surveillance_out_carpha_report') }}">CARPHA Weekly Report</a></li>
             <li {% if sidebar_menu == 'scomdis_surveillance_trend' %}class="active"{% endif %}>
               <a href="{{ path('scomdis_surveillance_trend') }}">Trend</a></li>
             <li {% if sidebar_menu == 'scomdis_surveillance_prediction' %}class="active"{% endif %}>
               <a href="{{ path('scomdis_surveillance_prediction') }}">Prediction</a></li>
             <li {% if sidebar_menu == 'scomdis_surveillance_gis' %}class="active"{% endif %}>
               <a href="{{ path('scomdis_surveillance_gis') }}">GIS</a></li>
+            <li class="nav-header">Maintenance</li>
             <li {% if sidebar_menu == 'scomdis_surveillance_import' %}class="active"{% endif %}>
               <a href="{{ path('scomdis_surveillance_import') }}">Import</a></li>
             <li class="nav-header">Outbreak Daily Tally</li>
@@ -43,11 +44,9 @@
               <a href="{{ path('scomdis_outbreak_search') }}">Search</a></li>
             <li {% if sidebar_menu == 'scomdis_outbreak_new' %}class="active"{% endif %}>
               <a href="{{ path('scomdis_outbreak_new') }}">New</a></li>
-            <li class="nav-header">Case Notification</li>
-            <li {% if sidebar_menu == 'scomdis_case_notification' %}class="active"{% endif %}>
-              <a href="#">List</a></li>
-            <li {% if sidebar_menu == 'scomdis_case_notification_new' %}class="active"{% endif %}>
-              <a href="#">New</a></li>
+            <li class="nav-header">Test</li>
+            <li {% if sidebar_menu == 'scomdis_surveillance_test' %}class="active"{% endif %}>
+              <a href="{{ path('scomdis_surveillance_test') }}">Test</a></li>
           </ul>
         </div>
       </div>
@@ -73,7 +72,6 @@
     <script type="text/javascript" src="{{ asset('bundles/dhisscomdis/js/epiweek_calc.js') }}"></script>
     
 <script>
-//$(".weekend").datepicker({ 
 $(".epi-weekend").datepicker({ 
   dateFormat: 'dd/mm/yy',
   showWeek: true,
@@ -86,22 +84,22 @@ $(".epi-weekend").datepicker({
   if (day != 6) {
     date = new Date(date.getFullYear(), date.getMonth(), date.getDate() + (6 - day));
   }
-//  $("#surveillance_weekend").val(
+
   $(".epi-weekend").val(
       (date.getDate() < 10 ? '0' : '') + date.getDate() + "/"
    + ((date.getMonth() + 1) < 10 ? '0' : '') + (date.getMonth() + 1) + "/" 
    + date.getFullYear()
   );
 
-  var week = $.datepicker.iso8601Week(date);
+  //var week = $.datepicker.iso8601Week(date);
+  var week = epiWeekCalc(date);
   var year = date.getFullYear()
   if (week >= 52 && (date.getMonth() + 1) == 1) {
     year -= 1;
   } else if (week == 1 && (date.getMonth() + 1) == 12) {
     year += 1;
   }
-//  $("#surveillance_weekOfYear").val(week);
-//  $("#surveillance_year").val(year);
+
   $(".epi-weekOfYear").val(week);
   $(".epi-year").val(year);
   }
@@ -109,7 +107,6 @@ $(".epi-weekend").datepicker({
 </script>
 <script>
 $(".epi-date").datepicker({ 
-//$(".date").datepicker({ 
 dateFormat: 'dd/mm/yy',
   showWeek: true,
   changeMonth: true,

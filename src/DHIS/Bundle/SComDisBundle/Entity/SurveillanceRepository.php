@@ -26,6 +26,10 @@ class SurveillanceRepository extends EntityRepository
             throw new \InvalidArgumentException('Error: Duplicated surveillance.');
         }
         
+        if ("6" !== $surveillance->getWeekend()->format('w')) {
+            throw new \InvalidArgumentException('Error: Invalid weekend.');
+        }
+        
         $manager->persist($surveillance);
         
         foreach ($surveillance->surveillanceItems as $item ) {

@@ -47,17 +47,23 @@ class LoadSyndrome4SurveillanceData extends AbstractFixture implements OrderedFi
         // ARI >= 5
         $symptom08 = $this->createSyndrome4SurveillanceSite(8, 'ARI >= 5', 8);
         
-        // Skin Rash
-        $symptom09 = $this->createSyndrome4SurveillanceSite(9, 'Skin Rash', 9);
+        // Skin Infection
+        $symptom09 = $this->createSyndrome4SurveillanceSite(9, 'Skin Infection', 9);
         
         // Conjunctivitis
         $symptom10 = $this->createSyndrome4SurveillanceSite(10, 'Conjunctivitis', 10);
         
-        // Genital discharge
+        // Genital Discharge
         $symptom11 = $this->createSyndrome4SurveillanceSite(11, 'Genital Discharge', 11);
         
-        // Genital ulcer
-        $symptom12 = $this->createSyndrome4SurveillanceSite(12, 'Genital Ulcer', 12);
+        // Genital Lesion
+        $symptom12 = $this->createSyndrome4SurveillanceSite(12, 'Genital Lesion', 12);
+        
+        // HIV
+        $symptom13 = $this->createSyndrome4SurveillanceSite(13, 'HIV', 13);
+        
+        // Morbidity
+        $symptom14 = $this->createSyndrome4SurveillanceSite(14, 'Morbidity', 14);
         
         $this->manager->flush();
         
@@ -73,6 +79,8 @@ class LoadSyndrome4SurveillanceData extends AbstractFixture implements OrderedFi
         $this->addReference('S4S_SYMPTOM10', $symptom10);
         $this->addReference('S4S_SYMPTOM11', $symptom11);
         $this->addReference('S4S_SYMPTOM12', $symptom12);
+        $this->addReference('S4S_SYMPTOM13', $symptom13);
+        $this->addReference('S4S_SYMPTOM14', $symptom14);
     }
     
     protected function createSyndrome4SurveillanceSite($id, $name, $displayId) {

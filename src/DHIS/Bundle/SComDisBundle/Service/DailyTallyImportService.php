@@ -23,14 +23,19 @@ class DailyTallyImportService
     private $managerRegistry;
     
     /**
-     * @var array $logs
+     * @var array $logInfo
      */
-    private $logs;
+    private $logInfo;
     
     /**
-     * @var array $errors
+     * @var array $logWarn
      */
-    private $errors;
+    private $logWarn;
+    
+    /**
+     * @var string $errorMessage
+     */
+    private $errorMessage;
     
     /**
      * @var int 
@@ -43,6 +48,8 @@ class DailyTallyImportService
     
     private $clinicRepository;
     
+    private $syndromeRepository;
+    
     public static $CNV_TBL_SENTINEL_CODE = array(
         1 => 1,     // MARIGOT
         2 => 2,     // GRAND BAY
@@ -52,7 +59,7 @@ class DailyTallyImportService
         6 => 6,     // POTSMOUTH
         7 => 7,     // ROSEAU
         8 => 8,     // PMH
-                    // 9 is ROSS UNIVERSITY but only exist new system
+                    // 9 is ROSS UNIVERSITY but only exists new system
     );
     
     public static $CNV_TBL_CLINIC_CODE = array(
@@ -102,7 +109,7 @@ class DailyTallyImportService
         'P8' => 608,
         
         /* ROSEAU */
-        'RC' => 701,
+        'RC'  => 701,
         'RN1' => 702,
         'RN2' => 703,
         'RN3' => 704,
@@ -131,8 +138,8 @@ class DailyTallyImportService
 
     );
     
-    public static $CNV_TBL_SYNDROME_INDEX = array(
-         1 => 5,    // Gastroenteritis < 5
+    public static $CNV_TBL_SYNDROME_OFFSET = array(
+         1 =>  5,   // Gastroenteritis < 5
          2 => 13,   // Gastroenteritis >= 5
          3 => 21,   // Undifferentiated Fever < 5
          4 => 29,   // Undifferentiated Fever >= 5
@@ -140,7 +147,6 @@ class DailyTallyImportService
          6 => 45,   // Ferver & Hemorrhagic Symptoms
          7 => 53,   // ARI < 5
          8 => 61,   // ARI >= 5
-//@todo check ahmed        
          9 => 77,   // Skin Rash
         10 => 69,   // Conjunctivitis
         11 => 85,   // Genital Discharge
@@ -155,27 +161,39 @@ class DailyTallyImportService
     public function __construct(RegistryInterface $managerRegistry)
     {
         $this->managerRegistry = $managerRegistry;
-        $this->logs= array();
-        $this->errors = array();
+        $this->logInfo = array();
+        $this->logWarn = array();
+        $this->errorMessage = '';
         $this->importedRecordsNumber = 0;
     }
     
     /**
      * @return array 
      */
-    public function getLogs()
+    public function getLogInfo()
     {
-        return array();
+        return $this->logInfo;
     }
     
     /**
      * @return array
      */
-    public function getErrors()
+    public function getLogWarn()
     {
-        return array();
+        return $this->logWarn;
     }
     
+    /**
+     * @return array
+     */
+    public function getErrorMessage()
+    {
+        return $this->errorMessage;
+    }
+    
+    /**
+     * @return int
+     */
     public function getImportedRecordsNumber()
     {
         return $this->importedRecordsNumber;
@@ -190,10 +208,13 @@ class DailyTallyImportService
      */
     public function import(Document $document, $isLegacy = true)
     {
+        set_time_limit(600);
+        ini_set("memory_limit", "1G");
+        
         $manager = $this->managerRegistry->getEntityManager('common');
         
         $this->clear();
-        $this->log("Start Importing");
+        $this->logInfo("Start Importing");
         
         $result = false;
         
@@ -208,7 +229,7 @@ class DailyTallyImportService
         $manager->persist($document);
         $manager->flush();
         
-        $this->log("End Importing. Sutatus: ". ($result ? 'Success' : 'Failure'));
+        $this->logInfo("End Importing. Sutatus: ". ($result ? 'Success' : 'Failure'));
         
         return $result;
     }
@@ -219,37 +240,64 @@ class DailyTallyImportService
         $this->surveillanceRepository = $manager->getRepository('DHISSComDisBundle:Surveillance');
         $this->sentinelSiteRepository = $manager->getRepository('DHISSComDisBundle:SentinelSite');
         $this->clinicRepository = $manager->getRepository('DHISSComDisBundle:Clinic');
-        $syndromeRepository = $manager->getRepository('DHISSComDisBundle:Syndrome4Surveillance');
-        $syndromes = $syndromeRepository->findAll();
+        $this->syndromeRepository = $manager->getRepository('DHISSComDisBundle:Syndrome4Surveillance');     
+        $syndromes = $this->syndromeRepository->findAll();
         
-        $filepath = $document->getAbsolutePath();
-        $handle = fopen($filepath, "r");
-        while ($csv = fgetcsv($handle)) {
-            $res = mb_convert_variables("UTF-8", "SJIS-win", $csv);
-            if (false !== $res) {
+        try {
+            $manager->getConnection()->beginTransaction();
+        
+            $filepath = $document->getAbsolutePath();
+            $handle = fopen($filepath, "r");
+            while ($csv = fgetcsv($handle)) {
+                $res = mb_convert_variables("UTF-8", "SJIS-win", $csv);
+                if (!$res) {
+                    $message = "Importing Error Occured. Can not convert Multi Byte. ID:".$csv[0];
+                    throw new \InvalidArgumentException($message);
+                }
+                
                 $surveillance = new Surveillance($syndromes);
-                
                 $res = $this->convert($surveillance, $csv);
-                if (false !== $res) {
-                    $this->log("ID: ".$csv[0]." Sentinel: ".$csv[1]." Clinic: ".$csv[2]);
-                
-                    $manager->persist($surveillance);
+                if ($res) {
+                    try {
+                        $this->surveillanceRepository->saveSurveillance($surveillance);
+                    } catch (\InvalidArgumentException $e) {
+                        $message = $e->getMessage()." - ID: ".$csv[0]." Sentinel: ".$csv[1]." Clinic: ".$csv[2];
+                        throw new \InvalidArgumentException($message);
+                    }
                     $this->importedRecordsNumber++;
+                    $this->logInfo("Import Record - ID: ".$csv[0]." Sentinel: ".$csv[1]." Clinic: ".$csv[2]);
+                } else {
+                    // Not error, only ignore this record.
+                    $this->logWarn("Ignore Record - ID: ".$csv[0]." Sentinel: ".$csv[1]." Clinic: ".$csv[2]);
                 }
             }
             
-            if (false === $res) {
-                $this->error("Importing Error Occured. ID:".$csv[0]);
-                return false;
-            }
+            $manager->getConnection()->commit();
+            
+        } catch (\Exception $e) {
+            $manager->getConnection()->rollback();
+            $this->errorMessage = $e->getMessage();
+            return false;
         }
-        
-        $manager->flush();
         return true;
     }
     
     protected function convert(Surveillance $surveillance, $csv)
     {
+        // Check the record
+        $bool1 = empty($csv[1]);
+        $bool1 = $csv[1] === "0" ? true : false;
+        $bool1 = empty($csv[2]);
+        $bool1 = $csv[2] === "0" ? true : false;
+        
+        if ((empty($csv[1]) || $csv[1] === "0") || (empty($csv[2]) || $csv[2] === "0" ))
+            return false;
+        
+        $weekend = new \DateTime($csv[3]);
+        $weekend->setTime(0, 0, 0);
+        if (2004 > CommonUtils::getEPIYear($weekend))
+            return false;
+
         // Clinic
         $clinicId = self::$CNV_TBL_CLINIC_CODE[$csv[2]];
         $clinic = $this->clinicRepository->find($clinicId);
@@ -262,16 +310,14 @@ class DailyTallyImportService
         $sentinelSite = $this->sentinelSiteRepository->find($sentinelSiteId);
         $surveillance->setSentinelSite($sentinelSite);
         
-        // weekend
-        $weekend = new \DateTime($csv[3]);
-        $weekend->setTime(0, 0, 0);
+        // weekend     
         $surveillance->setWeekend($weekend);
         
         // week_of_year & year
         $surveillance->setWeekNumber($weekend);
         
         // Reported_by
-        $surveillance->setReportedBy('Unknown - Imported by system');
+        $surveillance->setReportedBy('Imported by system');
         
         // Reported_at
         if (CommonUtils::isDate($csv[4])) {
@@ -286,28 +332,25 @@ class DailyTallyImportService
             $surveillance->setReceivedBy('Epidemiologist');
         }
         
+        // Serveillance Items
         $surveillanceItems = $surveillance->getSurveillanceItems();
         foreach ($surveillanceItems as $surveillanceItem) {
-            $surveillanceItem->getSyndrome()->getId();
-            
-            $startIndex = 1;
-            $surveillanceItem->setSunday(   $csv[$startIndex + 0]);
-            $surveillanceItem->setMonday(   $csv[$startIndex + 1]);
-            $surveillanceItem->setTuesday(  $csv[$startIndex + 2]);
-            $surveillanceItem->setWednesday($csv[$startIndex + 3]);
-            $surveillanceItem->setThursday( $csv[$startIndex + 4]);
-            $surveillanceItem->setFriday(   $csv[$startIndex + 5]);
-            $surveillanceItem->setSaturday( $csv[$startIndex + 6]);
-            $surveillanceItem->setReferrals($csv[$startIndex + 7]);
-            
+            $id = $surveillanceItem->getSyndrome()->getId();
+            if (0 < $id && $id < 13) {
+                $offset = self::$CNV_TBL_SYNDROME_OFFSET[$id];
+                $surveillanceItem->setSunday(   $csv[$offset + 0]);
+                $surveillanceItem->setMonday(   $csv[$offset + 1]);
+                $surveillanceItem->setTuesday(  $csv[$offset + 2]);
+                $surveillanceItem->setWednesday($csv[$offset + 3]);
+                $surveillanceItem->setThursday( $csv[$offset + 4]);
+                $surveillanceItem->setFriday(   $csv[$offset + 5]);
+                $surveillanceItem->setSaturday( $csv[$offset + 6]);
+                $surveillanceItem->setReferrals($csv[$offset + 7]);
+            }
         }
         
-        
-        // Check Duplicated. huyou repo ni wataseba wakaruka
-        
         return true;
-    }
-    
+    }    
     
     protected function importFromNewSys(Document $document)
     {
@@ -317,18 +360,19 @@ class DailyTallyImportService
     
     protected function clear()
     {
-        $this->logs = array();
-        $this->errors= array();
+        $this->logInfo = array();
+        $this->logWarn = array();
+        $this->errorMessage = '';
         $this->importedRecordsNumber = 0;
     }
     
-    protected function log($message)
+    protected function logInfo($message)
     {
-        $this->logs[] = $message;
+        $this->logInfo[] = $message;
     }
     
-    protected function error($message)
+    protected function logWarn($message)
     {
-        $this->errors[] = $message;
+        $this->logWarn[] = $message;
     }
 }

@@ -38,17 +38,17 @@ class LoadSyndrome4OutbreakData extends AbstractFixture implements OrderedFixtur
         // ARI
         $symptom05 = $this->createSyndrome4OutbreakSite(5, 'ARI', 5);
         
-        // Skin Rash
+        // Skin Infection
         $symptom06 = $this->createSyndrome4OutbreakSite(6, 'Skin Rash', 6);
         
         // Conjunctivitis
         $symptom07 = $this->createSyndrome4OutbreakSite(7, 'Conjunctivitis', 7);
         
         // Genital discharge
-        $symptom08 = $this->createSyndrome4OutbreakSite(8, 'Genital discharge', 8);
+        $symptom08 = $this->createSyndrome4OutbreakSite(8, 'Genital Discharge', 8);
         
-        // Genital ulcer
-        $symptom09 = $this->createSyndrome4OutbreakSite(9, 'Genital ulcer', 9);
+        // Genital Lesion
+        $symptom09 = $this->createSyndrome4OutbreakSite(9, 'Genital Lesion', 9);
         
         $this->manager->flush();
         
