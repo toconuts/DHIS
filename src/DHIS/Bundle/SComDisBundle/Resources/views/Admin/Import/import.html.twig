@@ -5,7 +5,7 @@
 {% block content_title 'Syndromic Surveillance - Import' %}
 
 {% set menu = 'SComDis' %}
-{% set sidebar_menu = 'scomdis_surveillance_import' %}
+{% set sidebar_menu = 'scomdis_admin_import' %}
 
 {% block content %}
 {% if app.request.session.hasFlash('success') %}
@@ -18,7 +18,7 @@
   {{ app.request.session.getFlash('error') }}
 </div>
 {% endif %}
-<form action="{{ path('scomdis_surveillance_import') }}" method="post" class="form-horizontal" {{ form_enctype(form) }}>
+<form action="{{ path('scomdis_admin_import') }}" method="post" class="form-horizontal" {{ form_enctype(form) }}>
   <label class="control-label">File to import</label>
   <div class="controls">
   {{ form_errors(form.attachment) }}

@@ -64,79 +64,89 @@ class DailyTallyImportService
     
     public static $CNV_TBL_CLINIC_CODE = array(
         /* MARIGOT */
-        'M1' => 101,
-        'M2' => 102,
-        'M3' => 103,
-        'M4' => 104,
-        'M5' => 105,
+        'M1' => 1001,
+        'M2' => 1002,
+        'M3' => 1003,
+        'M4' => 1004,
+        'M5' => 1005,
         
         /* GRAND BAY */
-        'G1' => 201,
-        'G2' => 202,
-        'G3' => 203,
-        'G4' => 204,
-        'G5' => 205,
+        'G1' => 2001,
+        'G2' => 2002,
+        'G3' => 2003,
+        'G4' => 2004,
+        'G5' => 2005,
         
         /* ST JOSEPH */
-        'J1' => 301,
-        'J2' => 302,
-        'J3' => 303,
-        'J4' => 304,
-        'J5' => 305,
+        'J1' => 3001,
+        'J2' => 3002,
+        'J3' => 3003,
+        'J4' => 3004,
+        'J5' => 3005,
         
         /* LA PLAINE */
-        'L1' => 401,
-        'L2' => 402,
-        'L3' => 403,
-        'L4' => 404,
-        'L5' => 405,
+        'L1' => 4001,
+        'L2' => 4002,
+        'L3' => 4003,
+        'L4' => 4004,
+        'L5' => 4005,
         
         /* CASTLE BRUCE */
-        'C1' => 501,
-        'C2' => 502,
-        'C3' => 503,
-        'C4' => 504,
-        'C5' => 505,
+        'C1' => 5001,
+        'C2' => 5002,
+        'C3' => 5003,
+        'C4' => 5004,
+        'C5' => 5005,
         
         /* PORTSMOUTH */
-        'P1' => 601,
-        'P2' => 602,
-        'P3' => 603,
-        'P4' => 604,
-        'P5' => 605,
-        'P6' => 606,
-        'P7' => 607,
-        'P8' => 608,
+        'P1' => 6001,
+        'P2' => 6002,
+        'P3' => 6003,
+        'P4' => 6004,
+        'P5' => 6005,
+        'P6' => 6006,
+        'P7' => 6007,
+        'P8' => 6008,
         
         /* ROSEAU */
-        'RC'  => 701,
-        'RN1' => 702,
-        'RN2' => 703,
-        'RN3' => 704,
-        'RN4' => 705,
-        'RN5' => 706,
-        'RS1' => 707,
-        'RS2' => 708,
-        'RS3' => 709,
-        'RS4' => 710,
-        'RV1' => 711,
-        'RV2' => 712,
-        'RV3' => 713,
-        'RV4' => 714,
-        'RV5' => 715,
-        'RV6' => 716,
-        'RV7' => 717,
+        /* ROSEAU CENTRAL */
+        'RC'  => 7101,
+        
+        /* ROSEAU NORTH */
+        'RN1' => 7201,
+        'RN2' => 7202,
+        'RN3' => 7203,
+        'RN4' => 7204,
+        'RN5' => 7205,
+        // 7206 new system also have Campbell
+        // 7207 new system also have Warner
+        
+        /* ROSEAU SOUTH */
+        'RS1' => 7301,
+        'RS2' => 7302,
+        'RS3' => 7303,
+        'RS4' => 7304,
+        
+        /* ROSEAU VALLEY */
+        'RV1' => 7401,
+        'RV2' => 7402,
+        'RV3' => 7403,
+        'RV4' => 7404,
+        'RV5' => 7405,
+        'RV6' => 7406,
+        'RV7' => 7407,
         
         /* PMH */
-        '2' => 802,
-        '3' => 803,
-        '4' => 804,
-        '5' => 805,
+        '2' => 8002,
+        '3' => 8003,
+        '4' => 8004,
+        '5' => 8005,
         
         /* ROSS UNIVERSITY */
-        'P9' => 901,    // also need to change sentinel code 6 -> 9
-
+        'P9' => 9001,    // also need to change sentinel code 6 -> 9
     );
+    
+    public static $ROSSUNIVERSITY_ID = 9001;
     
     public static $CNV_TBL_SYNDROME_OFFSET = array(
          1 =>  5,   // Gastroenteritis < 5
@@ -305,7 +315,7 @@ class DailyTallyImportService
         
         // Sentinel Site
         $sentinelSiteId = self::$CNV_TBL_SENTINEL_CODE[$csv[1]];
-        if ($clinicId === 901) // ROSS Univ.
+        if ($clinicId === self::$ROSSUNIVERSITY_ID)
             $sentinelSiteId = 9;
         $sentinelSite = $this->sentinelSiteRepository->find($sentinelSiteId);
         $surveillance->setSentinelSite($sentinelSite);

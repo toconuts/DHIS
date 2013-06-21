@@ -1,0 +1,22 @@
+{% extends '::base.html.twig' %}
+
+{% set nodisp_navbar = 'true' %}
+
+{% block stylesheets %}
+  {{ parent() }}
+  {% stylesheets '@DHISCommonBundle/Resources/public/css/main.css'
+                 '@DHISSComDisBundle/Resources/public/css/content.css' %}
+    <link href="{{ asset_url }}" type="text/css" rel="stylesheet" />
+  {% endstylesheets %}
+{% endblock %}
+
+{% block body %}    
+  <div class="wrapper-with-sidebar">
+      {% block content %}{% endblock %}
+  </div>
+{% endblock %}
+
+{% block javascripts %}
+  {{ parent() }}
+    <script type="text/javascript" src="{{ asset('bundles/dhisscomdis/js/jquery_hselect.js') }}"></script>
+{% endblock %}

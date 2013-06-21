@@ -4,9 +4,10 @@ namespace DHIS\Bundle\SComDisBundle\Entity;
 
 
 /**
- * Description of LineChart
+ * LineChart.
  *
  * @author Natsuki Hara <toconuts@gmail.com>
+ * 
  */
 class LineChart
 {

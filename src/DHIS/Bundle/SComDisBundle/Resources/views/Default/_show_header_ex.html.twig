@@ -1,4 +1,4 @@
-{% extends "DHISSComDisBundle:Surveillance:_show_header.html.twig" %}
+{% extends "DHISSComDisBundle:Default:_show_header.html.twig" %}
 
 {% block after_content %}
 <tr>
@@ -12,7 +12,7 @@
   <td colspan="2">Unreceived</td>
   <td colspan="3">
     {% if is_granted('ROLE_SCOMDIS_ADMIN') %}
-    <a href="{{ path('scomdis_surveillance_receive', {'id': surveillance.id}) }}" class="btn btn-primary">Receive</a>
+    <a href="{{ path('scomdis_receive', {'id': surveillance.id}) }}" class="btn btn-primary">Receive</a>
     {% endif %}
   </td>
   {% endif %}

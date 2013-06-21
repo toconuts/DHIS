@@ -111,6 +111,31 @@ class SurveillanceRepository extends EntityRepository
     
     public function findAllByYearAndSentinelSite(array $years, array $sentinelSites) {
         
+        $paramYears = $this->getParamYears($years);
+        $paramSentinelSites = $this->getParamSentinelSites($sentinelSites);
+        
+        $manager = $this->getEntityManager();
+        $query = $manager->createQuery('SELECT s FROM DHISSComDisBundle:Surveillance s WHERE ' . 
+                $paramYears . ' AND ' . $paramSentinelSites . ' ORDER BY s.year, s.weekOfYear');
+        $surveillances = $query->getResult();
+        
+        return $surveillances;
+    }
+    
+    public function findAllByYear(array $years) {
+        
+        $paramYears = $this->getParamYears($years);
+        
+        $manager = $this->getEntityManager();
+        $query = $manager->createQuery('SELECT s FROM DHISSComDisBundle:Surveillance s WHERE ' . 
+                $paramYears . ' ORDER BY s.year, s.weekOfYear');
+        $surveillances = $query->getResult();
+        
+        return $surveillances;
+    }
+    
+    protected function getParamYears(array $years) {
+
         $paramYears = '( ';
         for ($i = 0; $i < count($years); $i++) {
             $paramYears = $paramYears . 's.year = ' . $years[$i];
@@ -121,6 +146,11 @@ class SurveillanceRepository extends EntityRepository
             }
         };
         
+        return $paramYears;
+    }
+    
+    protected function getParamSentinelSites(array $sentinelSites) {
+
         $paramSentinelSites = '( ';
         for ($i = 0; $i < count($sentinelSites); $i++) {
             $paramSentinelSites = $paramSentinelSites . 's.sentinelSite = ' . $sentinelSites[$i];
@@ -131,11 +161,7 @@ class SurveillanceRepository extends EntityRepository
             }
         };
         
-        $manager = $this->getEntityManager();
-        $query = $manager->createQuery('SELECT s FROM DHISSComDisBundle:Surveillance s WHERE ' . 
-                $paramYears . ' AND ' . $paramSentinelSites . ' ORDER BY s.year, s.weekOfYear');
-        $surveillances = $query->getResult();
-        
-        return $surveillances;
+        return $paramSentinelSites;
     }
+
 }

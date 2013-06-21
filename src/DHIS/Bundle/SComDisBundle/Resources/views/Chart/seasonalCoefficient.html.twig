@@ -1,0 +1,198 @@
+{% extends 'DHISSComDisBundle::popupLayout.html.twig' %}
+
+{% block page_title 'Chart Surveillance - SComDis' %}
+{% block product_name 'SComDis' %}
+{% block content_title 'Chart Surveillance - SComDis' %}
+
+{% block javascripts %}
+  {{ parent() }}
+    <script type="text/javascript" src="http://www.google.com/jsapi"></script>
+    <script type="text/javascript">
+      google.load('visualization', '1', {packages: ['corechart']});
+    </script>
+    <script type="text/javascript">
+      function drawVisualization() {
+        var data = google.visualization.arrayToDataTable([
+          ['weak'{% for district in epidemicPhase.districts[1] %}{% if (epidemicPhase.showIslandwide == false) and (district.id == 0) %}{% else %}, '{{ district.name | raw }}'{% endif %}{% endfor %}, ''],
+          [0{% for district in epidemicPhase.districts[1] %}{% if (epidemicPhase.showIslandwide == false) and (district.id == 0) %}{% else %}, 0{% endif %}{% endfor %}, 0],
+          {% for week, districts in epidemicPhase.districts %}
+          [{{ week }}{% for district in districts %}{% if (epidemicPhase.showIslandwide == false) and (district.id == 0) %}{% else %}, {{ district.coefficient }}{% endif %}{% endfor %}, 0],
+          {% endfor %}
+        ]);
+      
+        new google.visualization.LineChart(document.getElementById('visualization')).
+            draw(data, {title: '{{ epidemicPhase.title | raw }}',
+                        titleTextStyle: {color: 'gray', fontName: 'Arial', fontSize: 20},
+                        fontSize: 10,
+                        fontName: 'Arial',
+                        curveType: "none",
+                        pointSize: 2,
+                        width: 1280, height: 768,
+                        vAxis: {maxValue: {% if epidemicPhase.maxCoefficientValue == 0 %}10{% else %}{{ epidemicPhase.maxCoefficientValue }}{% endif %},
+                                minValue: {% if epidemicPhase.minCoefficientValue == 0 %}-20{% else %}{{ epidemicPhase.minCoefficientValue }}{% endif %},
+                                textStyle: {color: 'gray', fontName: 'Arial', fontSize: 10},
+                        },
+                        hAxis: {showTextEvery: 1,
+                                textStyle: {color: 'gray', fontName: 'Arial', fontSize: 10}
+                                , slantedText: true
+                        },
+                        series: { {% if epidemicPhase.showIslandwide == true %}{{ epidemicPhase.districts[1] | length }}{% else %}{{ (epidemicPhase.districts[1] | length) - 1}}{% endif %}:{lineWidth: 0, pointSize: 0, visibleInLegend: false}},
+        });
+      }
+      google.setOnLoadCallback(drawVisualization);
+      
+    </script>
+{% endblock %}
+
+{% block content %}
+  <div class="container">
+    
+    {% if app.request.session.hasFlash('success') %}
+    <div class="alert alert-success">
+      {{ app.request.session.getFlash('success') }}
+    </div>
+    {% endif %}
+    {% if app.request.session.hasFlash('error') %}
+    <div class="alert alert-error">
+    {{ app.request.session.getFlash('error') }}
+    </div>
+    {% endif %}
+    {% if app.request.session.hasFlash('warn') %}
+    <div class="alert alert">
+    {{ app.request.session.getFlash('warn') }}
+    </div>
+    {% endif %}
+    
+    <table class="table table-striped table-bordered">
+      <tbody>
+        <tr>
+        <th>Target Year: </th>
+        <td>{{ epidemicPhase.year }}</td>
+        </tr>
+        <tr>
+        <th>Calculation Years: </th>
+        <td>{% set continue_year = false %}
+        {% for calcYear in epidemicPhase.calcYears %}
+          {% if continue_year == false %}{% set continue_year = true %}{% else %}{{ ', ' }}{% endif %}
+          {{ calcYear }}
+        {% endfor %}</td>
+        </tr>
+        <tr>
+        <th>Syndromes: </th>
+        <td>{% set continue_syndrome = false %}
+        {% for syndrome in epidemicPhase.syndromes %}
+              {% if continue_syndrome == false %}{% set continue_syndrome = true %}{% else %}{{ ', ' }}{% endif %}
+              {{ syndrome.name }}
+        {% endfor %}</td>
+        </tr>
+        <tr>
+        <th>Note: </th>
+        <td>Calc. no records as 0 case option={% if epidemicPhase.useNoRecord  == true %}on{% else %}off{% endif %}, Calc. coefficient using islandwide SD and average that devided by population ratio option={% if epidemicPhase.useLandwideSD == true %}on{% else %}off{% endif %}, Show islandwide option={% if epidemicPhase.showIslandwide == true %}on{% else %}off{% endif %}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div id="visualization" style="width: 1280px; height: 768px;"></div>
+    
+  <div class="container">
+    <table class="table table-striped table-bordered">
+      {% if epidemicPhase.useLandwideSD == true %}
+      <thead>
+        <tr>
+          <th rowspan="2">Week</th>
+          {% for district in epidemicPhase.districts[1] %}
+            {% if district.id == 0 %}
+            <th colspan="6">{{ district.name }} - {{ district.population | number_format }} ({{ district.ratio * 100 }}%)</th>
+            {% else %}
+            <th colspan="3">{{ district.name }} - {{ district.population | number_format }} ({{ district.ratio * 100 }}%)</th>
+            {% endif %}
+          {% endfor %}
+          <th rowspan="2">Week</th>
+        </tr>
+        <tr>
+          {% for district in epidemicPhase.districts[1] %}
+            {% if district.id == 0 %}
+            <th>T</th>
+            <th>C</th>
+            <th>NUM</th>
+            <th>AVG</th>
+            <th>SD</th>
+            <th>COEF</th>
+            {% else %}
+            <th>T</th>
+            <th>AVG</th>
+            <th>COEF</th>
+            {% endif %}
+          {% endfor %}
+        </tr>
+      </thead>
+      <tbody>
+      {% for week, districts in epidemicPhase.districts %}
+        <tr>
+        <td>{{ week }}</td>
+        {% for district in districts %}
+          {% if district.id == 0 %}
+          <td>{{ district.totalOfTargetCases }}</td>
+          <td>{{ district.totalOfCalcCases }}</td>
+          <td>{{ district.numberOfCalcCases }}</td>
+          <td>{{ district.average }}</td>
+          <td>{{ district.sd }}</td>
+          <td>{{ district.coefficient }}</td>
+          {% else %}
+          <td>{{ district.totalOfTargetCases }}</td>
+          <td>{{ district.average }}</td>
+          <td>{{ district.coefficient }}</td>          
+          {% endif %}
+        {% endfor %}
+        <td>{{ week }}</td>
+        </tr>
+      {% endfor %}
+      </tbody>
+      
+      {% else %}
+      <thead>
+        <tr>
+          <th rowspan="2">Week</th>
+          {% for district in epidemicPhase.districts[1] %}
+            {% if (epidemicPhase.showIslandwide == false) and (district.id == 0) %}{% else %}
+            <th colspan="6">{{ district.name }}</th>
+            {% endif %}
+          {% endfor %}
+          <th rowspan="2">Week</th>
+        </tr>
+        <tr>
+          {% for district in epidemicPhase.districts[1] %}
+            {% if (epidemicPhase.showIslandwide == false) and (district.id == 0) %}{% else %}
+            <th>T</th>
+            <th>C</th>
+            <th>NUM</th>
+            <th>AVG</th>
+            <th>SD</th>
+            <th>COEF</th>
+            {% endif %}
+          {% endfor %}
+        </tr>
+      </thead>
+      <tbody>
+      {% for week, districts in epidemicPhase.districts %}
+        <tr>
+        <td>{{ week }}</td>
+        {% for district in districts %}
+          {% if (epidemicPhase.showIslandwide == false) and (district.id == 0) %}{% else %}
+          <td>{{ district.totalOfTargetCases }}</td>
+          <td>{{ district.totalOfCalcCases }}</td>
+          <td>{{ district.numberOfCalcCases }}</td>
+          <td>{{ district.average }}</td>
+          <td>{{ district.sd }}</td>
+          <td>{{ district.coefficient }}</td>
+          {% endif %}
+        {% endfor %}
+        <td>{{ week }}</td>
+        </tr>
+      {% endfor %}
+      </tbody>
+      {% endif %}
+    </table>
+  </div>
+{% endblock %}

@@ -5,7 +5,7 @@
 {% block content_title 'Syndromic Surveillance - CARPHA Weekly Report' %}
 
 {% set menu = 'SComDis' %}
-{% set sidebar_menu = 'scomdis_surveillance_out_carpha_report' %}
+{% set sidebar_menu = 'scomdis_report_carpha_weekly' %}
 
 {% block content %}
 {% if app.request.session.hasFlash('success') %}
@@ -19,7 +19,7 @@
 </div>
 {% endif %}
 
-<form action="{{ path('scomdis_surveillance_out_carpha_report') }}" method="post" class="form-horizontal">
+<form action="{{ path('scomdis_report_carpha_weekly') }}" method="post" class="form-horizontal">
   {{ form_errors(form) }}
   <div class="control-group {% if form.weekend.get('errors') %}error{% endif %}">
     <label class="control-label">Weekend</label>

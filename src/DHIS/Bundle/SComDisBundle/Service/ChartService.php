@@ -7,6 +7,7 @@ use DHIS\Bundle\SComDisBundle\Entity\SurveillanceRepository;
 use DHIS\Bundle\SComDisBundle\Entity\Surveillance;
 Use DHIS\Bundle\SComDisBundle\Entity\SurveillanceTrendCriteria;
 use DHIS\Bundle\SComDisBundle\Entity\SurveillancePredictionCriteria;
+use DHIS\Bundle\SComDisBundle\Entity\SurveillanceCoefficientCriteria;
 use DHIS\Bundle\SComDisBundle\Entity\CommonUtils;
 use DHIS\Bundle\SComDisBundle\Entity\GoogleLineChart;
 use DHIS\Bundle\SComDisBundle\Entity\LineChart;
@@ -231,5 +232,48 @@ class ChartService
             }
         }
         return $syndromeNames;
+    }
+    
+    public function createSeasonalCoefficientChart(SurveillanceCoefficientCriteria $criteria) {
+        $manager = $this->managerRegistry->getEntityManager('scomdis');
+        $districts = $manager->getRepository('DHISSComDisBundle:District')->findAll();
+        
+        $lineChart = new LineChart();
+        
+        $targetYear = $criteria->getTargetYear();
+        $lineChart->setTitle("Seasonal Coefficient in $targetYear");
+        
+        $seasonalCoefficientData = $this->getSeasonalCoefficientData($criteria, $districts);
+        $lineChart->setData($seasonalCoefficientData);
+        
+        $dataLabels = array();
+        foreach ($districts as $district) {
+            $dataLabels[] = $district->getName();
+        }
+        $lineChart->setSeriesNames($dataLabels);
+
+        return $lineChart;
+    }
+    
+    protected function getSeasonalCoefficientData(SurveillanceCoefficientCriteria $criteria, $districts) {
+        
+        $manager = $this->managerRegistry->getEntityManager('scomdis');
+        $targetYear[] = $criteria->getTargetYear();
+        $surveillancesTargetYear = $manager->getRepository('DHISSComDisBundle:Surveillance')
+            ->findAllByYear($targetYear)
+        ;
+        
+        $surveillancesCalcYear = $manager->getRepository('DHISSComDisBundle:Surveillance')
+            ->findAllByYear($criteria->getYearChoices())
+        ;
+        
+        // Get epidmic phase data from service
+        //$service = $this->get('surveillance.epidemic_phase_service');
+        //$data = $service->createEpidemicPhaseData($surveillancesTargetYear, 
+        //                                          $surveillancesCalcYear,
+        //                                          $criteria->isUseNoRecords(),
+        //                                          $criteria->isUseIslandwideSD());
+        
+        // $data[year][week][series]
     }
 }

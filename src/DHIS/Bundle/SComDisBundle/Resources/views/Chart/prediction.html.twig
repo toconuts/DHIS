@@ -1,11 +1,11 @@
 {% extends 'DHISSComDisBundle::layout.html.twig' %}
 
-{% block page_title 'Syndromic Surveillance - Epidemic Prediction - SComDis' %}
+{% block page_title 'Syndromic Surveillance - Epidemic Prediction Chart - SComDis' %}
 {% block product_name 'SComDis' %}
-{% block content_title 'Syndromic Surveillance - Epidemic Prediction' %}
+{% block content_title 'Syndromic Surveillance - Epidemic Prediction Chart' %}
 
 {% set menu = 'SComDis' %}
-{% set sidebar_menu = 'scomdis_surveillance_prediction' %}
+{% set sidebar_menu = 'scomdis_chart_prediction' %}
 
 {% block content %}
 {% if app.request.session.hasFlash('success') %}
@@ -19,7 +19,7 @@
 </div>
 {% endif %}
 
-<form target="_blank" action="{{ path('scomdis_surveillance_prediction') }}" method="post" class="form-horizontal">
+<form target="_blank" action="{{ path('scomdis_chart_prediction') }}" method="post" class="form-horizontal">
   {{ form_errors(form) }}
   <div class="control-group {% if form.year_choices.get('errors') %}error{% endif %}">
     <label class="control-label">Target year</label>
@@ -77,7 +77,7 @@
     {{ form_errors(form.confidence_coefficient) }}    
     <label class="control-label">Confidence Coefficient</label>
     <div class="controls">
-      Threshold = Average + SD x {{ form_widget(form.confidence_coefficient) }}
+      Epidemic Threshold = Average + {{ form_widget(form.confidence_coefficient) }} x SD
     </div>
   </div>
   {{ form_widget(form._token) }}

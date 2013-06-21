@@ -5,7 +5,7 @@
 {% block content_title 'Syndromic Surveillance' %}
 
 {% set menu = 'scomdis' %}
-{% set sidebar_menu = 'scomdis_surveillance' %}
+{% set sidebar_menu = 'scomdis_list' %}
 
 {% block content %}
 {% if app.request.session.hasFlash('success') %}
@@ -37,7 +37,7 @@
   <tbody>
     {% for surveillance in pagination %}
     <tr>
-      <td><a href="{{ path('scomdis_surveillance_show', {'id': surveillance.id}) }}">{{ surveillance.id }}</a></td>
+      <td><a href="{{ path('scomdis_show', {'id': surveillance.id}) }}">{{ surveillance.id }}</a></td>
       <td>{{ surveillance.weekOfYear }}</td>
       <td>{{ surveillance.year }}</td>
       <td>{{ surveillance.weekEnd|date('d/m/Y') }}</td>

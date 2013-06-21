@@ -5,7 +5,7 @@
 {% block content_title 'Surveillance - confirm' %}
 
 {% set menu = 'SComDis' %}
-{% set sidebar_menu = 'scomdis_surveillance_new' %}
+{% set sidebar_menu = 'scomdis_new' %}
 
 {% block content %}
 {% if app.request.session.hasFlash('error') %}
@@ -14,10 +14,10 @@
 </div>
 {% endif %}
 
-{% include "DHISSComDisBundle:Surveillance:_show_header.html.twig" %}
-{% include "DHISSComDisBundle:Surveillance:_show_items.html.twig" %}
+{% include "DHISSComDisBundle:Default:_show_header.html.twig" %}
+{% include "DHISSComDisBundle:Default:_show_items.html.twig" %}
 
-<form action="{{ path('scomdis_surveillance_confirm') }}" method="post">
+<form action="{{ path('scomdis_confirm') }}" method="post">
   <div class="form-actions">
       <a href=javascript:history:back() class="btn">&laquo; Back</a>
       <input type="submit" class="btn btn-primary" value="Submit">

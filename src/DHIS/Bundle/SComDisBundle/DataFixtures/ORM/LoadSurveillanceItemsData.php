@@ -81,6 +81,6 @@ class LoadSurveillanceItemsData extends AbstractFixture implements OrderedFixtur
      */
     public function getOrder()
     {
-        return 6;
+        return 7;
     }
 }
