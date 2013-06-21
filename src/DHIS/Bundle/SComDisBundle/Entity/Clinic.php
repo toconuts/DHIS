@@ -34,12 +34,32 @@ class Clinic
     private $name;
     
     /**
+     * @var type
+     * @ORM\Column(name="code", type="string", length=10, nullable=true)
+     * @Assert\MaxLength(limit=10)
+     */
+    private $code;
+    
+    public function __construct()
+    {
+        $this->clinics = new ArrayCollection();
+    }
+    
+    /**
      * @var SentilenSite $sentinelSite
      * 
      * @ORM\ManyToOne(targetEntity="SentinelSite", inversedBy="clinics")
      * @ORM\JoinColumn(name="sintinel_site_id", referencedColumnName="id", nullable=false)
      */
     private $sentinelSite;
+    
+    /**
+     * @var SentilenSite $district
+     * 
+     * @ORM\ManyToOne(targetEntity="District", inversedBy="clinics")
+     * @ORM\JoinColumn(name="destrict_id", referencedColumnName="id", nullable=false)
+     */
+    private $district;
 
     /**
      * __toString()
@@ -90,6 +110,26 @@ class Clinic
     {
         return $this->name;
     }
+    
+    /**
+     * Set code
+     *
+     * @param string $code
+     */
+    public function setCode($code)
+    {
+        $this->code = $code;
+    }
+
+    /**
+     * Get code
+     *
+     * @return string 
+     */
+    public function getCode()
+    {
+        return $this->code;
+    }
 
     /**
      * Set sentinelSite
@@ -109,5 +149,25 @@ class Clinic
     public function getSentinelSite()
     {
         return $this->sentinelSite;
+    }
+    
+    /**
+     * Set district
+     *
+     * @param DHIS\Bundle\SComDisBundle\Entity\District $district
+     */
+    public function setDistrict(\DHIS\Bundle\SComDisBundle\Entity\District $district)
+    {
+        $this->district = $district;
+    }
+
+    /**
+     * Get district
+     *
+     * @return DHIS\Bundle\SComDisBundle\Entity\District
+     */
+    public function getDistrict()
+    {
+        return $this->district;
     }
 }

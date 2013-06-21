@@ -15,3 +15,7 @@ services:
     class: DHIS\Bundle\SComDisBundle\Service\DailyTallyImportService
     arguments:
       - @doctrine
+  surveillance.epidemic_phase_service:
+    class: DHIS\Bundle\SComDisBundle\Service\EpidemicPhaseService
+    arguments:
+      - @doctrine

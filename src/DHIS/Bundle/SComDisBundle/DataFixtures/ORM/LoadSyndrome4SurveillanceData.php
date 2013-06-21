@@ -97,6 +97,6 @@ class LoadSyndrome4SurveillanceData extends AbstractFixture implements OrderedFi
      */
     public function getOrder()
     {
-        return 3;
+        return 4;
     }
 }

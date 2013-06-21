@@ -1,0 +1,55 @@
+{% extends 'DHISSComDisBundle::layout.html.twig' %}
+
+{% block page_title 'Surveillance&apos;s details - SComDis' %}
+{% block product_name 'SComDis' %}
+{% block content_title 'Surveillance&apos;s detals' %}
+
+{% set menu = 'SComDis' %}
+{% set sidebar_menu = 'scomdis_list' %}
+
+{% block content %}
+{% if app.request.session.hasFlash('success') %}
+<div class="alert alert-success">
+  {{ app.request.session.getFlash('success') }}
+</div>
+{% endif %}
+{% if app.request.session.hasFlash('error') %}
+<div class="alert alert-error">
+  {{ app.request.session.getFlash('error') }}
+</div>
+{% endif %}
+
+{% include "DHISSComDisBundle:Default:_show_header_ex.html.twig" %}
+{% include "DHISSComDisBundle:Default:_show_items.html.twig" %}
+
+<table class="table table-striped table-bordered">
+  <tbody>
+    <tr>
+      <th>ID</th>
+      <td>{{ surveillance.id }}</td>
+      <th>Created At</th>
+      <td>{{ surveillance.createdAt|date('m/d/Y H:i') }}</td>
+      <th>Updated At</th>
+      <td>{{ surveillance.updatedAt|date('m/d/Y H:i') }}</td>
+    </tr>
+  </tbody>
+</table>
+
+<div class="row">
+  <div class="span6">
+    <div class="form-actions">
+      <a href=javascript:history:back() class="btn">&laquo; Back</a>
+      <a href="{{ path('scomdis_edit', {'id': surveillance.id}) }}" class="btn btn-success">Edit</a>
+      <a href="{{ path('scomdis_report_daily_tally', {'id': surveillance.id}) }}" class="btn btn-primary">Daily Tally Report</a>
+    </div>
+  </div>
+  <div class="span4">
+    <div class="well">
+      <h4>Delete this Surveillance</h4>
+      <p>Note: once it is deleted, you will not be able to restore it.</p>
+      <a href="{{ path('scomdis_delete', {'id': surveillance.id}) }}" class="btn btn-danger">Delete</a>
+    </div>
+  </div>    
+</div>
+
+{% endblock %}

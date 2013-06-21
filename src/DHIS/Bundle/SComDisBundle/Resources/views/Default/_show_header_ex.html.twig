@@ -1,0 +1,20 @@
+{% extends "DHISSComDisBundle:Default:_show_header.html.twig" %}
+
+{% block after_content %}
+<tr>
+  {% if surveillance.receivedAt is not null %}
+  <th>Received At</th>
+  <td colspan="2">{{ surveillance.receivedAt|date('m/d/Y') }}</td>
+  <th>Received by</th>
+  <td colspan="2">{{ surveillance.receivedBy }}</td>
+  {% else %}
+  <th>Received At</th>
+  <td colspan="2">Unreceived</td>
+  <td colspan="3">
+    {% if is_granted('ROLE_SCOMDIS_ADMIN') %}
+    <a href="{{ path('scomdis_receive', {'id': surveillance.id}) }}" class="btn btn-primary">Receive</a>
+    {% endif %}
+  </td>
+  {% endif %}
+</tr>
+{% endblock %}

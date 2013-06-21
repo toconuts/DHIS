@@ -1,0 +1,88 @@
+{% extends 'DHISSComDisBundle::layout.html.twig' %}
+
+{% block page_title 'Syndromic Surveillance - Epidemic Prediction Chart - SComDis' %}
+{% block product_name 'SComDis' %}
+{% block content_title 'Syndromic Surveillance - Epidemic Prediction Chart' %}
+
+{% set menu = 'SComDis' %}
+{% set sidebar_menu = 'scomdis_chart_prediction' %}
+
+{% block content %}
+{% if app.request.session.hasFlash('success') %}
+<div class="alert alert-success">
+  {{ app.request.session.getFlash('success') }}
+</div>
+{% endif %}
+{% if app.request.session.hasFlash('error') %}
+<div class="alert alert-error">
+  {{ app.request.session.getFlash('error') }}
+</div>
+{% endif %}
+
+<form target="_blank" action="{{ path('scomdis_chart_prediction') }}" method="post" class="form-horizontal">
+  {{ form_errors(form) }}
+  <div class="control-group {% if form.year_choices.get('errors') %}error{% endif %}">
+    <label class="control-label">Target year</label>
+    <div class="controls">
+    {{ form_errors(form.year_choices) }}
+      <select id="syndrome" name="SurveillancePrediction[target_year]">
+      {% for year in yearChoices %}
+        <option value="{{ year }}" >{{ year }}</option>
+      {% endfor %}
+      </select>
+    </div>
+  </div>
+  
+  <div class="control-group {% if form.year_choices.get('errors') %}error{% endif %}">
+    <label class="control-label">Calculation Years</label>
+    <div class="controls">
+    {{ form_errors(form.year_choices) }}
+      <select id="syndrome" name="SurveillancePrediction[year_choices][]" required="required" multiple="multiple">
+      {% for year in yearChoices %}
+        <option value="{{ year }}" >{{ year }}</option>
+      {% endfor %}
+      </select>
+    </div>
+  </div>
+  <div class="control-group {% if form.syndromes.get('errors') %}error{% endif %}">
+    <label class="control-label">Syndromes</label>
+    <div class="controls">
+    {{ form_errors(form.syndromes) }}
+      <select id="syndrome" name="SurveillancePrediction[syndromes][]" required="required" multiple="multiple">
+      {% for syndrome in syndromes %}
+        <option value="{{ syndrome.id }}" >{{ syndrome.name }}</option>
+      {% endfor %}
+      </select>
+      {#<label class='checkbox'>{{ form_widget(form.useSeriesSyndromes) }}Series</label>#}
+    </div>
+  </div>
+  <div class="control-group {% if form.sentinelSites.get('errors') %}error{% endif %}">
+    <label class="control-label">Sentinel sites</label>
+    <div class="controls">
+    {{ form_errors(form.sentinelSites) }}
+      <select id="sentinelSite" name="SurveillancePrediction[sentinelSites][]" required="required" multiple="multiple">
+      {% for sentinelSite in sentinelSites %}
+        <option value="{{ sentinelSite.id }}" >{{ sentinelSite.name }}</option>
+      {% endfor %}
+      </select>
+    </div>
+  </div>
+  <div class="control-group">
+    {{ form_errors(form.useNoRecords) }}
+    <div class="controls">
+    <label class='checkbox'>{{ form_widget(form.useNoRecords) }}Calc. no records as 0 case.</label>
+    </div>
+  </div>
+  <div class="control-group">
+    {{ form_errors(form.confidence_coefficient) }}    
+    <label class="control-label">Confidence Coefficient</label>
+    <div class="controls">
+      Epidemic Threshold = Average + {{ form_widget(form.confidence_coefficient) }} x SD
+    </div>
+  </div>
+  {{ form_widget(form._token) }}
+  <div class="form-actions">
+    <input class="btn btn-primary" type="submit" value="Create">
+  </div>
+</form>
+{% endblock %}

@@ -1,0 +1,28 @@
+{% extends 'DHISSComDisBundle::layout.html.twig' %}
+
+{% block page_title 'Syndromic Surveillance - Grade Map - SComDis' %}
+{% block product_name 'SComDis' %}
+{% block content_title 'Syndromic Surveillance - Confirm Grade' %}
+
+{% set menu = 'SComDis' %}
+{% set sidebar_menu = 'scomdis_map_coefficient' %}
+
+{% block content %}
+{% if app.request.session.hasFlash('success') %}
+<div class="alert alert-success">
+  {{ app.request.session.getFlash('success') }}
+</div>
+{% endif %}
+{% if app.request.session.hasFlash('error') %}
+<div class="alert alert-error">
+  {{ app.request.session.getFlash('error') }}
+</div>
+{% endif %}
+
+<form target="_blunk" action="{{ path('scomdis_map_confirm_phase') }}" method="post" class="form-horizontal">
+  <div class="form-actions">
+    <a href=javascript:history:back() class="btn">Back</a>
+    <input class="btn btn-primary" type="submit" value="Create">
+  </div>
+</form>
+{% endblock %}

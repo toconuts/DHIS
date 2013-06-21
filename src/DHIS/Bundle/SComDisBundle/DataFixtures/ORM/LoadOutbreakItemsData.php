@@ -100,6 +100,6 @@ class LoadOutbreakItemData extends AbstractFixture implements OrderedFixtureInte
      */
     public function getOrder()
     {
-        return 8;
+        return 9;
     }
 }

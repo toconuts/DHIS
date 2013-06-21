@@ -6,7 +6,7 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilder;
 
 /**
- * OutDailyTallyReportType
+ * SearchSurveillanceType
  *
  * @author Natsuki Hara <toconuts@gmail.com>
  */

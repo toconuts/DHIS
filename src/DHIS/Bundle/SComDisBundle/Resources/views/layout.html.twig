@@ -19,34 +19,53 @@
             {% set sidebar_menu = null %}
           {% endif %}
           <ul class="nav nav-list">
-            <li class="nav-header">Syndromiic Surveillance</li>
-            <li {% if sidebar_menu == 'scomdis_surveillance' %}class="active"{% endif %}>
-              <a href="{{ path('scomdis_surveillance') }}">List</a></li>
-            <li {% if sidebar_menu == 'scomdis_surveillance_search' %}class="active"{% endif %}>
-              <a href="{{ path('scomdis_surveillance_search') }}">Search</a></li>
-            <li {% if sidebar_menu == 'scomdis_surveillance_new' %}class="active"{% endif %}>
-              <a href="{{ path('scomdis_surveillance_new') }}">New</a></li>
-            <li {% if sidebar_menu == 'scomdis_surveillance_out_carpha_report' %}class="active"{% endif %}>
-              <a href="{{ path('scomdis_surveillance_out_carpha_report') }}">CARPHA Weekly Report</a></li>
-            <li {% if sidebar_menu == 'scomdis_surveillance_trend' %}class="active"{% endif %}>
-              <a href="{{ path('scomdis_surveillance_trend') }}">Trend</a></li>
-            <li {% if sidebar_menu == 'scomdis_surveillance_prediction' %}class="active"{% endif %}>
-              <a href="{{ path('scomdis_surveillance_prediction') }}">Prediction</a></li>
-            <li {% if sidebar_menu == 'scomdis_surveillance_gis' %}class="active"{% endif %}>
-              <a href="{{ path('scomdis_surveillance_gis') }}">GIS</a></li>
+            <li class="nav-header">Entry</li>
+            <li {% if sidebar_menu == 'scomdis_list' %}class="active"{% endif %}>
+              <a href="{{ path('scomdis_list') }}">List</a></li>
+            <li {% if sidebar_menu == 'scomdis_search' %}class="active"{% endif %}>
+              <a href="{{ path('scomdis_search') }}">Search</a></li>
+            <li {% if sidebar_menu == 'scomdis_new' %}class="active"{% endif %}>
+              <a href="{{ path('scomdis_new') }}">New</a></li>
+            
+            <li class="nav-header">Report</li>
+            <li {% if sidebar_menu == 'scomdis_report_carpha_weekly' %}class="active"{% endif %}>
+              <a href="{{ path('scomdis_report_carpha_weekly') }}">CARPHA Weekly</a></li>
+            
+            <li class="nav-header">Chart</li>
+            <li {% if sidebar_menu == 'scomdis_chart_trend' %}class="active"{% endif %}>
+              <a href="{{ path('scomdis_chart_trend') }}">Trend</a></li>
+            <li {% if sidebar_menu == 'scomdis_chart_prediction' %}class="active"{% endif %}>
+              <a href="{{ path('scomdis_chart_prediction') }}">Prediction</a></li>
+            <li {% if sidebar_menu == 'scomdis_chart_coefficient' %}class="active"{% endif %}>
+              <a href="{{ path('scomdis_chart_coefficient') }}">Seasonal Coefficient</a></li>
+            
+            <li class="nav-header">Map</li>
+            <li {% if sidebar_menu == 'scomdis_map_epidemic_phase' %}class="active"{% endif %}>
+              <a href="{{ path('scomdis_map_epidemic_phase') }}">Epidemic Phase</a></li>
+            <li {% if sidebar_menu == 'scomdis_map_cases' %}class="active"{% endif %}>
+              <a href="{{ path('scomdis_chart_coefficient') }}">Number of cases</a></li>
+            
             <li class="nav-header">Maintenance</li>
-            <li {% if sidebar_menu == 'scomdis_surveillance_import' %}class="active"{% endif %}>
-              <a href="{{ path('scomdis_surveillance_import') }}">Import</a></li>
-            <li class="nav-header">Outbreak Daily Tally</li>
+            <li {% if sidebar_menu == 'scomdis_admin_clinic' %}class="active"{% endif %}>
+              <a href="{{ path('scomdis_admin_import') }}">Clinic</a></li>
+            <li {% if sidebar_menu == 'scomdis_admin_sentinel_site' %}class="active"{% endif %}>
+              <a href="{{ path('scomdis_admin_import') }}">Sentinel Site</a></li>
+            <li {% if sidebar_menu == 'scomdis_admin_district' %}class="active"{% endif %}>
+              <a href="{{ path('scomdis_admin_import') }}">District</a></li>
+            <li {% if sidebar_menu == 'scomdis_admin_import' %}class="active"{% endif %}>
+              <a href="{{ path('scomdis_admin_import') }}">Import</a></li>
+            
+            <li class="nav-header">Outbreak</li>
             <li {% if sidebar_menu == 'scomdis_outbreak' %}class="active"{% endif %}>
               <a href="{{ path('scomdis_outbreak') }}">List</a></li>
             <li {% if sidebar_menu == 'scomdis_outbreak_search' %}class="active"{% endif %}>
               <a href="{{ path('scomdis_outbreak_search') }}">Search</a></li>
             <li {% if sidebar_menu == 'scomdis_outbreak_new' %}class="active"{% endif %}>
               <a href="{{ path('scomdis_outbreak_new') }}">New</a></li>
+            
             <li class="nav-header">Test</li>
-            <li {% if sidebar_menu == 'scomdis_surveillance_test' %}class="active"{% endif %}>
-              <a href="{{ path('scomdis_surveillance_test') }}">Test</a></li>
+            <li {% if sidebar_menu == 'scomdis_test' %}class="active"{% endif %}>
+              <a href="{{ path('scomdis_test') }}">Test</a></li>
           </ul>
         </div>
       </div>

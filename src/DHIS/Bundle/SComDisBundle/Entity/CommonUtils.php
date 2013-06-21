@@ -64,12 +64,12 @@ class CommonUtils extends CommonUtilsBase
         return $year;
     }
     
-    public static function staticsStandardDeviation(array $values, $sample = false)
+    public static function staticsStandardDeviation(array $values, $sample = false, $precision = 2)
     {
         $mean = (float)(array_sum($values) / count($values));
         $variance = 0.0;
         foreach ($values as $value) {
-            $variance += pow($value - $mean, 2);
+            $variance += pow($value - $mean, $precision);
         }
         $variance /= ($sample ? count($values) - 1 : count($values));
         return (float)sqrt($variance);

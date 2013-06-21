@@ -5,7 +5,7 @@ namespace DHIS\Bundle\SComDisBundle\Entity;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
- * SurveillanceTrendCriteria.
+ * SurveillancePredictionCriteria.
  *
  * @author Natsuki Hara <toconuts@gmail.com>
  * 
@@ -16,7 +16,6 @@ class SurveillancePredictionCriteria extends SurveillanceTrendCriteria
      * @var id $targetYear 
      */
     private $targetYear;
-
 
     /**
      * @var bool $useNoRecords 
@@ -32,7 +31,7 @@ class SurveillancePredictionCriteria extends SurveillanceTrendCriteria
     {
         parent::__construct($syndromes, $sentinelSites);
         $this->targetYear = 0;
-        $this->useNoRecord = false;
+        $this->useNoRecords = true;
         $this->confidenceCoefficient = 1.645;
     }
     

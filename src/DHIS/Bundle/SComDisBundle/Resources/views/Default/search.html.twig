@@ -1,0 +1,75 @@
+{% extends 'DHISSComDisBundle::layout.html.twig' %}
+
+{% block page_title 'Syndromic Surveillance - Search - SComDis' %}
+{% block product_name 'SComDis' %}
+{% block content_title 'Syndromic Surveillance - Search' %}
+
+{% set menu = 'SComDis' %}
+{% set sidebar_menu = 'scomdis_search' %}
+
+{% block content %}
+{% if app.request.session.hasFlash('success') %}
+<div class="alert alert-success">
+  {{ app.request.session.getFlash('success') }}
+</div>
+{% endif %}
+{% if app.request.session.hasFlash('error') %}
+<div class="alert alert-error">
+  {{ app.request.session.getFlash('error') }}
+</div>
+{% endif %}
+<form action="{{ path('scomdis_search') }}" method="post" class="form-horizontal">
+  {{ form_errors(form) }}
+  <div class="control-group {% if form.weekend.get('errors') %}error{% endif %}">
+    <label class="control-label">Weekend</label>
+    <div class="controls">
+    {{ form_errors(form.weekend) }}
+    {{ form_widget(form.weekend) }}
+    </div>
+  </div>
+  <div class="control-group">
+    <label class="control-label">Week of year</label>
+    <div class="controls">
+    {{ form_errors(form.weekOfYear) }}
+    {{ form_widget(form.weekOfYear, {'attr': {'readonly': 'readonly'} }) }}
+    </div>
+  </div>
+  <div class="control-group">
+    <label class="control-label">Year</label>
+    <div class="controls">
+    {{ form_errors(form.year) }}
+    {{ form_widget(form.year, {'attr': {'readonly': 'readonly'} }) }}
+    </div>
+  </div>
+  <div class="control-group {% if form.sentinelSite.get('errors') %}error{% endif %}">
+    <label class="control-label">Sentinel Site</label>
+    <div class="controls">
+    {{ form_errors(form.sentinelSite) }}
+      <select id="sentinelsite" name="SearchSurveillance[sentinelSite]">
+      {% for sentinelSite in sentinelSites %}
+        <option value="{{ sentinelSite.id }}" {% if surveillance is defined and surveillance.sentinelSite.id == sentinelSite.id %}selected{% endif %}>{{ sentinelSite.name }}</option>
+      {% endfor %}
+      </select>
+    </div>
+  </div>
+  <div class="control-group {% if form.clinic.get('errors') %}error{% endif %}">
+    <label class="control-label">Clinic / Ward</label>
+    <div class="controls">
+    {{ form_errors(form.clinic) }}
+      <select id="clinic" name="SearchSurveillance[clinic]">
+      {% for sentinelSite in sentinelSites %}
+        {% for clinic in clinics %}
+          {% if sentinelSite.id == clinic.sentinelSite.id %}
+          <option class=":{{ sentinelSite.id }}:" value="{{ clinic.id }}"{% if surveillance is defined and surveillance.clinic.id == clinic.id %}selected{% endif %}>{{ clinic.name }}</option>
+          {% endif %}
+        {% endfor %}
+      {% endfor %}
+      </select>
+    </div>
+  </div>
+  {{ form_widget(form._token) }}
+  <div class="form-actions">
+    <input class="btn btn-primary" type="submit" value="Search">
+  </div>
+</form>
+{% endblock %}
