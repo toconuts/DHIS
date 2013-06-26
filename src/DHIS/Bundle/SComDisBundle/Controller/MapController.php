@@ -35,12 +35,17 @@ class MapController extends AppController
             $data = $request->request->get($form->getName());
             $form->bind($data);
             if ($form->isValid()) {
-                //$request->getSession()->set('scomdis_surveillance/new', $data);
-                //return $this->redirect($this->generateUrl('scomdis_map_confirm_grade'));
                 
-                return $this->forward('DHISSComDisBundle:Map:confirmPhase', array(
-                    'request' => null,
-                    'criteria' => $data,
+                // Get epidemic phase object from service.
+                $service = $this->get('surveillance.epidemic_phase_service');
+                $epidemicPhase = $service->createEpidemicPhase($criteria);
+                $messages = $epidemicPhase->getMessages();
+                if (count($messages) > 0) {
+                    $request->getSession()->setFlash('warn', "Warnings: " . implode(', ', $messages));
+                }
+                
+                return $this->render('DHISSComDisBundle:Map:map_epidemic_phase.html.twig', array(
+                    'epidemicPhase' => $epidemicPhase,
                 ));
             }
         }
@@ -50,24 +55,5 @@ class MapController extends AppController
             'syndromes' => $syndromes,
             'form' => $form->createView(),
         );
-    }
-    
-    /**
-     * @Route("/confirm_phase", name="scomdis_map_confirm_phase")
-     * @Template()
-     */
-    public function confirmPhaseAction(Request $request = null, $criteria = null)
-    {
-        if ($request && $request->getMethod() === 'POST') {
-            return $this->render('DHISSComDisBundle:Map:map.html.twig', array(
-            //    'lineChart' => $lineChart,
-            //    'year_choices' => $criteria->getYearChoices(),
-            //    'syndrome_choices' => $criteria->getSyndromes(),
-            //    'sentinelSite_choices' => $criteria->getSentinelSites(),
-            //    'syndromes' => $syndromes,
-            //    'sentinelSites' => $sentinelSites,
-            ));
-        }
-        return array();
     }
 }

@@ -67,6 +67,8 @@ class EpidemicPhase
     private $minCoefficientValue;
     
     private $messages;
+    
+    private $phases;
 
     public function __construct($year, $weekOfYear, array $calcYears, $useNorecord = true, $useLandwideSD = false, $showIslandwide = false)
     {
@@ -85,6 +87,7 @@ class EpidemicPhase
         $this->minCoefficientValue = 0.0;
         
         $this->messages = array();
+        $this->phases = array();
     }
 
     /**
@@ -271,7 +274,7 @@ class EpidemicPhase
                 } catch (\InvalidArgumentException $e) {
                     if (!$this->useLandwideSD) {
                         $name = $district->getName();
-                        $this->messages[] = $e->getMessage() . "Week: $week, District: $name";
+                        $this->addMessage($e->getMessage() . "Week: $week, District: $name");
                     }
                 }
                 $this->updateMinMaxCoefficientValue($district->getCoefficient());
@@ -294,11 +297,14 @@ class EpidemicPhase
             $casesOfCalc = array();
             
             foreach ($districts as $district) {
-                $tmpCasesOfTarget = array();
-                $tmpCasesOfCalc = array();
-                $district->updateClinics($tmpCasesOfTarget, $tmpCasesOfCalc);
-                $casesOfTarget = array_merge($casesOfTarget, $tmpCasesOfTarget);
-                $casesOfCalc = array_merge($casesOfCalc, $tmpCasesOfCalc);
+                
+                foreach ($district->getClinics() as $clinic) {
+                    $tmpCasesOfTarget = array();
+                    $tmpCasesOfCalc = array();
+                    $clinic->getCases($tmpCasesOfTarget, $tmpCasesOfCalc);
+                    $casesOfTarget = array_merge($casesOfTarget, $tmpCasesOfTarget);
+                    $casesOfCalc = array_merge($casesOfCalc, $tmpCasesOfCalc);
+                }
             }
 
             // create islandwide epidemic phase district object
@@ -322,7 +328,8 @@ class EpidemicPhase
     protected function getTotalPopulation()
     {
         $total = 0;
-        foreach ($this->districts[1] as $district) {            
+        $index = ($this->weekOfYear != 0) ? $this->weekOfYear : 1;
+        foreach ($this->districts[$index] as $district) {            
                 $total += $district->getPopulation();
         }
         return $total;
@@ -339,6 +346,10 @@ class EpidemicPhase
         return new EpidemicPhaseDistrict($this, $islandwide);
     }
     
+    public function addMessage($message)
+    {
+        $this->messages[] = $message;
+    }
     
     public function getMessages()
     {
@@ -350,32 +361,100 @@ class EpidemicPhase
      * 
      * @param PMH $pmh
      */
-    public function mergePMH(PMH $pmh)
+    public function mergePMH(array $pmh)
     {
-// @todo
+        $this->pmh = $pmh;
         foreach ($this->districts as $week => $districts) {
-            foreach ($districts as $district) {
-                // if districts = pmh
+            foreach ($districts as $districtId => $district) {
+                
+                $clinicPMH = NULL;
+                $casesOfTarget = 0;
+                $casesOfCalc = array();
+                
                 $clinics = $district->getClinics();
-                foreach ($clinics as $id => $clinic) {
-                    
-
-                    //unset($clinics[$id]);
+                foreach ($clinics as $clinicId => $clinic) {
+                    if ($this->isPMH($clinic->getId())) {
+                        if ($clinicPMH === NULL) {
+                            $clinicPMH = $this->createPMHInstance($district->getDistrict());
+                        }
+                        
+                        $casesOfTarget += $clinic->getCasesOfTarget();
+                        if (count($casesOfCalc) == 0) {
+                            $casesOfCalc = $clinic->getCasesOfCalc();
+                        } else {
+                            foreach ($clinic->getCasesOfCalc() as $year => $cases) {
+                                $casesOfCalc[$year] += $cases;
+                            }
+                        }
+                        $this->removeClinic($week, $districtId, $clinicId);
+                    }
+                }
+                if ($clinicPMH != NULL) {
+                    $this->addClinic($week, $districtId, $clinicPMH);
+                    $this->setCasesOfTarget($week, $districtId, PMH::PMHID, $casesOfTarget);
+                    foreach ($casesOfCalc as $year => $total) {
+                        $this->setCasesOfCalc($week, $districtId, PMH::PMHID, $year, $total);
+                    }
                 }
             }
         }
+    }
+    
+    protected function createPMHInstance($district)
+    {
+        $clinic = new Clinic();
+        $clinic->setId(PMH::PMHID);
+        $clinic->setName(PMH::NAME);
+        $clinic->setCode(PMH::CODE);
+        //$clinic->setSentinelSite($sentinel);
+        $clinic->setDistrict($district);
+        
+        return new EpidemicPhaseClinic($this, $clinic, $this->getCalcYears());
+    }
+
+
+    protected function isPMH($id)
+    {
+        foreach ($this->pmh as $department) {
+            if ($id == $department->getClinic()->getId())
+                return true;
+        }
+        return false;
     }
 
     /**
      * Judge Phase
      * 
      * @param float $coefficient
-     * @return int 
+     * @return Phase
      */
     public function judgePhase($coefficient)
     {
-// @todo
-        return 1;
+// @todo delete
+        /*
+        if ($coefficient === NULL) {
+            return NULL;
+        } else if ($coefficient == 0) {
+            return 0;
+        }
+        
+        foreach ($this->phases as $phase) {
+            if ($phase->getThreshold() <= $coefficient) {
+                return $phase->getId();
+            }
+        }
+        
+        return 0;
+         */
+        
+        if ($coefficient !== NULL) {// && $coefficient != 0) {
+            foreach ($this->phases as $phase) {
+                if ($phase->getThreshold() <= $coefficient) {
+                    return $phase;
+                }
+            }
+        }
+        return NULL;
     }
     
     /**
@@ -399,6 +478,21 @@ class EpidemicPhase
     public function addPhase(Phase $value)
     {
         $this->phases[] = $value;
+    }
+    
+    public function setPhases(array $values)
+    {
+        $this->phases = $values;
+        uasort($this->phases, array($this, 'cmpThreshold'));
+    }
+    
+    function cmpThreshold(Phase $a, Phase $b)
+    {
+        if ($a->getThreshold() == $b->getThreshold()) {
+            return 0;
+        }
+        
+        return ($a->getThreshold() < $b->getThreshold()) ? 1 : -1;
     }
     
     public function getSyndromes()
@@ -446,6 +540,16 @@ class EpidemicPhase
     {
         $clinics = $this->districts[$week][$districtId]->getClinics();
         $clinics[$clinicId]->setCaseOfCalc($year, $value);
+    }
+    
+    public function addClinic($week, $districtId, $clinic)
+    {
+        $this->districts[$week][$districtId]->addClinic($clinic);
+    }
+    
+    public function removeClinic($week, $districtId, $clinicId)
+    {
+        $this->districts[$week][$districtId]->removeClinic($clinicId);
     }
     
     public function isToGenerateErrorException()

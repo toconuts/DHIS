@@ -40,29 +40,46 @@ class EpidemicPhaseService
     
     public function createSeasonalCoefficient(SurveillanceCoefficientCriteria $criteria)
     {
+        $criteria->setWeekOfYear(0);
+        return $this->createEpidemicPhaseObject($criteria);
+    }
+
+    public function createEpidemicPhase(SurveillanceCoefficientCriteria $criteria)
+    {
+        $criteria->setModeSpecificWeek(true);
+        $criteria->setTargetYear(CommonUtils::getEPIYear($criteria->getWeekend()));
+        return $this->createEpidemicPhaseObject($criteria);
+    }
+    
+    public function createEpidemicPhaseObject(SurveillanceCoefficientCriteria $criteria)
+    {
         set_time_limit(600);
         ini_set("memory_limit", "1G");
-        
+
         $epidemicPhase = new EpidemicPhase(
                 $criteria->getTargetYear(),
-                0,  // week of year is not necessary to specify.
+                $criteria->getWeekOfYear(),
                 $criteria->getYearChoices(),
                 $criteria->isUseNoRecords(),
                 $criteria->isUseLandwideSD(),
                 $criteria->isShowIslandwide()
         );
         
-        $epidemicPhase->setTitle('Seasonal Coefficient');
+        if ($criteria->isModeSpecificWeek()) {
+            $epidemicPhase->setTitle('Epidemic Phase');
+        } else {
+            $epidemicPhase->setTitle('Seasonal Coefficient');
+        }
         
         $this->setSyndromes($epidemicPhase, $criteria->getSyndromes());
         
         $this->setDistricts($epidemicPhase, $criteria);
         
-// @todo delete
-        // Merge PMH only use for map
-        if (0)
+        if ($criteria->isModeSpecificWeek())
             $this->mergePMH($epidemicPhase);
 
+        $this->setPhase($epidemicPhase);
+        
         $epidemicPhase->analyzeCoefficient();
         
         return $epidemicPhase;
@@ -76,6 +93,14 @@ class EpidemicPhaseService
         $epidemicPhase->mergePMH($pmh);
     }
     
+    protected function setPhase(EpidemicPhase $epidemicPhase)
+    {
+        $manager = $this->managerRegistry->getEntityManager('scomdis');
+        $repository = $manager->getRepository('DHISSComDisBundle:Phase');
+        $phases = $repository->findAll();
+        $epidemicPhase->setPhases($phases);
+    }
+    
     protected function setSyndromes(EpidemicPhase $epidemicPhase, $ids)
     {
         $manager = $this->managerRegistry->getEntityManager('scomdis');
@@ -86,7 +111,7 @@ class EpidemicPhaseService
         }
     }
    
-    protected function setDistricts(EpidemicPhase $epidemicPhase, $criteria)
+    protected function setDistricts(EpidemicPhase $epidemicPhase, SurveillanceCoefficientCriteria $criteria)
     {
         $manager = $this->managerRegistry->getEntityManager('scomdis');
         $repository  = $manager->getRepository('DHISSComDisBundle:Surveillance');
@@ -96,26 +121,35 @@ class EpidemicPhaseService
         $epidemicPhase->setDistricts($districts);
         
         // TargetYear
+        $targetSurveillance = array();
         $targetYear[] = $criteria->getTargetYear();
-        $targetSurveillance = $repository->findAllByYear($targetYear);
+        if ($criteria->isModeSpecificWeek()) {
+            $targetSurveillance = $repository->findAllBySpecificWeek($targetYear, $criteria->getWeekOfYear());
+        } else {
+            $targetSurveillance = $repository->findAllByYear($targetYear);
+        }
         $this->setTargetYearData($epidemicPhase, $targetSurveillance);
         
         // CalcYear
-        $calcSurveillances = $repository->findAllByYear($criteria->getYearChoices());
+        $calcSurveillances = array();
+        if ($criteria->isModeSpecificWeek()) {
+            $calcSurveillances = $repository->findAllBySpecificWeek($criteria->getYearChoices(), $criteria->getWeekOfYear());
+        } else {
+            $calcSurveillances = $repository->findAllByYear($criteria->getYearChoices());
+        }
         $this->setCalcYearsData($epidemicPhase, $calcSurveillances);
     }
     
     protected function getEpidemicPhaseDistrict(
             EpidemicPhase $epidemicPhase,
-            SurveillanceCoefficientCriteria $criteria,
-            $isSpecificWeek = false)
+            SurveillanceCoefficientCriteria $criteria)
     {
         $manager = $this->managerRegistry->getEntityManager('scomdis');
         $districts = $manager->getRepository('DHISSComDisBundle:District')->findAll();
         
         $epidemicPhaseDistricts = array();
-        if ($isSpecificWeek) {
-            $epidemicPhaseDistricts[0] = $this->createEpidemicPhaseDistrictInstance($epidemicPhase, $districts, $criteria->getYearChoices());
+        if ($criteria->isModeSpecificWeek()) {
+            $epidemicPhaseDistricts[$criteria->getWeekOfYear()] = $this->createEpidemicPhaseDistrictInstance($epidemicPhase, $districts, $criteria->getYearChoices());
         } else {
             $endweek = CommonUtils::is53EPIWeekInYear($criteria->getTargetYear()) ? 53 : 52;
             for ($i = 1; $i <= $endweek; $i++) {

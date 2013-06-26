@@ -95,7 +95,8 @@ class SurveillanceRepository extends EntityRepository
      * @param type $user
      * @throws \InvalidArgumentException 
      */
-    public function receiveSurveillance($id, $user) {
+    public function receiveSurveillance($id, $user)
+    {
         $surveillance = $this->find($id);
         if (!$surveillance) {
             throw new \InvalidArgumentException('Error: The surveillance is not found.');
@@ -109,7 +110,8 @@ class SurveillanceRepository extends EntityRepository
         $manager->flush();
     }
     
-    public function findAllByYearAndSentinelSite(array $years, array $sentinelSites) {
+    public function findAllByYearAndSentinelSite(array $years, array $sentinelSites)
+    {
         
         $paramYears = $this->getParamYears($years);
         $paramSentinelSites = $this->getParamSentinelSites($sentinelSites);
@@ -122,7 +124,8 @@ class SurveillanceRepository extends EntityRepository
         return $surveillances;
     }
     
-    public function findAllByYear(array $years) {
+    public function findAllByYear(array $years)
+    {
         
         $paramYears = $this->getParamYears($years);
         
@@ -134,7 +137,20 @@ class SurveillanceRepository extends EntityRepository
         return $surveillances;
     }
     
-    protected function getParamYears(array $years) {
+    public function findAllBySpecificWeek(array $years, $weekOfYear)
+    {
+        $paramYears = $this->getParamYears($years);
+        
+        $manager = $this->getEntityManager();
+        $query = $manager->createQuery('SELECT s FROM DHISSComDisBundle:Surveillance s WHERE ' . 
+                $paramYears . ' AND ' . 's.weekOfYear =' . $weekOfYear . ' ORDER BY s.year');
+        $surveillances = $query->getResult();
+        
+        return $surveillances;
+    }
+    
+    protected function getParamYears(array $years)
+    {
 
         $paramYears = '( ';
         for ($i = 0; $i < count($years); $i++) {
@@ -149,7 +165,8 @@ class SurveillanceRepository extends EntityRepository
         return $paramYears;
     }
     
-    protected function getParamSentinelSites(array $sentinelSites) {
+    protected function getParamSentinelSites(array $sentinelSites)
+    {
 
         $paramSentinelSites = '( ';
         for ($i = 0; $i < count($sentinelSites); $i++) {

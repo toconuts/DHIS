@@ -79,6 +79,11 @@ class EpidemicPhaseDistrict
         $this->phase = NULL;
 
     }
+    
+    public function getDistrict()
+    {
+        return $this->district;
+    }
 
     public function getId()
     {
@@ -140,9 +145,9 @@ class EpidemicPhaseDistrict
      *
      * @param DHIS\Bundle\SComDisBundle\Entity\EpidemicPhaseClinic $clinic
      */
-    public function addClinic(\DHIS\Bundle\SComDisBundle\Entity\Clinic $clinic)
+    public function addClinic(\DHIS\Bundle\SComDisBundle\Entity\EpidemicPhaseClinic $clinic)
     {
-        $this->clinics[] = $clinic;
+        $this->clinics[$clinic->getId()] = $clinic;
     }
     
     /**
@@ -207,7 +212,7 @@ class EpidemicPhaseDistrict
     
     protected function updateCoefficient()
     {
-        if ($this->totalOfTargetCases === NULL || $this->sd === NULL || $this->average === NULL) {
+        if ($this->totalOfTargetCases === NULL || $this->average === NULL || $this->sd === NULL) {
             $this->coefficient = NULL;
         } else if ($this->sd == 0) {
             $this->coefficient = 0;
@@ -226,29 +231,20 @@ class EpidemicPhaseDistrict
     public function updateClinics(array &$casesOfTarget, array &$casesOfCalc)
     {
         foreach ($this->clinics as $clinic) {
-            $clinic->update();
-            $this->getClinicCases($clinic, $casesOfTarget, $casesOfCalc);
+            try {
+                $clinic->update();
+            } catch (\InvalidArgumentException $e) {
+                if (!$this->epidemicPhase->isUseLandwideSD()) {
+                    $name = $clinic->getName();
+                    $this->epidemicPhase->addMessage($e->getMessage() . " Clinic: $name");
+                }
+            }
+            $clinic->getCases($casesOfTarget, $casesOfCalc);
         }
     }
     
-    public function getClinicCases($clinic, array &$casesOfTarget, array &$casesOfCalc)
+    public function removeClinic($id)
     {
-        if ($clinic->getCasesOfTarget() === NULL) {
-            if ($this->epidemicPhase->isUseNoRecord() == true) {
-                $casesOfTarget[] = 0;
-            }
-        } else {
-            $casesOfTarget[] = $clinic->getCasesOfTarget();
-        }
-
-        foreach ($clinic->getCasesOfCalc() as $caseOfCalc) {
-            if ($caseOfCalc === NULL) {
-                if ($this->epidemicPhase->isUseNoRecord() == true) {
-                    $casesOfCalc[] = 0;
-                }
-            } else {
-                $casesOfCalc[] = $caseOfCalc;
-            }
-        }   
+        unset($this->clinics[$id]);
     }
 }

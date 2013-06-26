@@ -36,8 +36,8 @@ class Phase
     /**
      * @var string $color
      * 
-     * @ORM\Column(name="referrals", type="string", length=50)
-     * @Assert\MaxLength(limit=50)
+     * @ORM\Column(name="color", type="string", length=50)
+     * @Assert\MaxLength(limit=10)
      * @Assert\NotBlank
      */
     private $color;

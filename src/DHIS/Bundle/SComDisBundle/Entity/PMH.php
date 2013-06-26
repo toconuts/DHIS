@@ -16,6 +16,10 @@ use Symfony\Component\Validator\Constraints as Assert;
  */
 class PMH
 {
+    const PMHID = 8000;
+    const NAME = "PMH";
+    const CODE = "0";
+    
     /**
      * @var integer $id
      *

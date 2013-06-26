@@ -19,7 +19,7 @@
 </div>
 {% endif %}
 
-<form action="{{ path('scomdis_map_epidemic_phase') }}" method="post" class="form-horizontal">
+<form target="_blank" action="{{ path('scomdis_map_epidemic_phase') }}" method="post" class="form-horizontal">
   {{ form_errors(form) }}
   <div class="control-group {% if form.weekend.get('errors') %}error{% endif %}">
     <label class="control-label">Weekend</label>
@@ -70,12 +70,12 @@
     <label class='checkbox'>{{ form_widget(form.useNoRecords) }}Calc. no records as 0 case.</label>
     </div>
   </div>
-  <div class="control-group">
+{#  <div class="control-group">
     {{ form_errors(form.useLandwideSD) }}
     <div class="controls">
     <label class='checkbox'>{{ form_widget(form.useLandwideSD) }}Calc. threshold in each district by dividing islandwide threshold in proportion to its population.</label>
     </div>
-  </div>
+  </div> #}
   {{ form_widget(form._token) }}
   <div class="form-actions">
     <input class="btn btn-primary" type="submit" value="Next">

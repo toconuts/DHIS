@@ -56,6 +56,8 @@ class SurveillanceCoefficientCriteria
      * @var bool $showIslandwide
      */
     private $showIslandwide;
+    
+    private $modeSpecificWeek;
 
     public function __construct(array $syndromes)
     {
@@ -69,6 +71,7 @@ class SurveillanceCoefficientCriteria
         $this->useNoRecords = true;
         $this->useLandwideSD = false;
         $this->showIslandwide = false;
+        $this->modeSpecificWeek = false;
     }
     
     /**
@@ -202,5 +205,15 @@ class SurveillanceCoefficientCriteria
     public function isShowIslandwide()
     {
         return $this->showIslandwide;
+    }
+    
+    public function setModeSpecificWeek($value)
+    {
+        $this->modeSpecificWeek = $value;
+    }
+    
+    public function isModeSpecificWeek()
+    {
+        return $this->modeSpecificWeek;
     }
 }

@@ -184,18 +184,8 @@ function getClinicLatLng(id)
       break;
     
     // PMH
-// @todo PMH LatLng
-    case 8002:
-      path = new google.maps.LatLng(15.30620129, -61.38391882);
-      break;
-    case 8003:
-      path = new google.maps.LatLng(15.30620129, -61.38391882);
-      break;
-    case 8004:
-      path = new google.maps.LatLng(15.30620129, -61.38391882);
-      break;
-    case 8005:
-      path = new google.maps.LatLng(15.30620129, -61.38391882);
+    case 8000:
+      path = new google.maps.LatLng(15.308525, -61.386974);
       break;
 
     // ROSS

@@ -56,7 +56,7 @@ class EpidemicPhaseClinic
     private $coefficient;
     
     /**
-     * @var integer $phase
+     * @var Phase $phase
      */
     private $phase;
 
@@ -179,25 +179,48 @@ class EpidemicPhaseClinic
         if ($this->numberOfCalcCases > 1) { // Because sample true is (n - 1). Protect dividing with zero.
             $this->sd = round(CommonUtils::staticsStandardDeviation($casesOfCalc, true), 3);
         } else if ($this->epidemicPhase->isToGenerateErrorException()) {
-            $this->sd = NULL;
-            $this->coefficient = NULL;
-            $this->phase = NULL;
-            $message = "Can not calculate standard daviation because there are not enough records. Please try to check \"no records as 0 case\" option.";
+            $message = "Can not calculate SD.";
             throw new \InvalidArgumentException($message);
         } else {
             $this->sd = 0;
         }
         
         // Calc coefficient
-        if ($this->casesOfTarget === NULL) {
-            
+        if ($this->casesOfTarget === NULL || $this->average === NULL || $this->sd === NULL) {
+            $this->coefficient = NULL;
         } elseif ($this->sd == 0) {
+            if ($this->casesOfTarget > 0 && $this->epidemicPhase->isToGenerateErrorException()) {
+                $this->coefficient = NULL;
+                $message = "Can not calculate coefficient because SD is zero.";
+                throw new \InvalidArgumentException($message);
+            }
             $this->coefficient = 0;
         } else {
-            $this->coefficient = round(($this->casesOfTarget - $this->average) / $this->sd, 3);
+            $this->coefficient = round(((float)$this->casesOfTarget - $this->average) / $this->sd, 3);
         }
         
         // Judge the phase
         $this->phase = $this->epidemicPhase->judgePhase($this->coefficient);
+    }
+    
+    public function getCases(array &$casesOfTarget, array &$casesOfCalc)
+    {
+        if ($this->getCasesOfTarget() === NULL) {
+            if ($this->epidemicPhase->isUseNoRecord() == true) {
+                $casesOfTarget[] = 0;
+            }
+        } else {
+            $casesOfTarget[] = $this->getCasesOfTarget();
+        }
+
+        foreach ($this->getCasesOfCalc() as $caseOfCalc) {
+            if ($caseOfCalc === NULL) {
+                if ($this->epidemicPhase->isUseNoRecord() == true) {
+                    $casesOfCalc[] = 0;
+                }
+            } else {
+                $casesOfCalc[] = $caseOfCalc;
+            }
+        }   
     }
 }

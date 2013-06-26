@@ -32,3 +32,11 @@
 .hide {
     display: none;
 }
+
+#map-canvas img {
+  max-width: none;
+}
+
+#map-canvas label {
+  width: auto; display:inline; 
+}
