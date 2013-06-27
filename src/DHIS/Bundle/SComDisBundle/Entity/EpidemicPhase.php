@@ -430,23 +430,6 @@ class EpidemicPhase
      */
     public function judgePhase($coefficient)
     {
-// @todo delete
-        /*
-        if ($coefficient === NULL) {
-            return NULL;
-        } else if ($coefficient == 0) {
-            return 0;
-        }
-        
-        foreach ($this->phases as $phase) {
-            if ($phase->getThreshold() <= $coefficient) {
-                return $phase->getId();
-            }
-        }
-        
-        return 0;
-         */
-        
         if ($coefficient !== NULL) {// && $coefficient != 0) {
             foreach ($this->phases as $phase) {
                 if ($phase->getThreshold() <= $coefficient) {

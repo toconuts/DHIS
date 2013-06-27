@@ -42,9 +42,16 @@
             <li class="nav-header">Map</li>
             <li {% if sidebar_menu == 'scomdis_map_epidemic_phase' %}class="active"{% endif %}>
               <a href="{{ path('scomdis_map_epidemic_phase') }}">Epidemic Phase</a></li>
-            <li {% if sidebar_menu == 'scomdis_map_cases' %}class="active"{% endif %}>
-              <a href="{{ path('scomdis_chart_coefficient') }}">Number of cases</a></li>
             
+            <li class="nav-header">Outbreak</li>
+            <li {% if sidebar_menu == 'scomdis_outbreak' %}class="active"{% endif %}>
+              <a href="{{ path('scomdis_outbreak') }}">List</a></li>
+            <li {% if sidebar_menu == 'scomdis_outbreak_search' %}class="active"{% endif %}>
+              <a href="{{ path('scomdis_outbreak_search') }}">Search</a></li>
+            <li {% if sidebar_menu == 'scomdis_outbreak_new' %}class="active"{% endif %}>
+              <a href="{{ path('scomdis_outbreak_new') }}">New</a></li>
+            
+            {% if is_granted('ROLE_ADMIN') %}
             <li class="nav-header">Maintenance</li>
             <li {% if sidebar_menu == 'scomdis_admin_clinic' %}class="active"{% endif %}>
               <a href="{{ path('scomdis_admin_import') }}">Clinic</a></li>
@@ -54,14 +61,7 @@
               <a href="{{ path('scomdis_admin_import') }}">District</a></li>
             <li {% if sidebar_menu == 'scomdis_admin_import' %}class="active"{% endif %}>
               <a href="{{ path('scomdis_admin_import') }}">Import</a></li>
-            
-            <li class="nav-header">Outbreak</li>
-            <li {% if sidebar_menu == 'scomdis_outbreak' %}class="active"{% endif %}>
-              <a href="{{ path('scomdis_outbreak') }}">List</a></li>
-            <li {% if sidebar_menu == 'scomdis_outbreak_search' %}class="active"{% endif %}>
-              <a href="{{ path('scomdis_outbreak_search') }}">Search</a></li>
-            <li {% if sidebar_menu == 'scomdis_outbreak_new' %}class="active"{% endif %}>
-              <a href="{{ path('scomdis_outbreak_new') }}">New</a></li>
+            {% endif %}
             
             <li class="nav-header">Test</li>
             <li {% if sidebar_menu == 'scomdis_test' %}class="active"{% endif %}>

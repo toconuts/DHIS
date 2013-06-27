@@ -43,17 +43,79 @@ class ChartService
         set_time_limit(600);
         ini_set("memory_limit", "1G");
 
-        $data = $this->getTrendChartData($criteria);
-        
-        $lineChart = new LineChart();
+        $lineChart = new LineChart(0, $criteria->getYearChoices(), false, $criteria->isUseSeriesSyndromes());
         $lineChart->setTitle("Epidemic Trend");
+        $this->setSyndromes($lineChart, $criteria->getSyndromes());
+        $this->setSentinelSites($lineChart, $criteria->getSentinelSites());
+        $this->setSeriesNames($lineChart);
         
+        $data = $this->getTrendChartData($criteria);
         $lineChart->setData($data);
         
-        $dataLabels = $this->getSyndromeNames($criteria);
-        $lineChart->setSeriesNames($dataLabels);
+        return $lineChart;
+    }
+    
+    public function createPredictionChart(SurveillancePredictionCriteria $criteria)
+    {
+        set_time_limit(600);
+        ini_set("memory_limit", "1G");
+        
+        $lineChart = new LineChart($criteria->getTargetYear(), $criteria->getYearChoices(), $criteria->isUseNoRecords(), false);
+        $lineChart->setTitle("Epidemic Prediction");
+        $this->setSyndromes($lineChart, $criteria->getSyndromes());
+        $this->setSentinelSites($lineChart, $criteria->getSentinelSites());
+        $this->setSeriesNames($lineChart, false);
+        
+        $targetYearData = $this->getTargetYearData($criteria);
+        $predictionData = $this->getPredictionData($targetYearData, $criteria);
+        $lineChart->setData($predictionData);
         
         return $lineChart;
+    }
+    
+    protected function setSyndromes(LineChart $lineChart, $ids)
+    {
+        $manager = $this->managerRegistry->getEntityManager('scomdis');
+        $repository = $manager->getRepository('DHISSComDisBundle:Syndrome4Surveillance');
+        
+        foreach($ids as $id) {
+            $lineChart->addSyndrome($repository->find($id));
+        }
+    }
+    
+    protected function setSentinelSites(LineChart $lineChart, $ids)
+    {
+        $manager = $this->managerRegistry->getEntityManager('scomdis');
+        $repository = $manager->getRepository('DHISSComDisBundle:SentinelSite');
+        
+        foreach($ids as $id) {
+            $lineChart->addSentinelSite($repository->find($id));
+        }
+    }
+    
+    protected function setSeriesNames(LineChart $lineChart, $trend = true)
+    {
+        $seriesNames = array();
+        
+        if ($trend) {
+            $syndromes = $lineChart->getSyndromes();
+            foreach ($syndromes as $index => $syndrome) {
+                if ($lineChart->isUseSeriesSyndromes()) {
+                    $seriesNames[] = $syndrome->getName();
+                } else {
+                    if ($index == 0) {
+                        $seriesNames[0] = $syndrome->getName();
+                    } else {
+                        $seriesNames[0] = $seriesNames[0] . ', ' . $syndrome->getName();
+                    }
+                }
+            }
+        } else { // for prediction
+            $targetYear = $lineChart->getYear();
+            $seriesNames = array("Number in $targetYear", "Average", "Threshold");
+        }
+        
+        $lineChart->setSeriesNames($seriesNames);
     }
     
     protected function getTrendChartData(SurveillanceTrendCriteria $criteria, $initialValue = 0)
@@ -117,24 +179,6 @@ class ChartService
         return $trends;
     }
 
-    public function createPredictionChart(SurveillancePredictionCriteria $criteria)
-    {
-        $lineChart = new LineChart();
-        $syndromeNames = implode(",", $this->getSyndromeNames($criteria));
-        $lineChart->setTitle("Epidemic Prediction in $syndromeNames");
-        
-        $targetYearData = $this->getTargetYearData($criteria);
-        $predictionData = $this->getPredictionData($targetYearData, $criteria);
-        
-        $lineChart->setData($predictionData);
-        
-        $targetYear = $criteria->getTargetYear();
-        $dataLabels = array("Number in $targetYear", "Average", "Threshold");
-        $lineChart->setSeriesNames($dataLabels);
-        
-        return $lineChart;
-    }
-    
     protected function getTargetYearData(SurveillancePredictionCriteria $criteria)
     {        
         $calcYears = $criteria->getYearChoices();
@@ -208,72 +252,5 @@ class ChartService
         }
         
         return $prediction;
-    }
-
-    protected function getSyndromeNames($criteria) {
-        
-        $manager = $this->managerRegistry->getEntityManager('scomdis');
-        $repository = $manager->getRepository('DHISSComDisBundle:Syndrome4Surveillance');
-        $syndromeChoices = $criteria->getSyndromes();
-        $first = true;
-        
-        $syndromeNames = array();
-        for ($i = 0; $i < count($syndromeChoices); $i++) {
-            $syndrome = $repository->find($syndromeChoices[$i]);
-            if ($criteria->isUseSeriesSyndromes()) {
-                $syndromeNames[$i] = $syndrome->getName();
-            } else {
-                if ($first) {
-                    $syndromeNames[0] = $syndrome->getName();
-                    $first = false;
-                } else {
-                    $syndromeNames[0] = $syndromeNames[0] . ', ' . $syndrome->getName();
-                }
-            }
-        }
-        return $syndromeNames;
-    }
-    
-    public function createSeasonalCoefficientChart(SurveillanceCoefficientCriteria $criteria) {
-        $manager = $this->managerRegistry->getEntityManager('scomdis');
-        $districts = $manager->getRepository('DHISSComDisBundle:District')->findAll();
-        
-        $lineChart = new LineChart();
-        
-        $targetYear = $criteria->getTargetYear();
-        $lineChart->setTitle("Seasonal Coefficient in $targetYear");
-        
-        $seasonalCoefficientData = $this->getSeasonalCoefficientData($criteria, $districts);
-        $lineChart->setData($seasonalCoefficientData);
-        
-        $dataLabels = array();
-        foreach ($districts as $district) {
-            $dataLabels[] = $district->getName();
-        }
-        $lineChart->setSeriesNames($dataLabels);
-
-        return $lineChart;
-    }
-    
-    protected function getSeasonalCoefficientData(SurveillanceCoefficientCriteria $criteria, $districts) {
-        
-        $manager = $this->managerRegistry->getEntityManager('scomdis');
-        $targetYear[] = $criteria->getTargetYear();
-        $surveillancesTargetYear = $manager->getRepository('DHISSComDisBundle:Surveillance')
-            ->findAllByYear($targetYear)
-        ;
-        
-        $surveillancesCalcYear = $manager->getRepository('DHISSComDisBundle:Surveillance')
-            ->findAllByYear($criteria->getYearChoices())
-        ;
-        
-        // Get epidmic phase data from service
-        //$service = $this->get('surveillance.epidemic_phase_service');
-        //$data = $service->createEpidemicPhaseData($surveillancesTargetYear, 
-        //                                          $surveillancesCalcYear,
-        //                                          $criteria->isUseNoRecords(),
-        //                                          $criteria->isUseIslandwideSD());
-        
-        // $data[year][week][series]
     }
 }

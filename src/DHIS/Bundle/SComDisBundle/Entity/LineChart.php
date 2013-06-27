@@ -11,21 +11,99 @@ namespace DHIS\Bundle\SComDisBundle\Entity;
  */
 class LineChart
 {
-    private $seriesNames;
-    
-    private $data;
-    
-    private $maxValue;
-
+    /**
+     * @var string $title
+     */
     private $title;
     
-    public function __construct()
+    /**
+     * @var string $targetYear
+     */
+    private $year;
+    
+    /**
+     * @var array $calcYears
+     */
+    private $calcYears;
+    
+    /**
+     * @var array seriesNames;
+     */
+    private $seriesNames;
+    
+    /**
+     * $data[year][week][series]
+       
+     * @var array $data
+     */
+    private $data;
+    
+    /**
+     * $lineChartData[] = array(index, series1, series2, series3,...seriesN)
+     * 
+     * @var array $lineChartData
+     */
+    private $lineChartData;
+    
+    /**
+     * @var int $maxValue
+     */
+    private $maxValue;
+    
+    /**
+     * @var boolean $useSeriesSyndromes
+     */
+    private $useSeriesSyndromes;
+    
+    /**
+     * @var boolean $isUseNorecord
+     */
+    private $useNoRecord;
+    
+    /**
+     * @var array $syndromes
+     */
+    private $syndromes;
+    
+    /**
+     * @var array $sentinelSites;
+     */
+    Private $sentinelSites;
+    
+    /**
+     * @var array $messages;
+     */
+    private $messages;
+    
+    public function __construct($year, $calcYears, $useNorecord, $useSeriesSyndromes = false)
     {
-       $this->seriesNames = array();
-       $this->data = array();
-       $this->maxValue = 0;
-       $this->chartTitle = "Chart Title";
-       $this->maxValue = 0;
+        $this->chartTitle = "Chart Title";
+        $this->year = $year;
+        $this->calcYears = $calcYears;
+        $this->useNoRecord = $useNorecord;
+        $this->useSeriesSyndromes = $useSeriesSyndromes;
+        
+        $this->seriesNames = array();
+        
+        $this->data = array();
+        $this->lineChartData = array();
+        
+        $this->maxValue = 0;
+        
+        $this->sentinelSites = array();
+        $this->syndromes = array();
+        
+        $this->messages = array();
+    }
+    
+    public function getYear()
+    {
+        return $this->year;
+    }
+    
+    public function getCalcYears()
+    {
+        return $this->calcYears;
     }
     
     public function setSeriesNames(array $names) {
@@ -36,29 +114,36 @@ class LineChart
         }
     }
     
-    public function getSeries() {
+    public function getSeriesNames() {
         return $this->seriesNames;
     }
     
-    public function setData(array $data) {
-        // $data[year][week][series]
-        // $this->data[] = array(index, series1, series2, series3,...seriesN)
+    public function setData(array $data)
+    {
+        $this->data = $data;
+        $this->createLineChartData();
+    }
+    
+    public function createLineChartData()
+    {
+        // $this->data[year][week][series]
+        // $this->lineChartData[] = array(index, series1, series2, series3,...seriesN)
         
         $this->maxValue = 0;
-        $this->data = array();
+        $this->lineChartData = array();
         
         $index = 0;
-        foreach ($data as $numberOfYear => $year) {
+        foreach ($this->data as $numberOfYear => $year) {
             foreach ($year as $numberOfWeek => $week) {
                 if ($numberOfWeek === 1) {
-                    $this->data[$index][0] = "$numberOfYear-$numberOfWeek";
+                    $this->lineChartData[$index][0] = "$numberOfYear-$numberOfWeek";
                 } elseif ($this->isLabeledWeek ($numberOfWeek)) {
-                    $this->data[$index][0] = (string)$numberOfWeek;
+                    $this->lineChartData[$index][0] = (string)$numberOfWeek;
                 } else {
-                    $this->data[$index][0] = '';
+                    $this->lineChartData[$index][0] = '';
                 }
                 foreach ($week as $series => $value) {
-                    $this->data[$index][$series + 1] = $value;
+                    $this->lineChartData[$index][$series + 1] = $value;
                     $this->updateMaxValue($value);
                 }
                 $index++;
@@ -68,6 +153,10 @@ class LineChart
     
     public function getData() {
         return $this->data;
+    }
+    
+    public function getLineChartData() {
+        return $this->lineChartData;
     }
     
     public function setMaxValue($value) {
@@ -86,6 +175,72 @@ class LineChart
         return $this->title;
     }
     
+    /**
+     * Add syndrome
+     *
+     * @param Syndrome4Surveillance $syndrome
+     */
+    public function addSyndrome(Syndrome4Surveillance $syndrome)
+    {
+        $this->syndromes[] = $syndrome;
+    }
+    
+    public function getSyndromes()
+    {
+        return $this->syndromes;
+    }
+    
+    /**
+     * Add sentinelSite
+     *
+     * @param SentinelSite $sentinelSite
+     */
+    public function addSentinelSite(SentinelSite $sentinelSite)
+    {
+        $this->sentinelSites[] = $sentinelSite;
+    }
+    
+    /**
+     * Set sentinelSites
+     *
+     * @param array $sentinelSites
+     */
+    public function setSentinelSites($sentinelSites)
+    {
+        $this->sentinelSites = $sentinelSites;
+    }
+    
+    /**
+     * Get sentinelSites
+     *
+     * @return array $sentinelSites
+     */
+    public function getSentinelSites()
+    {
+        return $this->sentinelSites;
+    }
+    
+    public function addMessage($message)
+    {
+        $this->messages[] = $message;
+    }
+    
+    public function getMessages()
+    {
+        return $this->messages;
+    }
+    
+    public function isUseNoRecord()
+    {
+        return $this->useNoRecord;
+    }
+    
+    public function isUseSeriesSyndromes()
+    {
+        return $this->useSeriesSyndromes;
+    }
+
+
     protected function isLabeledWeek($week) {
         if ($week ==  1 || 
             $week ==  5 || 
@@ -109,4 +264,5 @@ class LineChart
         if ($this->maxValue < $value)
             $this->maxValue = $value;
     }
+
 }

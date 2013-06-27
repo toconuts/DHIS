@@ -41,6 +41,9 @@ class LoadGroupData extends AbstractFixture implements OrderedFixtureInterface
         // SComdis Users
         $groupSComDis = $this->createGroup("SComDis Users", "ROLE_SCOMDIS_USER");
         
+        // SComdis Admin
+        $groupSComDisAdmin = $this->createGroup("SComDis Admin", "ROLE_SCOMDIS_ADMIN");
+        
         // PM.1 Users
         $groupPM1 = $this->createGroup("PM1 Users", "ROLE_PM1_USER");
         
@@ -49,14 +52,15 @@ class LoadGroupData extends AbstractFixture implements OrderedFixtureInterface
                 
         $this->manager->flush();
         
-        $this->addReference('groupAdmin',       $groupAdmin);
-        $this->addReference('groupSuperAdmin',  $groupSuperAdmin);
-        $this->addReference('groupDefaultUser', $groupDefaultUser);
-        $this->addReference('groupAllProduct',  $groupAllProduct);
-        $this->addReference('groupOpenMRS',     $groupOpenMRS);
-        $this->addReference('groupSComDis',     $groupSComDis);
-        $this->addReference('groupPM1',         $groupPM1);
-        $this->addReference('groupEyeBase',     $groupEyeBase);
+        $this->addReference('groupAdmin',           $groupAdmin);
+        $this->addReference('groupSuperAdmin',      $groupSuperAdmin);
+        $this->addReference('groupDefaultUser',     $groupDefaultUser);
+        $this->addReference('groupAllProduct',      $groupAllProduct);
+        $this->addReference('groupOpenMRS',         $groupOpenMRS);
+        $this->addReference('groupSComDis',         $groupSComDis);
+        $this->addReference('groupSComDisAdmin',    $groupSComDisAdmin);
+        $this->addReference('groupPM1',             $groupPM1);
+        $this->addReference('groupEyeBase',         $groupEyeBase);
     }
     
     protected function createGroup($name, $role) {
