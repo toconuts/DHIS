@@ -5,12 +5,12 @@
 {% block content_title 'Registration Complete' %}
 
 {% set menu = 'admin' %}
-{% set sidebar_menu = 'admin_user' %}
+{% set sidebar_menu = 'admin_group_rregister' %}
 
 {% block content %}
 <div class="alert alert-success">
-  <p>User registration complete.</p>
-  <a href="{{ path ('admin_user') }}" class="btn">&laquo; Go to list</a>
-  <a href="{{ path ('admin_user_register') }}" class="btn btn-success">Add more user</a>
+  <p>Group registration complete.</p>
+  <a href="{{ path ('admin_group') }}" class="btn">&laquo; Go to list</a>
+  <a href="{{ path ('admin_group_register') }}" class="btn btn-success">Add more group</a>
 </div>
 {% endblock %}

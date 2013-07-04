@@ -16,7 +16,7 @@ DHISCommonBundle:
     type:     annotation
     prefix:   /
 
-DHISCommonBundle:
+DHISComDisBundle:
     resource: "@DHISSComDisBundle/Controller/"
     type:     annotation
 

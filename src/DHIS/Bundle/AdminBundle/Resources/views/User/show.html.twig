@@ -52,14 +52,30 @@
     </tr>
   </tbody>
 </table>
-{#<div class="actions">
-    <a href=javascript:history:back() class="btn">&laquo; Back</a>
-</div>#}
-<form action="{{ path('admin_user_edit', {'id': user.id}) }}">
-  <div class="form-actions">
-      <a href=javascript:history:back() class="btn">&laquo; Back</a>
+
+<div class="row">
+  <div class="span6">
+    <div class="form-actions">
+  <form action="{{ path('admin_user_edit', {'id': user.id}) }}">
+      <a href=javascript:history:back() class="btn">&laquo; Back</a>      
       <input type="submit" class="btn btn-primary" value="Edit">
+  </form>
+    </div>
   </div>
-</form>
+  <div class="span4">
+    <div class="well">
+      <form action="{{ path('admin_user_delete', {'id': user.id}) }}">
+        <h4>Delete this User</h4>
+        <p>Note: once it is deleted, you will not be able to restore it.</p>
+        {#<a href="{{ path('admin_user_delete') }}" class="btn btn-danger">Delete</a>#}
+        {% if is_granted('ROLE_SUPER_ADMIN') %}
+        <input type="submit" class="btn btn-danger" value="Delete">
+        {% else %}
+        <p>Can not be allowed.</p>
+        {% endif %}
+      </form>
+    </div>
+  </div>
+</div>
 
 {% endblock %}

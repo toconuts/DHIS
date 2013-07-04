@@ -222,13 +222,13 @@ class User implements AdvancedUserInterface
      * @return boolean 
      */
     public function isValidPassword($rawPassword)
-    {
+    {      
         if ($this->password === $this->hashPassword($rawPassword)) {
             return true;
         }
         return false;
     }
-    
+
     /**
      * Hash password.
      * @param string $rawPassword

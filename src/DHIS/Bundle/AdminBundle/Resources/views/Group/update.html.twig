@@ -1,13 +1,19 @@
 {% extends 'DHISAdminBundle::layout.html.twig' %}
 
-{% block page_title 'Group&apos;s details - Admin' %}
+{% block page_title 'Update Group&apos;s profile - Admin' %}
 {% block product_name 'Admin' %}
-{% block content_title 'Group&apos;s details' %}
+{% block content_title 'Update Group&apos;s profile' %}
 
 {% set menu = 'admin' %}
 {% set sidebar_menu = 'admin_group' %}
 
 {% block content %}
+{% if app.request.session.hasFlash('success') %}
+<div class="alert alert-success">
+  {{ app.request.session.getFlash('success') }}
+</div>
+{% endif %}
+
 <table class="table table-striped table-bordered">
   <tbody>
     <tr>
@@ -30,20 +36,10 @@
       <th>Updated at</th>
       <td>{{ group.updatedAt|date('Y/m/d') }}</td>
     </tr>
-    <tr>
-      <th>Users</th>
-      <td>
-      {% for user in group.users %}
-        <a href="{{ path('admin_user_show', {'id': user.id}) }}">{{ user.displayname }}</a><br>
-      {% endfor %}
-    </td>
-    </tr>
   </tbody>
 </table>
-<form action="{{ path('admin_group_edit', {'id': group.id}) }}">
   <div class="form-actions">
-    <a href=javascript:history:back() class="btn">&laquo; Back</a>
-    <input type="submit" class="btn btn-primary" value="Edit">
+      <a href="{{ pre_url }}" class="btn">&laquo; Back</a>
   </div>
-</form>
+
 {% endblock %}

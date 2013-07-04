@@ -14,7 +14,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  * @author Natsuki Hara <toconuts@gmail.com>
  * 
  * @ORM\Table(name="dhis_groups")
- * @ORM\Entity()
+ * @ORM\Entity(repositoryClass="DHIS\Bundle\CommonBundle\Entity\GroupRepository")
  */
 class Group implements RoleInterface 
 {

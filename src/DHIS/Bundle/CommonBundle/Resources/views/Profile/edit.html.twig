@@ -1,0 +1,97 @@
+{% extends 'DHISCommonBundle::layout.html.twig' %}
+
+{% block page_title 'Edit - Profile' %}
+{% block product_name 'Common' %}
+{% block content_title 'Edit Profile' %}
+
+{% set menu = 'common_profile' %}
+{% set sidebar_menu = 'common_profile' %}
+
+{% block content %}
+<form action="{{ path('common_profile_edit') }}" method="post" class="form-horizontal">
+  {{ form_errors(form) }}
+    <div class="control-group {% if form.displayname.get('errors') %}error{% endif %}">
+      <label class="control-label">Name</label>
+      <div class="controls">
+        {{ form_errors(form.displayname) }}
+        {{ form_widget(form.displayname) }}
+      </div>
+    </div>
+    <div class="control-group {% if form.username.get('errrors') %}error{% endif %}">
+      <label class="control-label">Username</label>
+      <div class="controls">
+        {{ form_errors(form.username) }}
+        {{ form_widget(form.username) }}
+      </div>
+    </div>
+    <div class="control-group {% if form.email.get('errors')%}error{% endif %}">
+      <label class="control-label">Email</label>
+      <div class="controls">
+        {{ form_errors(form.email) }}
+        {{ form_widget(form.email.first) }}
+      </div>
+    </div>
+    <div class="control-group {% if form.email.get('errors')%}error{% endif %}">
+      <label class="control-label">Re-type Email</label>
+      <div class="controls">
+        {{ form_widget(form.email.second) }}
+      </div>
+    </div>
+    <hr>
+    <div class="control-group {% if form.rawPassword.get('errors')%}error{% endif %}">
+      <label class="control-label">Password</label>
+      <div class="controls">
+        <label class='checkbox'>{{ form_widget(form.changePassword, { 'attr' : { 'onclick' : "setEnable(this.checked)" }}) }}Edit</label>
+      </div>
+    </div>
+    <div class="control-group">
+      <label class="control-label">Current</label>
+      <div class="controls">
+        {{ form_errors(form.rawPassword) }}
+        {{ form_widget(form.rawPassword) }}
+      </div>
+    </div>
+    <div class="control-group">
+      <label class="control-label">New</label>
+      <div class="controls">
+        {{ form_errors(form.newRawPassword) }}
+        {{ form_widget(form.newRawPassword.first) }}
+      </div>
+    </div>
+    <div class="control-group">
+      <label class="control-label">Re-type</label>
+      <div class="controls">
+        {{ form_widget(form.newRawPassword.second) }}
+      </div>
+    </div>
+    {% if is_granted('ROLE_ADMIN') %}
+    <hr>
+    <div class="control-group {% if form.groups.get('errrors') %}error{% endif %}">
+      <label class="control-label">Groups</label>
+      <div class="controls">
+        {{ form_errors(form.groups) }}
+        {{ form_widget(form.groups) }}
+      </div>
+    </div>
+    {% endif %}
+    {{ form_widget(form._token) }}
+    <div class="form-actions">
+      <a href={{ path('common_profile_show') }} class="btn">&laquo; Cancel</a>
+      <button class="btn btn-primary">Save Changes</button>
+    </div>
+</form>
+{% endblock %}
+
+{% block javascripts %}
+  {{ parent() }}
+<script type="text/javascript">
+function setEnable(enable) {
+  if (enable == null)
+    enable = document.getElementById('user_profile_changePassword').checked;
+  document.getElementById('user_profile_rawPassword').disabled = !enable;
+  document.getElementById('user_profile_newRawPassword_first').disabled = !enable;
+  document.getElementById('user_profile_newRawPassword_second').disabled = !enable;
+}
+$(document).ready(setEnable(null));
+</script>
+{% endblock %}

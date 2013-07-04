@@ -1,0 +1,55 @@
+{% extends 'DHISCommonBundle::layout.html.twig' %}
+
+{% block page_title 'Confirm - Profile' %}
+{% block product_name 'Common' %}
+{% block content_title 'Confirm Profile' %}
+
+{% set menu = 'common_profile' %}
+{% set sidebar_menu = 'common_profile' %}
+
+{% block content %}
+<table class="table table-striped table-bordered">
+  <tbody>
+    <tr>
+      <th>ID</th>
+      <td>{{ user.id }}</td>
+    </tr>
+    <tr>
+      <th>Name</th>
+      <td>{{ user.displayname }}</td>
+    </tr>
+    <tr>
+      <th>Username</th>
+      <td>{{ user.username }}</td>
+    </tr>
+    <tr>
+      <th>Mail</th>
+      <td>{{ user.email }}</td>
+    </tr>
+    {% if changePassword == true %}
+    <tr>
+      <th>Password</th>
+      <td>********</td>
+    </tr>
+    {% endif %}
+    {% if is_granted('ROLE_ADMIN') %}
+    <tr>
+      <th>Groups</th>
+      <td>
+      {% for group in user.groups %}
+        {{ group.name }}<br>
+      {% endfor %}
+    </td>
+    </tr>
+    {% endif %}
+  </tbody>
+</table>
+
+<form action="{{ path('common_profile_confirm')}}" method="post" >
+  <div class="form-actions">
+      <a href=javascript:history:back() class="btn">&laquo; Back</a>
+      <input type="submit" class="btn btn-primary" value="Submit">
+  </div>
+</form>
+
+{% endblock %}

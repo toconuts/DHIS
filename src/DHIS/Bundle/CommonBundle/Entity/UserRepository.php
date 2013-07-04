@@ -9,6 +9,8 @@ use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\NoResultException;
 
+use DHIS\Bundle\CommonBundle\Entity\User;
+
 /**
  * UserRepository.
  *
@@ -62,5 +64,58 @@ class UserRepository extends EntityRepository implements UserProviderInterface
     {
         return $this->getEntityName() === $class 
                 || is_subclass_of($class, $this->getEntityName());
+    }
+    
+    /**
+     * Check whether user already exist or not.
+     * 
+     * @param User $user
+     * @return boolean 
+     */
+    public function isExist(User $user)
+    {
+        $other = $this->findOneBy(array(
+            'username' => $user->getUsername(),
+        ));
+        
+        if ($other) {
+            if ($other->getId() === $user->getId())
+                return false;
+            else
+                return true;
+        }
+        
+        return false;
+    }
+    
+    /**
+     * Save.
+     * 
+     * @param User $user
+     * @throws \InvalidArgumentException 
+     */
+    public function saveUser(User $user)
+    {
+        $manager = $this->getEntityManager('common');
+        
+        if ($this->isExist($user)) {
+            throw new \InvalidArgumentException('Error: Duplicated user.');
+        }
+        
+        $manager->persist($user);
+        $manager->flush();
+    }
+    
+    /**
+     * Delete user.
+     * 
+     * @param User $user
+     * @throws \InvalidArgumentException 
+     */
+    public function deleteUser($user)
+    {
+        $manager = $this->getEntityManager();
+        $manager->remove($user);
+        $manager->flush();
     }
 }

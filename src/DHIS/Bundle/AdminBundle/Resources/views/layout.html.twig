@@ -13,7 +13,7 @@
   <div class="container-fluid">
     <div clas="row-fluid">
       {% block sidebar %}
-      <div class="span3">
+      <div class="span2">
         <div class="well sidebar-nav">
           {% if sidebar_menu is not defined %}
             {% set sidebar_menu = null %}
@@ -27,33 +27,32 @@
             <li class="nav-header">Group</li>
             <li {% if sidebar_menu == 'admin_group' %}class="active"{% endif %}>
               <a href="{{ path('admin_group') }}">List</a></li>
-            <li class="nav-header">etc.</li>
-            <li><a href="#">Link</a></li>
-            <li><a href="#">Link</a></li>
+            <li {% if sidebar_menu == 'admin_group_register' %}class="active"{% endif %}>
+              <a href="{{ path('admin_group_register') }}">Add</a></li>
           </ul>
         </div>
       </div>
       {% endblock %}
 
-      <div class="span9">
+      <div class="span10">
         <div class="hero-unit">
           <h1>{% block content_title %}{{ block('content_title') }}{% endblock %} - Admin </h1>
         </div>
         <hr>
+        {% if app.request.session.hasFlash('success') %}
+        <div class="alert alert-success">
+          {{ app.request.session.getFlash('success') }}
+        </div>
+        {% endif %}
+        {% if app.request.session.hasFlash('error') %}
+        <div class="alert alert-error">
+          {{ app.request.session.getFlash('error') }}
+        </div>
+        {% endif %}
+        
         {% block content %}{% endblock %}
       </div>
     </div>
   </div>
 </div>
-  {#
-  <div class="container">
-    {% if app.request.session.hasFlash('success') %}
-    <div class="alert alert-success">
-      {{ app.request.session.getFlash('success') }}
-    </div>
-    {% endif %}
-
-    {% block content %}{% endblock %}
-  </div>
-  #}
 {% endblock %}

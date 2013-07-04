@@ -1,0 +1,32 @@
+{% extends 'DHISAdminBundle::layout.html.twig' %}
+
+{% block page_title 'Group Registration - Admin' %}
+{% block product_name 'Admin' %}
+{% block content_title 'Group Registration' %}
+
+{% set menu = 'admin' %}
+{% set sidebar_menu = 'admin_group_register' %}
+
+{% block content %}
+<form action="{{ path('admin_group_register') }}" method="post" class="form-horizontal">
+  {{ form_errors(form) }}
+    <div class="control-group {% if form.name.get('errors') %}error{% endif %}">
+      <label class="control-label">Name</label>
+      <div class="controls">
+        {{ form_errors(form.name) }}
+        {{ form_widget(form.name) }}
+      </div>
+    </div>
+    <div class="control-group {% if form.role.get('errrors') %}error{% endif %}">
+      <label class="control-label">Role</label>
+      <div class="controls">
+        {{ form_errors(form.role) }}
+        {{ form_widget(form.role) }}
+      </div>
+    </div>
+    {{ form_rest(form) }}
+    <div class="form-actions">
+      <button class="btn btn-primary">Registration</button>
+    </div>
+</form>
+{% endblock %}

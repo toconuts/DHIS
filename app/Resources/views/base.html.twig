@@ -79,7 +79,7 @@
             </a>
             <ul class="dropdown-menu">
               <li>
-                <a href="#">View Profile</a>
+                <a href="{{ path('common_profile_show') }}">View Profile</a>
               </li>
               {% if is_granted('ROLE_ADMIN') %}
               <li>

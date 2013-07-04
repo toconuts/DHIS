@@ -7,6 +7,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 
 use DHIS\Bundle\CommonBundle\Entity\User;
+use DHIS\Bundle\CommonBundle\Entity\UserRepository;
 use DHIS\Bundle\AdminBundle\Form\UserRegistrationType;
 use DHIS\Bundle\AdminBundle\Form\UserGroupType;
 use DHIS\Bundle\AdminBundle\Form\UserEditType;
@@ -33,7 +34,7 @@ class UserController extends AppController
         
         $pagenator = $this->get('knp_paginator');
         $pagination = $pagenator->paginate($query, $request->
-                query->get('p', 1), 10);
+                query->get('p', 1), 20);
       
         return array(
             'pagination' => $pagination,
@@ -130,23 +131,27 @@ class UserController extends AppController
     public function confirmAction(Request $request)
     {
         $user = new User();
-        
         if (!$this->restoreUserForms($user, array('user_registration', 'user_group'))) {
             return $this->redirect($this->generateUrl('admin_user_registration'));
         }
 
         if ('POST' === $request->getMethod()) {
             
-            // @todo duplication check.
-            $em = $this->getDoctrine()->getEntityManager('common');
-            $em->persist($user);
-            $em->flush();
-            
-            $session = $request->getSession();
-            $session->remove('admin_user/registration');
-            $session->remove('admin_user/group');
-            
-            return $this->redirect($this->generateUrl('admin_user_finish'));
+            try {
+
+                $em = $this->getDoctrine()->getEntityManager('common');
+                $repository = $em->getRepository('DHISCommonBundle:User');
+                $repository->saveUser($user);
+
+                $session = $request->getSession();
+                $session->remove('admin_user/registration');
+                $session->remove('admin_user/group');
+
+                return $this->redirect($this->generateUrl('admin_user_finish'));
+                
+            } catch (\InvalidArgumentException $e) {
+                $request->getSession()->setFlash('error', $e->getMessage());
+            }
         }
         
         return array(
@@ -173,12 +178,17 @@ class UserController extends AppController
             $form->bind($data);
             if ($form->isValid()) {
                 
-                // @todo duplication check.
-                $em = $this->getDoctrine()->getEntityManager('common');
-                $em->persist($user);
-                $em->flush();
-            
-                return $this->redirect($this->generateUrl('admin_user_update', array('id' => $id)));
+                try {
+                    
+                    $em = $this->getDoctrine()->getEntityManager('common');
+                    $repository = $em->getRepository('DHISCommonBundle:User');
+                    $repository->saveUser($user);
+
+                    return $this->redirect($this->generateUrl('admin_user_update', array('id' => $id)));
+
+                } catch (\InvalidArgumentException $e) {
+                    $request->getSession()->setFlash('error', $e->getMessage());
+                }
             }
         }
 
@@ -219,9 +229,42 @@ class UserController extends AppController
      * @Route ("/finish", name="admin_user_finish")
      * @Template
      */
-    public function finishAction()
+    public function finishAction(Request $request)
     {
         return array();
+    }
+    
+    /**
+     * @Route ("/delete{id}", name="admin_user_delete", requirements={"id" = "\d+"})
+     * @Template
+     */
+    public function deleteAction(Request $request, $id)
+    {
+        $userRepository = $this->get('doctrine')->getRepository('DHISCommonBundle:User');
+        $user = $userRepository->find($id);
+        if (!$user) {
+            throw $this->createNotFoundException();
+        }
+        
+        $securityContext = $this->get('security.context');
+        $loginUser = $securityContext->getToken()->getUser();
+        
+        if ($user->getId() === $loginUser->getId()) {
+            $message = 'Can not delete yourself.';
+            $request->getSession()->setFlash('error', $message);
+            return $this->redirect($this->generateUrl('admin_user_show', array('id' => $id)));
+        }
+        
+        try {
+            $userRepository->deleteUser($user);
+            $message = "Complete deleting user. id: $id.";
+            $request->getSession()->setFlash('success', $message);
+            
+        } catch (\InvalidArgumentException $e) {
+            $request->getSession()->setFlash('error', $e->getMessage());
+        }
+        
+        return $this->redirect($this->generateUrl('admin_user'));
     }
     
     /**
