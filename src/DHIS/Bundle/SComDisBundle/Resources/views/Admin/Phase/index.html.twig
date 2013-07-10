@@ -1,0 +1,55 @@
+{% extends 'DHISSComDisBundle::layout.html.twig' %}
+
+{% block page_title 'Syndromic Surveillance - Phase - SComDis' %}
+{% block product_name 'SComDis' %}
+{% block content_title 'Syndromic Surveillance - Phase' %}
+
+{% set menu = 'SComDis' %}
+{% set sidebar_menu = 'scomdis_admin_phase' %}
+
+{% block content %}
+{% if app.request.session.hasFlash('success') %}
+<div class="alert alert-success">
+  {{ app.request.session.getFlash('success') }}
+</div>
+{% endif %}
+{% if app.request.session.hasFlash('error') %}
+<div class="alert alert-error">
+  {{ app.request.session.getFlash('error') }}
+</div>
+{% endif %}
+<table class="table table-striped table-bordered">
+  <thead>
+    <tr>
+      <th>ID</th>
+      <th>Threshold</th>
+      <th>Color</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for phase in pagination %}
+    <tr>
+      <td><a href="{{ path('scomdis_admin_phase_show', {'id': phase.id}) }}">{{ phase.id }}</a></td>
+      <td>{{ phase.threshold }}</td>
+      <td>{{ phase.color }}</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+
+{{ pagination.render()|raw }}
+
+<div class="row">
+  <div class="span8">
+    <p></p>
+  </div>
+  <div class="span2">
+    <div class="well">
+      <form action="{{ path('scomdis_admin_phase_register') }}">
+        <h4>Add new Phase</h4>
+        <input type="submit" class="btn btn-primary" value="Register">
+      </form>
+    </div>
+  </div>
+</div>
+{% endblock %}

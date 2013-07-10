@@ -1,0 +1,50 @@
+{% extends 'DHISSComDisBundle::layout.html.twig' %}
+
+{% block page_title 'Syndromic Surveillance - Syndrome for Outbreak - SComDis' %}
+{% block product_name 'SComDis' %}
+{% block content_title 'Syndromic Surveillance - Syndrome for Outbreak - New' %}
+
+{% set menu = 'SComDis' %}
+{% set sidebar_menu = 'scomdis_admin_syndrome4outbreak' %}
+
+{% block content %}
+{% if app.request.session.hasFlash('success') %}
+<div class="alert alert-success">
+  {{ app.request.session.getFlash('success') }}
+</div>
+{% endif %}
+{% if app.request.session.hasFlash('error') %}
+<div class="alert alert-error">
+  {{ app.request.session.getFlash('error') }}
+</div>
+{% endif %}
+<form action="{{ path('scomdis_admin_syndrome4outbreak_register') }}" method="post" class="form-horizontal">
+  {{ form_errors(form) }}
+    <div class="control-group {% if form.id.get('errors') %}error{% endif %}">
+      <label class="control-label">ID</label>
+      <div class="controls">
+        {{ form_errors(form.id) }}
+        {{ form_widget(form.id) }}
+      </div>
+    </div>
+    <div class="control-group {% if form.name.get('errrors') %}error{% endif %}">
+      <label class="control-label">Name</label>
+      <div class="controls">
+        {{ form_errors(form.name) }}
+        {{ form_widget(form.name) }}
+      </div>
+    </div>
+    <div class="control-group {% if form.displayId.get('errrors') %}error{% endif %}">
+      <label class="control-label">Display ID</label>
+      <div class="controls">
+        {{ form_errors(form.displayId) }}
+        {{ form_widget(form.displayId) }}
+      </div>
+    </div>
+    {{ form_rest(form) }}
+    <div class="form-actions">
+      <a href=javascript:history:back() class="btn">&laquo; Cancel</a>
+      <input type="submit" class="btn btn-primary" value="Confirm">
+    </div>
+</form>
+{% endblock %}

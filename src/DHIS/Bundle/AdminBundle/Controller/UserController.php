@@ -199,7 +199,7 @@ class UserController extends AppController
     }
     
     /**
-     * @Route("update/{id}", name="admin_user_update", requirements={"id" = "\d+"})
+     * @Route("/update/{id}", name="admin_user_update", requirements={"id" = "\d+"})
      * @Template()
      */
     public function updateAction(Request $request, $id)
@@ -235,7 +235,7 @@ class UserController extends AppController
     }
     
     /**
-     * @Route ("/delete{id}", name="admin_user_delete", requirements={"id" = "\d+"})
+     * @Route ("/delete/{id}", name="admin_user_delete", requirements={"id" = "\d+"})
      * @Template
      */
     public function deleteAction(Request $request, $id)

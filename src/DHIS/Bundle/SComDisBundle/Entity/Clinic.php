@@ -13,7 +13,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  * @author Natsuki Hara <toconuts@gmail.com>
  * 
  * @ORM\Table(name="clinic")
- * @ORM\Entity()
+ * @ORM\Entity(repositoryClass="DHIS\Bundle\SComDisBundle\Entity\ClinicRepository")
  */
 class Clinic
 {

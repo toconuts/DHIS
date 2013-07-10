@@ -60,10 +60,12 @@ function initialize() {
   for (var clinic in clinics) {          
     // Construct the circle for each value in clinics. We scale phase by 300.
     var circle = new google.maps.Circle({
-      strokeColor: '#48325A',
+      //strokeColor: '#48325A',
+      strokeColor: 'green',
       strokeOpacity: 0.8,
       strokeWeight: 2,
-      fillColor: '#48325A',
+      //fillColor: '#48325A',
+      fillColor: 'blue',
       fillOpacity: 0.5,
       map: map,
       center: getClinicLatLng(clinics[clinic].id),

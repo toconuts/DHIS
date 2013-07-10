@@ -1,0 +1,46 @@
+{% extends 'DHISSComDisBundle::layout.html.twig' %}
+
+{% block page_title 'Syndromic Surveillance - Clinic - SComDis' %}
+{% block product_name 'SComDis' %}
+{% block content_title 'Syndromic Surveillance - Clinic - Confirmation' %}
+
+{% set menu = 'SComDis' %}
+{% set sidebar_menu = 'scomdis_admin_clinic_site' %}
+
+{% block content %}
+{% if app.request.session.hasFlash('success') %}
+<div class="alert alert-success">
+  {{ app.request.session.getFlash('success') }}
+</div>
+{% endif %}
+{% if app.request.session.hasFlash('error') %}
+<div class="alert alert-error">
+  {{ app.request.session.getFlash('error') }}
+</div>
+{% endif %}
+
+<table class="table table-striped table-bordered">
+  <tbody>
+    <tr>
+      <th>ID</th>
+      <td>{{ clinic.id }}</td>
+    </tr>
+    <tr>
+      <th>Name</th>
+      <td>{{ clinic.name }}</td>
+    </tr>
+    <tr>
+      <th>Sentinel Site</th>
+      <td>{{ clinic.sentinelSite.name }}</td>
+    </tr>
+    <tr>
+      <th>District</th>
+      <td>{{ clinic.district.name }}</td>
+    </tr>
+  </tbody>
+</table>
+<div class="form-actions">
+  <a href="{{ pre_url }}" class="btn">&laquo; Back</a>
+</div>
+
+{% endblock %}

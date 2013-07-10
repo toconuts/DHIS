@@ -40,4 +40,70 @@ class DistrictRepository extends EntityRepository
             $district->updateRatio($totalPopulation);
         }
     }
+    
+    /**
+     * Save.
+     * 
+     * @param District $district
+     * @throws \InvalidArgumentException 
+     */
+    public function saveDistrict(District $district, $update = false)
+    {           
+        if ($this->isExist($district, $update)) {
+            throw new \InvalidArgumentException('Error: Duplicated District ID.');
+        }
+        
+        $manager = $this->getEntityManager();
+        $manager->persist($district);        
+        $manager->flush();
+    }
+    
+    public function updateDistrict(District $district, $update = true)
+    {
+        $this->saveDistrict($district, $update);
+    }
+    
+    /**
+     * Check whether district already exist or not.
+     * 
+     * @param District $district
+     * @return boolean 
+     */
+    public function isExist(District $district, $update = false)
+    {
+        $other = $this->findOneBy(array(
+            'id'    => $district->getId(),
+        ));
+        
+        if ($other) {
+            if ($other->getId() === $district->getId()) {
+                if ($update)
+                    return false;
+                else
+                    return true;
+            } else {
+                return true;
+            }
+        }
+        
+        return false;
+    }
+    
+    /**
+     * Delete district.
+     * 
+     * @param District $district
+     * @throws \InvalidArgumentException 
+     */
+    public function deleteDistrict($id)
+    {
+        $district = $this->find($id);
+        if (!$district) {
+            throw new \InvalidArgumentException('Error: District is not found.');
+        }
+        
+        $manager = $this->getEntityManager();        
+        $manager->remove($district);
+        $manager->flush();
+    }
 }

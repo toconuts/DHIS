@@ -31,8 +31,8 @@ class ChartController extends AppController
     public function trendAction(Request $request)
     {
         $manager = $this->get('doctrine')->getEntityManager('scomdis');
-        $syndromeRepositry = $manager->getRepository('DHISSComDisBundle:Syndrome4Surveillance');
-        $syndromes = $syndromeRepositry->findAll();
+        $syndromeRepository = $manager->getRepository('DHISSComDisBundle:Syndrome4Surveillance');
+        $syndromes = $syndromeRepository->findAll();
         $sentinelSiteRepository = $manager->getRepository('DHISSComDisBundle:SentinelSite');
         $sentinelSites = $sentinelSiteRepository->findAll();
         $criteria = new SurveillanceTrendCriteria($syndromes, $sentinelSites);

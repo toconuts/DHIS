@@ -1,0 +1,46 @@
+{% extends 'DHISSComDisBundle::layout.html.twig' %}
+
+{% block page_title 'Syndromic Surveillance - Phase - SComDis' %}
+{% block product_name 'SComDis' %}
+{% block content_title 'Syndromic Surveillance - Phase - Confirmation' %}
+
+{% set menu = 'SComDis' %}
+{% set sidebar_menu = 'scomdis_admin_phase' %}
+
+{% block content %}
+{% if app.request.session.hasFlash('success') %}
+<div class="alert alert-success">
+  {{ app.request.session.getFlash('success') }}
+</div>
+{% endif %}
+{% if app.request.session.hasFlash('error') %}
+<div class="alert alert-error">
+  {{ app.request.session.getFlash('error') }}
+</div>
+{% endif %}
+
+<table class="table table-striped table-bordered">
+  <tbody>
+    <tr>
+      <th>ID</th>
+      <td>{{ phase.id }}</td>
+    </tr>
+    <tr>
+      <th>Name</th>
+      <td>{{ phase.threshold }}</td>
+    </tr>
+    <tr>
+      <th>Display ID</th>
+      <td>{{ phase.color }}</td>
+    </tr>
+  </tbody>
+</table>
+
+<form action="{{ path('scomdis_admin_phase_confirm') }}" method="post">
+  <div class="form-actions">
+      <a href=javascript:history:back() class="btn">&laquo; Back</a>
+      <input type="submit" class="btn btn-primary" value="Submit">
+  </div>
+</form>
+
+{% endblock %}

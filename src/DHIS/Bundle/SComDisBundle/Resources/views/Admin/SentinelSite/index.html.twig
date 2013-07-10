@@ -1,0 +1,57 @@
+{% extends 'DHISSComDisBundle::layout.html.twig' %}
+
+{% block page_title 'Syndromic Surveillance - Sentinel Site - SComDis' %}
+{% block product_name 'SComDis' %}
+{% block content_title 'Syndromic Surveillance - Sentinel Site' %}
+
+{% set menu = 'SComDis' %}
+{% set sidebar_menu = 'scomdis_admin_sentinel_site' %}
+
+{% block content %}
+{% if app.request.session.hasFlash('success') %}
+<div class="alert alert-success">
+  {{ app.request.session.getFlash('success') }}
+</div>
+{% endif %}
+{% if app.request.session.hasFlash('error') %}
+<div class="alert alert-error">
+  {{ app.request.session.getFlash('error') }}
+</div>
+{% endif %}
+<table class="table table-striped table-bordered">
+  <thead>
+    <tr>
+      <th>ID</th>
+      <th>Name</th>
+      <th>Clinics</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for sentinelSite in pagination %}
+    <tr>
+      <td><a href="{{ path('scomdis_admin_sentinel_site_show', {'id': sentinelSite.id}) }}">{{ sentinelSite.id }}</a></td>
+      <td>{{ sentinelSite.name }}</td>
+      <td>{% for clinic in sentinelSite.clinics %}
+        <a href="{{ path('scomdis_admin_clinic_show', {'id': clinic.id}) }}">{{ clinic.name }}</a><br />
+      {% endfor %}</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+
+{{ pagination.render()|raw }}
+
+<div class="row">
+  <div class="span8">
+    <p></p>
+  </div>
+  <div class="span2">
+    <div class="well">
+      <form action="{{ path('scomdis_admin_sentinel_site_register') }}">
+        <h4>Add new sentinel site</h4>
+        <input type="submit" class="btn btn-primary" value="Register">
+      </form>
+    </div>
+  </div>
+</div>
+{% endblock %}

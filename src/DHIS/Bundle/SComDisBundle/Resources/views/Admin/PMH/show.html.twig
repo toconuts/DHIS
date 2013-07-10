@@ -1,0 +1,58 @@
+{% extends 'DHISSComDisBundle::layout.html.twig' %}
+
+{% block page_title 'Syndromic Surveillance - PMH - SComDis' %}
+{% block product_name 'SComDis' %}
+{% block content_title 'Syndromic Surveillance - PMH' %}
+
+{% set menu = 'SComDis' %}
+{% set sidebar_menu = 'scomdis_admin_pmh' %}
+
+{% block content %}
+{% if app.request.session.hasFlash('success') %}
+<div class="alert alert-success">
+  {{ app.request.session.getFlash('success') }}
+</div>
+{% endif %}
+{% if app.request.session.hasFlash('error') %}
+<div class="alert alert-error">
+  {{ app.request.session.getFlash('error') }}
+</div>
+{% endif %}
+<table class="table table-striped table-bordered">
+  <tbody>
+    <tr>
+      <th>ID</th>
+      <td>{{ pmh.id }}</td>
+    </tr>
+    <tr>
+      <th>Clinic</th>
+      <td>{{ pmh.clinic.name }}</td>
+    </tr>
+  </tbody>
+</table>
+
+<div class="row">
+  <div class="span6">
+    <div class="form-actions">
+  <form action="{{ path('scomdis_admin_pmh_edit', {'id': pmh.id}) }}">
+      <a href=javascript:history:back() class="btn">&laquo; Back</a>
+      <input type="submit" class="btn btn-primary" value="Edit">
+  </form>
+    </div>
+  </div>
+  <div class="span4">
+    <div class="well">
+      <form action="{{ path('scomdis_admin_pmh_delete', {'id': pmh.id}) }}">
+        <h4>Delete this PMH Dept.</h4>
+        <p>Note: once it is deleted, you will not be able to restore it.</p>
+        {% if is_granted('ROLE_SCOMDIS_ADMIN') %}
+        <input type="submit" class="btn btn-danger" value="Delete">
+        {% else %}
+        <p>Can not be allowed.</p>
+        {% endif %}
+      </form>
+    </div>
+  </div>
+</div>
+
+{% endblock %}
