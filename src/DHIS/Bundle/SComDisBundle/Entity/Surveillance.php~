@@ -6,6 +6,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Symfony\Component\Validator\Constraints as Assert;
+use DHIS\Bundle\SComDisBundle\Entity\CommonUtils;
 
 /**
  * Surveillance.
@@ -151,9 +152,9 @@ class Surveillance
         }
     }
     
-    public function setWeekNumber(\DateTime $weekend) {
-        $this->year = $weekend->format('o');
-        $this->weekOfYear = $weekend->format('W');
+    public function setWeekNumber(\DateTime $weekend) {        
+        $this->weekOfYear = CommonUtils::getEPIWeekOfYear($weekend);
+        $this->year = CommonUtils::getEPIYear($weekend);
     }
 
     /**
@@ -404,5 +405,14 @@ class Surveillance
     public function getYear()
     {
         return $this->year;
+    }
+
+    public function getSurveillanceItemBySyndrome($id) {
+        foreach ($this->surveillanceItems as $item) {
+            if ($item->getSyndrome()->getId() === (int)$id)
+                return $item;
+        }
+        
+        return null;
     }
 }

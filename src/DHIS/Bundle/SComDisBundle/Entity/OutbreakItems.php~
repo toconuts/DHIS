@@ -41,16 +41,21 @@ class OutbreakItems
     private $dayOfTheWeek;
 
     /**
+     * @var string $dayOfTheWeekName; 
+     */
+    private $dayOfTheWeekName;
+    
+    /**
      * @var integer $ageGroup1F
      * 
-     * @ORM\Column(name="$age_group_1f", type="integer") 
+     * @ORM\Column(name="age_group_1f", type="integer") 
      */
     private $ageGroup1F;
     
     /**
      * @var integer $ageGroup1M
      * 
-     * @ORM\Column(name="age_group_1m)", type="integer") 
+     * @ORM\Column(name="age_group_1m", type="integer") 
      */
     private $ageGroup1M;
     
@@ -153,6 +158,16 @@ class OutbreakItems
      * @Gedmo\Timestampable(on="update")
      */
     private $updatedAt;
+    
+    public static $textualRepOfDayOfTheWeek = array(
+        'Sunday',
+        'Monday',
+        'Tuesday',
+        'Wednesday',
+        'Thursday',
+        'Friday',
+        'Saturday',
+    );
     
     public function __construct()
     {
@@ -259,6 +274,32 @@ class OutbreakItems
              + $this->ageGroup7F
              + $this->ageGroup7M;
     }
+    
+    public function getDayOfTheWeekString()
+    {
+        return self::$textualRepOfDayOfTheWeek[$this->dayOfTheWeek];
+    }
+    
+    /**
+     * Set dayOfTheWeek
+     *
+     * @param integer $dayOfTheWeek
+     */
+    public function setDayOfTheWeek($dayOfTheWeek)
+    {
+        $this->dayOfTheWeek = $dayOfTheWeek;
+        $this->dayOfTheWeekString =  self::$textualRepOfDayOfTheWeek[$dayOfTheWeek];
+    }
+
+    /**
+     * Get dayOfTheWeek
+     *
+     * @return integer 
+     */
+    public function getDayOfTheWeek()
+    {
+        return $this->dayOfTheWeek;
+    }
 
     /**
      * Set ageGroup1F
@@ -278,5 +319,265 @@ class OutbreakItems
     public function getAgeGroup1F()
     {
         return $this->ageGroup1F;
+    }
+
+    /**
+     * Set ageGroup1M
+     *
+     * @param integer $ageGroup1M
+     */
+    public function setAgeGroup1M($ageGroup1M)
+    {
+        $this->ageGroup1M = $ageGroup1M;
+    }
+
+    /**
+     * Get ageGroup1M
+     *
+     * @return integer 
+     */
+    public function getAgeGroup1M()
+    {
+        return $this->ageGroup1M;
+    }
+
+    /**
+     * Set ageGroup2F
+     *
+     * @param integer $ageGroup2F
+     */
+    public function setAgeGroup2F($ageGroup2F)
+    {
+        $this->ageGroup2F = $ageGroup2F;
+    }
+
+    /**
+     * Get ageGroup2F
+     *
+     * @return integer 
+     */
+    public function getAgeGroup2F()
+    {
+        return $this->ageGroup2F;
+    }
+
+    /**
+     * Set ageGroup2M
+     *
+     * @param integer $ageGroup2M
+     */
+    public function setAgeGroup2M($ageGroup2M)
+    {
+        $this->ageGroup2M = $ageGroup2M;
+    }
+
+    /**
+     * Get ageGroup2M
+     *
+     * @return integer 
+     */
+    public function getAgeGroup2M()
+    {
+        return $this->ageGroup2M;
+    }
+
+    /**
+     * Set ageGroup3F
+     *
+     * @param integer $ageGroup3F
+     */
+    public function setAgeGroup3F($ageGroup3F)
+    {
+        $this->ageGroup3F = $ageGroup3F;
+    }
+
+    /**
+     * Get ageGroup3F
+     *
+     * @return integer 
+     */
+    public function getAgeGroup3F()
+    {
+        return $this->ageGroup3F;
+    }
+
+    /**
+     * Set ageGroup3M
+     *
+     * @param integer $ageGroup3M
+     */
+    public function setAgeGroup3M($ageGroup3M)
+    {
+        $this->ageGroup3M = $ageGroup3M;
+    }
+
+    /**
+     * Get ageGroup3M
+     *
+     * @return integer 
+     */
+    public function getAgeGroup3M()
+    {
+        return $this->ageGroup3M;
+    }
+
+    /**
+     * Set ageGroup4F
+     *
+     * @param integer $ageGroup4F
+     */
+    public function setAgeGroup4F($ageGroup4F)
+    {
+        $this->ageGroup4F = $ageGroup4F;
+    }
+
+    /**
+     * Get ageGroup4F
+     *
+     * @return integer 
+     */
+    public function getAgeGroup4F()
+    {
+        return $this->ageGroup4F;
+    }
+
+    /**
+     * Set ageGroup4M
+     *
+     * @param integer $ageGroup4M
+     */
+    public function setAgeGroup4M($ageGroup4M)
+    {
+        $this->ageGroup4M = $ageGroup4M;
+    }
+
+    /**
+     * Get ageGroup4M
+     *
+     * @return integer 
+     */
+    public function getAgeGroup4M()
+    {
+        return $this->ageGroup4M;
+    }
+
+    /**
+     * Set ageGroup5F
+     *
+     * @param integer $ageGroup5F
+     */
+    public function setAgeGroup5F($ageGroup5F)
+    {
+        $this->ageGroup5F = $ageGroup5F;
+    }
+
+    /**
+     * Get ageGroup5F
+     *
+     * @return integer 
+     */
+    public function getAgeGroup5F()
+    {
+        return $this->ageGroup5F;
+    }
+
+    /**
+     * Set ageGroup5M
+     *
+     * @param integer $ageGroup5M
+     */
+    public function setAgeGroup5M($ageGroup5M)
+    {
+        $this->ageGroup5M = $ageGroup5M;
+    }
+
+    /**
+     * Get ageGroup5M
+     *
+     * @return integer 
+     */
+    public function getAgeGroup5M()
+    {
+        return $this->ageGroup5M;
+    }
+
+    /**
+     * Set ageGroup6F
+     *
+     * @param integer $ageGroup6F
+     */
+    public function setAgeGroup6F($ageGroup6F)
+    {
+        $this->ageGroup6F = $ageGroup6F;
+    }
+
+    /**
+     * Get ageGroup6F
+     *
+     * @return integer 
+     */
+    public function getAgeGroup6F()
+    {
+        return $this->ageGroup6F;
+    }
+
+    /**
+     * Set ageGroup6M
+     *
+     * @param integer $ageGroup6M
+     */
+    public function setAgeGroup6M($ageGroup6M)
+    {
+        $this->ageGroup6M = $ageGroup6M;
+    }
+
+    /**
+     * Get ageGroup6M
+     *
+     * @return integer 
+     */
+    public function getAgeGroup6M()
+    {
+        return $this->ageGroup6M;
+    }
+
+    /**
+     * Set ageGroup7F
+     *
+     * @param integer $ageGroup7F
+     */
+    public function setAgeGroup7F($ageGroup7F)
+    {
+        $this->ageGroup7F = $ageGroup7F;
+    }
+
+    /**
+     * Get ageGroup7F
+     *
+     * @return integer 
+     */
+    public function getAgeGroup7F()
+    {
+        return $this->ageGroup7F;
+    }
+
+    /**
+     * Set ageGroup7M
+     *
+     * @param integer $ageGroup7M
+     */
+    public function setAgeGroup7M($ageGroup7M)
+    {
+        $this->ageGroup7M = $ageGroup7M;
+    }
+
+    /**
+     * Get ageGroup7M
+     *
+     * @return integer 
+     */
+    public function getAgeGroup7M()
+    {
+        return $this->ageGroup7M;
     }
 }

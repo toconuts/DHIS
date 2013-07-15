@@ -12,7 +12,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  * @author Natsuki Hara <toconuts@gmail.com>
  * 
  * @ORM\Table(name="syndrome_surveillance")
- * @ORM\Entity()
+ * @ORM\Entity(repositoryClass="DHIS\Bundle\SComDisBundle\Entity\Syndrome4SurveillanceRepository")
  */
 class Syndrome4Surveillance
 {

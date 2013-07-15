@@ -7,7 +7,7 @@
       <link href="{{ asset('bootstrap/css/bootstrap-responsive.css') }}" type="text/css" rel="stylesheet" />
       <link href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/base/jquery.ui.all.css" type="text/css" rel="stylesheet" />
     {% endblock %}
-    <title>{% block title %}{{ block('page_title') }} - Dominica Health Information System {% endblock %}</title>
+    <title>{% block title %}{{ block('page_title') }} - Dominica Integrated Information System for Health{% endblock %}</title>
     <link rel="shortcut icon" href="{{ asset('favicon.ico') }}" />
   </head>
 
@@ -34,13 +34,13 @@
           {% block nav %}
           <ul class="nav">
             <li class="{% if menu == 'home' %}active{% endif %}">
-              <a href="{{ path('homepage') }}">Home</a>
+              <a href="{{ path('homepage') }}">Menu</a>
             </li>
             <li class="{% if menu == 'openmrs' %}active{% endif %}">
               {% if is_granted('ROLE_OPENMRS_USER') %}
-              <a href="http://openmrs.org/">OpenMRSD</a>
+              <a href="http://openmrs.org/">OpenMRS</a>
               {% else %}
-              <p>OpenMRSD</p>
+              <p>OpenMRS</p>
               {% endif %}
             </li>
             <li class="{% if menu == 'scomdis' %}active{% endif %}">

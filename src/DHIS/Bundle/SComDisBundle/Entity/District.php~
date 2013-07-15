@@ -8,12 +8,12 @@ use Gedmo\Mapping\Annotation as Gedmo;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
- * District.
+ * District
  *
  * @author Natsuki Hara <toconuts@gmail.com>
  * 
  * @ORM\Table(name="district")
- * @ORM\Entity()
+ * @ORM\Entity(repositoryClass="DHIS\Bundle\SComDisBundle\Entity\DistrictRepository")
  */
 class District
 {
@@ -22,10 +22,9 @@ class District
      *
      * @ORM\Column(name="id", type="integer")
      * @ORM\Id
-     * @ORM\GeneratedValue(strategy="AUTO")
      */
     private $id;
-
+    
     /**
      * @var string $name
      * 
@@ -35,15 +34,35 @@ class District
     private $name;
     
     /**
+     * @var integer $population
+     *
+     * @ORM\Column(name="population", type="integer")
+     */
+    private $population;
+
+    /**
      * @var Clinic $clinics
      * 
      * @ORM\OneToMany(targetEntity="Clinic", mappedBy="district")
      */
     private $clinics;
     
+    private $ratio;
+    
     public function __construct()
     {
         $this->clinics = new ArrayCollection();
+        $ratio = 0.0;
+    }
+    
+    /**
+     * __toString()
+     * 
+     * @return string 
+     */
+    public function __toString()
+    {
+        return (string)$this->name;
     }
     
     /**
@@ -56,6 +75,16 @@ class District
         return $this->id;
     }
 
+    /**
+     * Set id
+     *
+     * @param integer $id
+     */
+    public function setId($id)
+    {
+        $this->id = $id;
+    }
+    
     /**
      * Set name
      *
@@ -74,6 +103,26 @@ class District
     public function getName()
     {
         return $this->name;
+    }
+    
+    /**
+     * Set population
+     *
+     * @param integer $population
+     */
+    public function setPopulation($population)
+    {
+        $this->population = $population;
+    }
+    
+    /**
+     * Get population
+     *
+     * @return integer 
+     */
+    public function getPopulation()
+    {
+        return $this->population;
     }
 
     /**
@@ -94,5 +143,25 @@ class District
     public function getClinics()
     {
         return $this->clinics;
+    }
+    
+    /**
+     * Update Ratio
+     *
+     * @param float $total
+     */
+    public function updateRatio($total) 
+    {
+        $this->ratio = round((float)$this->population / (float)$total, 3);
+    }
+    
+    /**
+     * Get ratio
+     *
+     * @return float
+     */
+    public function getRatio() 
+    {
+        return $this->ratio;
     }
 }

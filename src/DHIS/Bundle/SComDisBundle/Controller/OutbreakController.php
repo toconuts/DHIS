@@ -36,7 +36,7 @@ class OutbreakController extends AppController
         
         $pagenator = $this->get('knp_paginator');
         $pagination = $pagenator->paginate($query, $request->
-                query->get('p', 1), 20);
+                query->get('page', 1), 20);
       
         return array(
             'pagination' => $pagination,
@@ -111,6 +111,7 @@ class OutbreakController extends AppController
             try {
                 
                 $outbreakRepository->saveOutbreak($outbreak);
+                $this->logNewOutbreak($outbreak);
                 
                 $session = $request->getSession();
                 $session->remove('scomdis_outbreak/new');
@@ -121,10 +122,11 @@ class OutbreakController extends AppController
                             $outbreak->getSentinelSite().' '.
                             $outbreak->getSyndrome();
                 $request->getSession()->setFlash('success', $message);
-
+                
                 return $this->redirect($this->generateUrl('scomdis_outbreak'));
             } catch (\InvalidArgumentException $e) {
                 $request->getSession()->setFlash('error', $e->getMessage());
+                $this->logError($e->getMessage());
             }
         } else {
             if ($outbreakRepository->isExist($outbreak)) {
@@ -192,6 +194,8 @@ class OutbreakController extends AppController
             if ($form->isValid()) {
                 try {
                     $outbreakRepository->saveOutbreak($outbreak);
+                    $this->logUpdateOutbreak($outbreak);
+                    
                     $message = 'Updated the outbreak. '.
                             $outbreak->getYear().'-'.
                             $outbreak->getWeekOfYear().' '.
@@ -206,6 +210,7 @@ class OutbreakController extends AppController
 
                 } catch (\InvalidArgumentException $e) {
                     $request->getSession()->setFlash('error', $e->getMessage());
+                    $this->logError($e->getMessage());
                 }   
             }
         }
@@ -229,12 +234,16 @@ class OutbreakController extends AppController
         $repo = $manager->getRepository('DHISSComDisBundle:Outbreak');
 
         try {
+            $outbreak = $repo->find($id);
             $repo->deleteOutbreak($id);
+            $this->logDeleteOutbreak($outbreak);
+            
             $message = 'Complete deleting the outbreak.';
             $request->getSession()->setFlash('success', $message);
             
         } catch (\InvalidArgumentException $e) {
             $request->getSession()->setFlash('error', $e->getMessage());
+            $this->logError($e->getMessage());
         }
         
         return $this->redirect($this->generateUrl('scomdis_outbreak'));
@@ -349,5 +358,33 @@ class OutbreakController extends AppController
     public function outDailyTallyReportAction(Request $request, $id)
     {
         return array();
+    }
+    
+    public function logNewOutbreak($outbreak)
+    {
+        $this->logBase($outbreak, 'Add new outbreak.');
+    }
+    
+    public function logUpdateOutbreak($outbreak)
+    {
+        $this->logBase($outbreak, 'Update outbreak.');
+    }
+    
+    public function logDeleteOutbreak($outbreak)
+    {
+        $this->logBase($outbreak, 'Delete outbreak.');
+    }
+    
+    protected function logBase($outbreak, $premessage)
+    {
+        $message = $premessage.' ID: '.
+                    $outbreak->getId().' '.
+                    $outbreak->getYear().'-'.
+                    $outbreak->getWeekOfYear().' '.
+                    $outbreak->getClinic().'@'.
+                    $outbreak->getSentinelSite().' '.
+                    $outbreak->getSyndrome();
+     
+        $this->logInfo($message);
     }
 }

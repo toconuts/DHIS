@@ -3,9 +3,9 @@
   <p>Sign in and start sharing with health information.</p>
   <div class="product1">
     {% if app.user.username is defined and is_granted('ROLE_OPENMRS_USER') %}
-    <a href="{{ path('scomdis') }}">OpenMRSD</a>
+    <a href="{{ path('scomdis') }}">OpenMRS</a>
     {% else %}
-    <h3>OpenMRSD</h3>
+    <h3>OpenMRS</h3>
     {% endif %}
   </div>
   <div class="product2">

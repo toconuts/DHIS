@@ -33,7 +33,7 @@ class GroupController extends AppController
         
         $pagenator = $this->get('knp_paginator');
         $pagination = $pagenator->paginate($query, $request->
-                query->get('p', 1), 20);
+                query->get('page', 1), 20);
         
         return array(
             'pagination' => $pagination,

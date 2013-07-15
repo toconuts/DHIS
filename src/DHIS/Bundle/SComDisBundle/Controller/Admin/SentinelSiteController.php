@@ -30,7 +30,7 @@ class SentinelSiteController extends AdminAppController
         $query = $repo->createQueryBuilder('r')->orderBy('r.id', 'ASC')->getQuery();
         
         $pagenator = $this->get('knp_paginator');
-        $pagination = $pagenator->paginate($query, $request->query->get('p', 1), 20);
+        $pagination = $pagenator->paginate($query, $request->query->get('page', 1), 20);
       
         return array(
             'pagination' => $pagination,

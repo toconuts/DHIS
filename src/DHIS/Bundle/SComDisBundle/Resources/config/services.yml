@@ -19,3 +19,7 @@ services:
     class: DHIS\Bundle\SComDisBundle\Service\EpidemicPhaseService
     arguments:
       - @doctrine
+  log_service:
+    class: DHIS\Bundle\SComDisBundle\Service\LogService
+    arguments:
+      - @doctrine

@@ -129,17 +129,18 @@ class Outbreak
         
         $this->reportedAt = new \DateTime();
         $this->reportedAt->setTime(0, 0, 0);
+        
+        $this->createOutbreakItems();
     }
     
-    /*
-    public function createSurveillanceItems(array $syndromes)
+    public function createOutbreakItems()
     {
-        foreach ($syndromes as $syndrome) {
-            $item = new SurveillanceItems();
-            $item->setSyndrome($syndrome);
-            $this->surveillanceItems->add($item);
+        for ($i = 0; $i < 7; $i++) {
+            $item = new OutbreakItems();
+            $item->setDayOfTheWeek($i);
+            $this->outbreakItems->add($item);
         }
-    }*/
+    }
     
     public function setWeekNumber(\DateTime $weekend) {
         $this->year = $weekend->format('o');

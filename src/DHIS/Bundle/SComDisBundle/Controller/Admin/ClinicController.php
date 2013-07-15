@@ -30,7 +30,7 @@ class ClinicController extends AdminAppController
         $query = $repo->createQueryBuilder('r')->orderBy('r.id', 'ASC')->getQuery();
         
         $pagenator = $this->get('knp_paginator');
-        $pagination = $pagenator->paginate($query, $request->query->get('p', 1), 100);
+        $pagination = $pagenator->paginate($query, $request->query->get('page', 1), 100);
       
         return array(
             'pagination' => $pagination,

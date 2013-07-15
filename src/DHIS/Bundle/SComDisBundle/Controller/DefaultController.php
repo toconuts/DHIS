@@ -10,9 +10,12 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 
 use DHIS\Bundle\SComDisBundle\Entity\Surveillance;
 use DHIS\Bundle\SComDisBundle\Entity\SurveillanceRepository;
+use DHIS\Bundle\SComDisBundle\Entity\BBS;
+use DHIS\Bundle\SComDisBundle\Entity\BBSRepository;
 
 use DHIS\Bundle\SComDisBundle\Form\SurveillanceType;
 use DHIS\Bundle\SComDisBundle\Form\SearchSurveillanceType;      
+use DHIS\Bundle\SComDisBundle\Form\BBSNewType;
 
 /**
  * DefaultController for SComDis site.
@@ -27,9 +30,65 @@ class DefaultController extends AppController
      * @Route("/", name="scomdis")
      * @Template()
      */
-    public function indexAction()
+    public function indexAction(Request $request)
     {
-        return array();
+        $manager = $this->get('doctrine')->getEntityManager('scomdis');
+        
+        // BBS
+        $bbsRepository = $manager->getRepository('DHISSComDisBundle:BBS');
+        
+        $bbs = new BBS();
+        $form = $this->createForm(new BBSNewType(), $bbs);
+        
+        if ($request->getMethod() === 'POST') {
+            $data = $request->request->get($form->getName());
+            $form->bind($data);
+            
+            if ($form->isValid()) {               
+                $securityContext = $this->get('security.context');
+                $bbs->setUsername($securityContext->getToken()->getUser()->getUsername());
+                
+                $bbsRepository->postMessage($bbs);
+                return $this->redirect($this->generateUrl('scomdis'));
+            }
+        }
+        
+        $paginator = $this->get('knp_paginator');
+        
+        $bbsPageName = 'pbbs';
+        $bbsQuery = $bbsRepository->createQueryBuilder('r')
+                ->orderBy('r.updatedAt', 'DESC')
+                ->getQuery();
+        $bbsPage = $request->query->get($bbsPageName, 1);
+        $bbsPagination = $paginator->paginate(
+                $bbsQuery, 
+                $bbsPage,
+                5,
+                array('pageParameterName' => $bbsPageName)
+        );
+        
+        // Log
+        $logPageName = 'plog';
+        $logRepository = $manager->getRepository('DHISSComDisBundle:Log');
+        $logQuery = $logRepository->createQueryBuilder('r')
+                ->orderBy('r.updatedAt', 'DESC')
+                ->getQuery();
+        
+        //$logPaginator = $this->get('knp_paginator');
+        //$logPagination = $logPaginator->paginate($query, $request->
+        $logPage = $request->query->get($logPageName, 1);
+        $logPagination = $paginator->paginate(
+                $logQuery, 
+                $logPage,
+                10,
+                array('pageParameterName' => $logPageName)
+        );
+        
+        return array(
+            'form' => $form->createView(),
+            'bbsPagination' => $bbsPagination,
+            'logPagination' => $logPagination,
+        );
     }
     
     /**
@@ -42,9 +101,9 @@ class DefaultController extends AppController
         $repo = $manager->getRepository('DHISSComDisBundle:Surveillance');
         $query = $repo->createQueryBuilder('r')->orderBy('r.weekend', 'DESC')->getQuery();
         
-        $pagenator = $this->get('knp_paginator');
-        $pagination = $pagenator->paginate($query, $request->
-                query->get('p', 1), 100);
+        $paginator = $this->get('knp_paginator');
+        $pagination = $paginator->paginate($query, $request->
+                query->get('page', 1), 100);
       
         return array(
             'pagination' => $pagination,
@@ -119,6 +178,7 @@ class DefaultController extends AppController
             try {
                 
                 $surveillanceRepository->saveSurveillance($surveillance);
+                $this->logNewSurveillance($surveillance);
                 
                 $session = $request->getSession();
                 $session->remove('scomdis_surveillance/new');
@@ -130,8 +190,10 @@ class DefaultController extends AppController
                 $request->getSession()->setFlash('success', $message);
 
                 return $this->redirect($this->generateUrl('scomdis_list'));
+                
             } catch (\InvalidArgumentException $e) {
                 $request->getSession()->setFlash('error', $e->getMessage());
+                $this->logError($e->getMessage());
             }
         } else {
             if ($surveillanceRepository->isExist($surveillance)) {
@@ -196,6 +258,8 @@ class DefaultController extends AppController
             if ($form->isValid()) {
                 try {
                     $surveillanceRepository->saveSurveillance($surveillance);
+                    $this->logUpdateSurveillance($surveillance);
+                    
                     $message = 'Updated the surveillance. '.
                             $surveillance->getYear().'-'.
                             $surveillance->getWeekOfYear().' '.
@@ -204,11 +268,12 @@ class DefaultController extends AppController
                     $request->getSession()->setFlash('success', $message);
                     return $this->redirect(
                             $this->generateUrl('scomdis_show', 
-                                                array('id' => $surveillance->getId()))
+                                    array('id' => $surveillance->getId()))
                     );
 
                 } catch (\InvalidArgumentException $e) {
                     $request->getSession()->setFlash('error', $e->getMessage());
+                    $this->logError($e->getMessage());
                 }   
             }
         }
@@ -232,13 +297,16 @@ class DefaultController extends AppController
         $user = $this->get('security.context')->getToken()->getUser();
         
         try {
-            
+            $surveillance = $repo->find($id);
             $repo->receiveSurveillance($id, $user);
+            $this->logReceiveSurveillance($surveillance);
+            
             $message = 'Received the surveillance.';
             $request->getSession()->setFlash('success', $message);
             
         } catch (\InvalidArgumentException $e) {
             $request->getSession()->setFlash('error', $e->getMessage());
+            $this->logError($e->getMessage());
         }
         
         return $this->redirect($this->generateUrl(
@@ -255,12 +323,15 @@ class DefaultController extends AppController
         $repo = $manager->getRepository('DHISSComDisBundle:Surveillance');
 
         try {
+            $surveillance = $repo->find($id);
             $repo->deleteSurveillance($id);
+            $this->logDeleteSurveillance($surveillance);
             $message = 'Complete deleting the surveillance.';
             $request->getSession()->setFlash('success', $message);
             
         } catch (\InvalidArgumentException $e) {
             $request->getSession()->setFlash('error', $e->getMessage());
+            $this->logError($e->getMessage());
         }
         
         return $this->redirect($this->generateUrl('scomdis_list'));
@@ -360,47 +431,35 @@ class DefaultController extends AppController
         return true;
     }
     
-    /**
-     * @Route("/test", name="scomdis_test")
-     * @Template()
-     */
-    public function testAction(Request $request)
+    public function logNewSurveillance($surveillance)
     {
-        $manager = $this->get('doctrine')->getEntityManager('scomdis');
-        $syndromeRepository = $manager->getRepository('DHISSComDisBundle:Syndrome4Surveillance');
-        $syndromes = $syndromeRepository->findAll();
-        $surveillance = new Surveillance($syndromes);
-
-        $form = $this->createForm(new SurveillanceType(), $surveillance);
+        $this->logBase($surveillance, 'Add new surveillance.');
+    }
+    
+    public function logUpdateSurveillance($surveillance)
+    {
+        $this->logBase($surveillance, 'Update surveillance.');
+    }
+    
+    public function logDeleteSurveillance($surveillance)
+    {
+        $this->logBase($surveillance, 'Delete surveillance.');
+    }
+    
+    public function logReceiveSurveillance($surveillance)
+    {
+        $this->logBase($surveillance, 'Receive surveillance.');
+    }
+    
+    protected function logBase($surveillance, $premessage)
+    {
+        $message = $premessage.' ID: '.
+                    $surveillance->getId().' '.
+                    $surveillance->getYear().'-'.
+                    $surveillance->getWeekOfYear().' '.
+                    $surveillance->getClinic().'@'.
+                    $surveillance->getSentinelSite();
         
-        $sentinelSiteRepository = $manager->getRepository('DHISSComDisBundle:SentinelSite');
-        $sentinelSites = $sentinelSiteRepository->findAll();
-        
-        $clinicRepository = $manager->getRepository('DHISSComDisBundle:Clinic');
-        $clinics = $clinicRepository->findAll();
-        
-        $manager = $this->get('doctrine')->getEntityManager('common');
-        $userRepository = $manager->getRepository('DHISCommonBundle:User');
-        $query = $userRepository->createQueryBuilder('r')->orderBy('r.displayname', 'ASC')->getQuery();
-        $users = $query->getResult();
-        
-        if ($request->getMethod() === 'POST') {
-            $form->bindRequest($request);
-            //$data = $request->request->get($form->getName());
-            //$form->bind($data);
-            
-            if ($form->isValid()) {
-                $weekofYear = \DHIS\Bundle\SComDisBundle\Entity\CommonUtils::getEPIWeekOfYear($surveillance->getWeekend());
-                $year = \DHIS\Bundle\SComDisBundle\Entity\CommonUtils::getEPIYear($surveillance->getWeekend());
-            }
-        }
-        
-        return array(
-            'sentinelSites' => $sentinelSites,
-            'clinics'       => $clinics,
-            'users'         => $users,
-            'form'          => $form->createView(),
-        );
-
+        $this->logInfo($message);
     }
 }
